@@ -1,0 +1,5 @@
+%h1
+  Ledger:
+  = @ledger.name
+  - if @ledger.bank?
+    = "[#{@ledger.bank}]"
