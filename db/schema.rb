@@ -11,7 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120412174816) do
+ActiveRecord::Schema.define(:version => 20120412222733) do
+
+  create_table "entries", :force => true do |t|
+    t.integer  "ledger_id",     :null => false
+    t.date     "date"
+    t.decimal  "ammount"
+    t.text     "notes"
+    t.integer  "bank_entry_id"
+    t.string   "description"
+    t.integer  "external_id"
+    t.string   "account"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
+  add_index "entries", ["external_id"], :name => "index_entries_on_external_id", :unique => true
 
   create_table "ledgers", :force => true do |t|
     t.string   "name",       :null => false

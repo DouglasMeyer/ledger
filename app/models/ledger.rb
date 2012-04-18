@@ -1,3 +1,3 @@
 class Ledger < ActiveRecord::Base
-  attr_accessible :name, :bank
+  has_many :entries
 end

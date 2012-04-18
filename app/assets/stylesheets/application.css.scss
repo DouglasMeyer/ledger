@@ -11,3 +11,9 @@
  *= require_self
  *= require_tree .
 */
+
+table {
+  td, th {
+    padding: 2px 6px;
+  }
+}
