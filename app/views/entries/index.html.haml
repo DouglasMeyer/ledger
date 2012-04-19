@@ -4,6 +4,8 @@
   - if @ledger.bank?
     = "[#{@ledger.bank}]"
 
+= link_to 'Ledger', ledger_path(@ledger)
+
 %table
   %tr
     %th Date
@@ -16,7 +18,7 @@
   - @ledger.entries.each do |entry|
     %tr
       %td= entry.date
-      %td= entry.ammount
+      %td= number_to_currency entry.ammount
       %td= entry.notes
       %td= entry.description
       %td= entry.external_id

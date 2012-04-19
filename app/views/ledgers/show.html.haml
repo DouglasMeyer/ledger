@@ -4,6 +4,8 @@
   - if @ledger.bank?
     = "[#{@ledger.bank}]"
 
+= link_to 'Entries', ledger_entries_path(@ledger)
+
 %table
   %tr
     %th Account
@@ -12,4 +14,4 @@
   - @ledger.accounts.each do |account|
     %tr
       %td= account.name
-      %td= account.balance
+      %td= number_to_currency account.balance
