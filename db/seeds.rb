@@ -16,13 +16,18 @@ end
   end
 end
 
+ledger.accounts.create!{|a| a.name = 'Tithe' }
+ledger.accounts.create!{|a| a.name = 'Doug' }
+ledger.accounts.create!{|a| a.name = 'Katy' }
+ledger.accounts.create!{|a| a.name = 'Mortgage' }
+
 entries = harris.entries.all
 0.upto(3) do |n|
   ledger.entries.create! do |e|
     e.bank_entry = entries[n]
     e.date = Date.today
     e.ammount = entries[n].ammount
-    e.account = %w( Tithe Doug Katy Mortgage )[rand(4)]
+    e.account = ledger.accounts.order('RANDOM()').first
   end
 end
 
@@ -31,11 +36,11 @@ ledger.entries.create! do |e|
   e.bank_entry = entry
   e.date = Date.today
   e.ammount = entry.ammount / 2
-  e.account = %w( Tithe Doug Katy Mortgage )[rand(4)]
+  e.account = ledger.accounts.order('RANDOM()').first
 end
 ledger.entries.create! do |e|
   e.bank_entry = entry
   e.date = Date.today
   e.ammount = entry.ammount / 2
-  e.account = %w( Tithe Doug Katy Mortgage )[rand(4)]
+  e.account = ledger.accounts.order('RANDOM()').first
 end
