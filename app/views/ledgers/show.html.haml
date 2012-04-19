@@ -6,18 +6,10 @@
 
 %table
   %tr
-    %th Date
-    %th Ammount
-    %th Notes
-    %th Description
-    %th External Id
     %th Account
+    %th Balance
 
-  - @ledger.entries.each do |entry|
+  - @ledger.accounts.each do |account|
     %tr
-      %td= entry.date
-      %td= entry.ammount
-      %td= entry.notes
-      %td= entry.description
-      %td= entry.external_id
-      %td= entry.account
+      %td= account.name
+      %td= account.balance

@@ -1,0 +1,23 @@
+%h1
+  Ledger Entries:
+  = @ledger.name
+  - if @ledger.bank?
+    = "[#{@ledger.bank}]"
+
+%table
+  %tr
+    %th Date
+    %th Ammount
+    %th Notes
+    %th Description
+    %th External Id
+    %th Account
+
+  - @ledger.entries.each do |entry|
+    %tr
+      %td= entry.date
+      %td= entry.ammount
+      %td= entry.notes
+      %td= entry.description
+      %td= entry.external_id
+      %td= entry.account.name

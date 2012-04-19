@@ -3,7 +3,7 @@ class CreateEntries < ActiveRecord::Migration
     create_table :entries do |t|
       t.references :ledger, :null => false
       t.date :date
-      t.decimal :ammount, :scale => 2
+      t.decimal :ammount, :precision => 9, :scale => 2 # 1_234_567_89
       t.text :notes
 
       t.references :bank_entry

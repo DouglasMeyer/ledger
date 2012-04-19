@@ -21,15 +21,15 @@ ActiveRecord::Schema.define(:version => 20120418230204) do
   end
 
   create_table "entries", :force => true do |t|
-    t.integer  "ledger_id",     :null => false
+    t.integer  "ledger_id",                                   :null => false
     t.date     "date"
-    t.decimal  "ammount"
+    t.decimal  "ammount",       :precision => 9, :scale => 2
     t.text     "notes"
     t.integer  "bank_entry_id"
     t.string   "description"
     t.integer  "external_id"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",                                  :null => false
+    t.datetime "updated_at",                                  :null => false
     t.integer  "account_id"
   end
 
