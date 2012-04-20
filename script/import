@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+
+exit 1 if ARGV[0].nil?
+
+require 'pathname'
+require 'pp'
+require 'date'
+require ::File.expand_path('../../config/environment', __FILE__)
+
+file = Pathname(ARGV[0])
+
+module MoneyParser
+  def self.included(klass)
+    klass.module_eval do
+
+      def self.statement_attr(attr, key, &block)
+        define_method attr do
+          value = raw.scan(/<#{key}>(.*)/)[0][0].strip
+          value = block.call(value) if block_given?
+          value
+        end
+      end
+
+      def self.parse(file)
+        data = file.read
+        balance = file.read.scan(/<LEDGERBAL>.*?<.LEDGERBAL>/m)[0].scan(/<BALAMT>(.*)/)[0][0].strip.to_f
+        transactions = data.scan(/<STMTTRN>.*?<.STMTTRN>/m).map do |x|
+          Transaction.new(x)
+        end
+        transactions.sort_by{|t| t.id }.reverse.each do |transaction|
+          transaction.balance = balance
+          balance -= transaction.ammount
+        end
+      end
+
+    end
+  end
+end
+
+class Transaction
+  def self.statement_attr(attr, key, &block)
+    define_method attr do
+      value = raw.scan(/<#{key}>(.*)/)[0][0].strip
+      value = block.call(value) if block_given?
+      value
+    end
+  end
+
+  def self.parse(file)
+    data = file.read
+    balance = file.read.scan(/<LEDGERBAL>.*?<.LEDGERBAL>/m)[0].scan(/<BALAMT>(.*)/)[0][0].strip
+    balance = BigDecimal.new(balance)
+    transactions = data.scan(/<STMTTRN>.*?<.STMTTRN>/m).map do |x|
+      Transaction.new(x)
+    end
+    transactions.sort_by{|t| t.id }.reverse.each do |transaction|
+      transaction.balance = balance
+      balance -= transaction.ammount
+    end
+  end
+
+  attr_reader :raw
+  statement_attr :type,    'TRNTYPE'
+  statement_attr(:id,      'FITID'   ){ |string| string.to_i }
+  statement_attr :name,    'NAME'
+  statement_attr :memo,    'MEMO'
+  statement_attr(:date,    'DTPOSTED'){ |string| DateTime.parse(string) }
+  statement_attr(:ammount, 'TRNAMT'  ){ |string| BigDecimal.new(string) }
+  attr_accessor :balance
+
+  def initialize(raw)
+    @raw = raw
+  end
+
+  def inspect
+    attrs = %w(type id name memo).inject({}){|a,e| a[e.to_sym] = send(e); a}
+    attrs[:ammount] = ammount.to_f
+    attrs[:balance] = balance.to_f
+    attrs[:date] = date.strftime("%D")
+    "#<Transaction: #{attrs.inspect}>"
+  end
+end
+
+transactions = Transaction.parse(file).sort_by{|tr| tr.id }
+pp transactions
+
+harris = Ledger.where(:bank => 'harris').first
+
+transactions.each do |t|
+  harris.entries.create! do |e|
+    e.date        = t.date
+    e.ammount     = t.ammount
+    e.notes       = "#{t.type}: #{t.memo}"
+    e.description = t.name
+    e.external_id = t.id
+  end
+end
+
+ledger = Ledger.where(:name => 'My Ledger').first
+missing = transactions.last.balance - ledger.balance
+unless missing.zero?
+  e = harris.entries.create! do |e|
+    e.date        = Date.today
+    e.ammount     = missing
+    e.description = "The bank says we have an extra $#{missing}"
+  end
+  puts e.description
+end
+

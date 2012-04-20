@@ -8,7 +8,7 @@ class CreateEntries < ActiveRecord::Migration
 
       t.references :bank_entry
       t.string :description
-      t.integer :external_id
+      t.string :external_id
 
       t.string :account
 

@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(:version => 20120418230204) do
     t.text     "notes"
     t.integer  "bank_entry_id"
     t.string   "description"
-    t.integer  "external_id"
+    t.string   "external_id"
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
     t.integer  "account_id"
