@@ -12,4 +12,25 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
+//= require underscore-1.3.3-min
+//= require backbone-0.9.2-min
+//= require_self
 //= require_tree .
+
+window.BankEntry = Backbone.Model.extend();
+window.Account = Backbone.Model.extend();
+window.AccountEntry = Backbone.Model.extend();
+
+window.BankEntriesCollection = Backbone.Collection.extend({
+  model: BankEntry,
+  url: '/bank_entries'
+});
+window.AccountsCollection = Backbone.Collection.extend({
+  model: Account,
+  url: '/accounts'
+});
+window.AccountEntriesCollection = Backbone.Collection.extend({
+  model: AccountEntry,
+  url: '/account_entries'
+});

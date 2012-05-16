@@ -1,12 +1,12 @@
 %h1 Bank Entries
 
 = content_tag :script, :type => 'test/x-template', :id => 'bank-entry-template' do
-  %td {{ date }}
-  %td {{ description }}
-  %td {{ notes }}
-  %td {{ ammount }}
+  %td <%= date %>
+  %td <%= description %>
+  %td <%= notes %>
+  %td.currency <%= ammount %>
 
-%table
+%table#bank-entries
   %tr
     %th Date
     %th Description
@@ -19,11 +19,11 @@
       %td= entry.date
       %td= entry.description
       %td= entry.notes
-      %td= entry.ammount
+      %td.currency= entry.ammount
     - entry.account_entries do |entry|
       = content_tag_for :tr, entry do
         %td
         %td
         %td= entry.notes
-        %td= entry.ammount
+        %td.currency= entry.ammount
         %td= entry.account_name
