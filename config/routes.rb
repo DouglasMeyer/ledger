@@ -1,7 +1,8 @@
 Sledger::Application.routes.draw do
-  resources :ledgers, :only => [ :index, :show ] do
-    resources :entries, :only => :index
-  end
+  resources :bank_entries, :only => :index
 
-  root :to => 'ledgers#index'
+  resources :accounts,  :only => [ :index, :create ]
+  resources :account_entries, :only => [ :index, :create, :destroy ]
+
+  root :to => 'accounts#index'
 end

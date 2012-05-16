@@ -1,12 +1,3 @@
-ledger = Ledger.create! do |l|
-  l.name = 'My Ledger'
-end
-
-harris = Ledger.create! do |l|
-  l.name = 'Harris'
-  l.bank = 'harris'
-end
-
 #1.upto(5) do |n|
 #  harris.entries.create! do |e|
 #    e.date = n.days.ago

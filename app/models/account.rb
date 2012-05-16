@@ -1,5 +1,9 @@
 class Account < ActiveRecord::Base
-  has_many :entries
+  attr_accessible :name
+
+  has_many :entries, :class_name => 'AccountEntries'
+
+  validates_uniqueness_of :name
 
   def balance
     entries.pluck(:ammount).sum

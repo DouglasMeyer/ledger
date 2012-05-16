@@ -1,8 +1,0 @@
-%h1 Ledgers
-
-%ul
-  - @ledgers.each do |ledger|
-    %li
-      = link_to ledger.name, ledger
-      - if ledger.bank?
-        = "[#{ledger.bank}]"
