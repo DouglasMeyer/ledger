@@ -1,29 +1,34 @@
 %h1 Bank Entries
 
 = content_tag :script, :type => 'test/x-template', :id => 'bank-entry-template' do
-  %td <%= date %>
-  %td <%= description %>
-  %td <%= notes %>
-  %td.currency <%= ammount %>
+  .row
+    .date <%= date %>
+    .description <%= description %>
+    .notes <%= notes %>
+    .ammount.currency <%= ammount %>
 
-%table#bank-entries
-  %tr
-    %th Date
-    %th Description
-    %th Notes
-    %th Ammount
-    %th Account
+= content_tag :script, :type => 'test/x-template', :id => 'account-entry-template' do
+  .row
+    .notes <%= notes %>
+    .ammount.currency <%= ammount %>
+    %input.account
+
+#bank-entries
+  .row
+    .date Date
+    .description Description
+    .notes Notes
+    .ammount Ammount
+    .account Account
 
   - @bank_entries.each do |entry|
-    = content_tag_for :tr, entry do
-      %td= entry.date
-      %td= entry.description
-      %td= entry.notes
-      %td.currency= entry.ammount
+    = div_for entry, :class => :row do
+      .date= entry.date
+      .description= entry.description
+      .notes= entry.notes
+      .ammount.currency= entry.ammount
     - entry.account_entries do |entry|
-      = content_tag_for :tr, entry do
-        %td
-        %td
-        %td= entry.notes
-        %td.currency= entry.ammount
-        %td= entry.account_name
+      = div_for entry, :class => :row do
+        .notes= entry.notes
+        .ammount.currency= entry.ammount
+        .account= entry.account_name

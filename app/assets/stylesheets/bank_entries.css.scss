@@ -1,0 +1,29 @@
+#bank-entries {
+  & > .row:first-child { font-weight: bold; text-align: center; }
+  .row {
+    position: relative;
+    height: 1.2em;
+
+    $date_width: 100px;
+    $description_width: 300px;
+    $notes_width: 400px;
+    $ammount_width: 100px;
+    $account_width: 100px;
+    & > * { position: absolute; }
+    .date {        width: $date_width;        left: 0px; }
+    .description { width: $description_width; left: $date_width; }
+    .notes {       left: $date_width + $description_width; right: $ammount_width + $account_width; }
+    .ammount {     width: $ammount_width;     right: $account_width; }
+    .account {     width: $account_width;     right: 0px; }
+  }
+
+  .bank-entry-view:nth-child(even) {
+    background-color: #E8E8E8;
+  }
+
+  *[rel="add-account-entry"] {
+    text-align: center;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

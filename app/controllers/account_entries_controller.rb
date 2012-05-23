@@ -1,7 +1,9 @@
 class AccountEntriesController < ApplicationController
   def index
+    entries = AccountEntry.scoped
+    entries = entries.where(:bank_entry_id => params[:bank_entry]) if params[:bank_entry]
     respond_to do |format|
-      format.json { render :json => AccountEntries.all }
+      format.json { render :json => entries }
     end
   end
 

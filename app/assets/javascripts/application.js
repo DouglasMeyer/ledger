@@ -18,9 +18,24 @@
 //= require_self
 //= require_tree .
 
-window.BankEntry = Backbone.Model.extend();
+window.BankEntry = Backbone.Model.extend({
+  initialize: function(){
+    this.accountEntries = new AccountEntriesCollection();
+    this.accountEntries.url += '?bank_entry=' + this.get('id');
+
+    this.set('ammount', parseFloat(this.get('ammount')));
+  }
+});
 window.Account = Backbone.Model.extend();
-window.AccountEntry = Backbone.Model.extend();
+window.AccountEntry = Backbone.Model.extend({
+  initialize: function(){
+    this.set('ammount', parseFloat(this.get('ammount')));
+  },
+  defaults: {
+    account_name: '',
+    notes: ''
+  }
+});
 
 window.BankEntriesCollection = Backbone.Collection.extend({
   model: BankEntry,
