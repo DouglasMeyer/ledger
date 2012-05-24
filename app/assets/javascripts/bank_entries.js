@@ -2,9 +2,17 @@ jQuery(function($){
   var table = $('#bank-entries');
   if (!table.length) return;
 
+  var centsToCurrency = function(cents){
+    return cents / 100;
+  };
+  var currencyToCents = function(currency){
+    return Math.round(parseFloat(currency) * 100);
+  };
+
   var AccountEntryView = Backbone.View.extend({
     template: _.template($('#account-entry-template').html()),
     events: {
+      'change input.ammount': 'updateAmmount',
       'change input.account': 'updateAccount'
     },
     initialize: function(){
@@ -13,8 +21,12 @@ jQuery(function($){
     },
     render: function(){
       this.$el.html(this.template(this.model.toJSON()));
-      this.$('input.account').val(this.model.get('accountName'));
+      this.$('input.ammount').val(centsToCurrency(this.model.get('ammount_cents')));
+      this.$('input.account').val(this.model.get('account_name'));
       return this;
+    },
+    updateAmmount: function(){
+      this.model.set('ammount_cents', currencyToCents(this.$('input.ammount').val()));
     },
     updateAccount: function(){
       this.model.set('accountName', this.$('input.account').val());
@@ -26,11 +38,14 @@ jQuery(function($){
     initialize: function(){
       this.model.bind('change', this.render, this);
       this.model.bind('destroy', this.remove, this);
+      this.model.accountEntries.bind('all', this.updateAmmountRemaining, this);
+    },
+    events: {
+      'click [rel="add-account-entry"]': 'addAccountEntry'
     },
     render: function(){
-      var json = this.model.toJSON(),
-          ammount = (json.ammount+'.0').split('.');
-      json.ammount = ammount[0] + '.' + (ammount[1] + '0').substr(0,2);
+      var json = this.model.toJSON();
+      json.ammount = centsToCurrency(json.ammount_cents);
       this.$el.append(this.template(json));
 
       this.model.accountEntries.fetch();
@@ -39,7 +54,19 @@ jQuery(function($){
       });
       this.$el.append(this.accountEntriesView.render().el);
 
+      this.$el.append('<div class="row ammount-remaining"><div class="ammount currency"></div><div class="right-control" rel="add-account-entry">+</div></div>');
+      this.updateAmmountRemaining();
+
       return this;
+    },
+    addAccountEntry: function(){
+      var difference = this.model.accountEntryAmmountCentsDifference();
+      this.model.accountEntries.add({ ammount_cents: difference });
+    },
+    updateAmmountRemaining: function(){
+      var difference = this.model.accountEntryAmmountCentsDifference();
+      this.$('.row.ammount-remaining .ammount').html(centsToCurrency(difference));
+      this.$('.row.ammount-remaining')[difference === 0 ? 'hide' : 'show']();
     }
   });
   window.BankEntries = new BankEntriesCollection();

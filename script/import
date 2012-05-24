@@ -72,6 +72,10 @@ class Transaction
     @raw = raw
   end
 
+  def ammount_cents
+    ammount.to_f * 100
+  end
+
   def inspect
     attrs = %w(type id name memo).inject({}){|a,e| a[e.to_sym] = send(e); a}
     attrs[:ammount] = ammount.to_f
@@ -86,20 +90,20 @@ pp transactions
 
 transactions.each do |t|
   BankEntry.create! do |e|
-    e.date        = t.date
-    e.ammount     = t.ammount
-    e.notes       = "#{t.type}: #{t.memo}"
-    e.description = t.name
-    e.external_id = t.id
+    e.date          = t.date
+    e.ammount_cents = t.ammount_cents
+    e.notes         = "#{t.type}: #{t.memo}"
+    e.description   = t.name
+    e.external_id   = t.id
   end
 end
 
-missing = transactions.last.balance - BankEntry.pluck(:ammount).sum
+missing = transactions.last.balance - BankEntry.pluck(:ammount_cents).sum
 unless missing.zero?
   e = BankEntry.create! do |e|
-    e.date        = Date.today
-    e.ammount     = missing
-    e.description = "The bank says we have an extra $#{missing}"
+    e.date          = Date.today
+    e.ammount_cents = missing
+    e.description   = "The bank says we have an extra $#{missing}"
   end
   puts e.description
 end

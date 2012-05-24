@@ -23,13 +23,19 @@ window.BankEntry = Backbone.Model.extend({
     this.accountEntries = new AccountEntriesCollection();
     this.accountEntries.url += '?bank_entry=' + this.get('id');
 
-    this.set('ammount', parseFloat(this.get('ammount')));
+    this.set('ammount_cents', parseInt(this.get('ammount_cents')));
+  },
+  accountEntryAmmountCentsDifference: function(){
+    var sum = this.accountEntries.reduce(function(sum, entry){
+      return sum + entry.get('ammount_cents');
+    }, 0);
+    return this.get('ammount_cents') - sum;
   }
 });
 window.Account = Backbone.Model.extend();
 window.AccountEntry = Backbone.Model.extend({
   initialize: function(){
-    this.set('ammount', parseFloat(this.get('ammount')));
+    this.set('ammount_cents', parseInt(this.get('ammount_cents')));
   },
   defaults: {
     account_name: '',

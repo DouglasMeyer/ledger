@@ -10,7 +10,7 @@
 = content_tag :script, :type => 'test/x-template', :id => 'account-entry-template' do
   .row
     .notes <%= notes %>
-    .ammount.currency <%= ammount %>
+    %input.ammount.currency
     %input.account
 
 #bank-entries
@@ -26,9 +26,9 @@
       .date= entry.date
       .description= entry.description
       .notes= entry.notes
-      .ammount.currency= entry.ammount
+      .ammount.currency= entry.ammount_cents / 100
     - entry.account_entries do |entry|
       = div_for entry, :class => :row do
         .notes= entry.notes
-        .ammount.currency= entry.ammount
+        .ammount.currency= entry.ammount_cents / 100
         .account= entry.account_name

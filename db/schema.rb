@@ -14,12 +14,12 @@
 ActiveRecord::Schema.define(:version => 20120516133803) do
 
   create_table "account_entries", :force => true do |t|
-    t.integer  "account_id",                                  :null => false
-    t.integer  "bank_entry_id",                               :null => false
-    t.decimal  "ammount",       :precision => 9, :scale => 2, :null => false
+    t.integer  "account_id",    :null => false
+    t.integer  "bank_entry_id", :null => false
+    t.integer  "ammount_cents", :null => false
     t.text     "notes"
-    t.datetime "created_at",                                  :null => false
-    t.datetime "updated_at",                                  :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "accounts", :force => true do |t|
@@ -31,13 +31,13 @@ ActiveRecord::Schema.define(:version => 20120516133803) do
   add_index "accounts", ["name"], :name => "index_accounts_on_name", :unique => true
 
   create_table "bank_entries", :force => true do |t|
-    t.date     "date",                                      :null => false
-    t.decimal  "ammount",     :precision => 9, :scale => 2, :null => false
+    t.date     "date",          :null => false
+    t.integer  "ammount_cents", :null => false
     t.text     "notes"
-    t.string   "description",                               :null => false
+    t.string   "description",   :null => false
     t.string   "external_id"
-    t.datetime "created_at",                                :null => false
-    t.datetime "updated_at",                                :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   add_index "bank_entries", ["external_id"], :name => "index_bank_entries_on_external_id", :unique => true
