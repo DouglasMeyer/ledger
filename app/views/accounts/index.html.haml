@@ -1,8 +1,10 @@
 %h1 Accounts
 
+= link_to "New Account", new_account_path
+
 %ul
   - @accounts.each do |account|
     %li
       = account.name
       -
-      = account.balance
+      = number_to_currency account.balance_cents / 100

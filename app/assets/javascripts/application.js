@@ -40,6 +40,11 @@ window.AccountEntry = Backbone.Model.extend({
   defaults: {
     account_name: '',
     notes: ''
+  },
+  sync: function(method, model, options){
+    options.contentType = 'application/json';
+    options.data = JSON.stringify({ account_entry: model.toJSON() });
+    return Backbone.sync.apply(this, arguments);
   }
 });
 

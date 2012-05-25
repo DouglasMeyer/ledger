@@ -6,12 +6,14 @@
     .description <%= description %>
     .notes <%= notes %>
     .ammount.currency <%= ammount %>
+    .right-control(rel="save-bank-entry") s
 
 = content_tag :script, :type => 'test/x-template', :id => 'account-entry-template' do
   .row
     .notes <%= notes %>
     %input.ammount.currency
     %input.account
+    .right-control(rel="remove-account-entry") -
 
 #bank-entries
   .row

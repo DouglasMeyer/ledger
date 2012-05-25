@@ -1,11 +1,11 @@
 class Account < ActiveRecord::Base
   attr_accessible :name
 
-  has_many :entries, :class_name => 'AccountEntries'
+  has_many :entries, :class_name => 'AccountEntry'
 
-  validates_uniqueness_of :name
+  validates :name, :presence => true, :uniqueness => true
 
-  def balance
-    entries.pluck(:ammount).sum
+  def balance_cents
+    entries.pluck(:ammount_cents).sum
   end
 end
