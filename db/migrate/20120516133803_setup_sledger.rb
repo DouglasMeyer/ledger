@@ -15,6 +15,7 @@ class SetupSledger < ActiveRecord::Migration
 
     create_table :accounts do |t|
       t.string :name, :null => false
+      t.boolean :asset, :null => false, :default => true
 
       t.timestamps
     end

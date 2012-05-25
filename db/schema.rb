@@ -23,9 +23,10 @@ ActiveRecord::Schema.define(:version => 20120516133803) do
   end
 
   create_table "accounts", :force => true do |t|
-    t.string   "name",       :null => false
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "name",                         :null => false
+    t.boolean  "asset",      :default => true, :null => false
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
   end
 
   add_index "accounts", ["name"], :name => "index_accounts_on_name", :unique => true

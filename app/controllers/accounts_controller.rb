@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
   def index
-    @accounts = Account.all
+    @accounts = Account.scoped
     respond_to do |format|
       format.html
       format.json { render :json => @accounts }

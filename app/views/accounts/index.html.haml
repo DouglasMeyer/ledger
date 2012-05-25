@@ -2,9 +2,17 @@
 
 = link_to "New Account", new_account_path
 
-%ul
-  - @accounts.each do |account|
-    %li
-      = account.name
-      -
-      = number_to_currency account.balance_cents / 100
+.accounts
+  %table.assets
+    %caption Assets
+    - @accounts.assets.each do |account|
+      %tr
+        %td= account.name
+        %td.currency= number_to_currency account.balance_cents / 100
+
+  %table.liabilities
+    %caption Liabilities
+    - @accounts.liabilities.each do |account|
+      %tr
+        %td= account.name
+        %td.currency= number_to_currency account.balance_cents / 100
