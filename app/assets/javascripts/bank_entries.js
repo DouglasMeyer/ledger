@@ -18,6 +18,7 @@ jQuery(function($){
   var AccountEntryView = Backbone.View.extend({
     template: _.template($('#account-entry-template').html()),
     events: {
+      'focus input': 'focusInput',
       'blur input.ammount': 'updateAmmount',
       'blur input.account': 'updateAccount',
       'click [rel="remove-account-entry"]': 'removeAccountEntry'
@@ -29,7 +30,8 @@ jQuery(function($){
     render: function(){
       this.$el.html(this.template(this.model.toJSON()));
       this.$('input.account').autocomplete({
-        source: Accounts.pluck('name')
+        source: Accounts.pluck('name'),
+        autoFocus: true
       });
       this.update();
       return this;
@@ -38,11 +40,27 @@ jQuery(function($){
       this.$('input.ammount').val(centsToCurrency(this.model.get('ammount_cents')));
       this.$('input.account').val(this.model.get('account_name'));
     },
+    focusInput: function(event){
+      setTimeout(function(){ event.target.select(); });
+    },
     updateAmmount: function(){
       this.model.set('ammount_cents', currencyToCents(this.$('input.ammount').val()));
+      this.isFilledOut() && this.saveAccountEntry();
+      this.isBlank() && this.removeAccountEntry();
     },
     updateAccount: function(){
       this.model.set('account_name', this.$('input.account').val());
+      this.isFilledOut() && this.saveAccountEntry();
+      this.isBlank() && this.removeAccountEntry();
+    },
+    isBlank: function(){
+      return !this.model.get('ammount_cents') && !this.model.get('account_name');
+    },
+    isFilledOut: function(){
+      return this.model.get('ammount_cents') && this.model.get('account_name');
+    },
+    saveAccountEntry: function(){
+      this.model.save();
     },
     removeAccountEntry: function(){
       this.model.destroy();
@@ -55,17 +73,14 @@ jQuery(function($){
       this.model.bind('change', this.render, this);
       this.model.bind('destroy', this.remove, this);
       this.model.accountEntries.bind('all', this.updateAmmountRemaining, this);
-      this.model.accountEntries.bind('all', this.updateSave, this);
     },
     events: {
-      'click [rel="add-account-entry"]': 'addAccountEntry',
-      'click [rel="save-bank-entry"]': 'saveBankEntry'
+      'focus .ammount-remaining input': 'addAccountEntry'
     },
     render: function(){
       var json = this.model.toJSON();
       json.ammount = centsToCurrency(json.ammount_cents);
       this.$el.append(this.template(json));
-      this.updateSave();
 
       this.model.accountEntries.fetch();
       this.accountEntriesView = new AccountEntriesView({
@@ -73,7 +88,7 @@ jQuery(function($){
       });
       this.$el.append(this.accountEntriesView.render().el);
 
-      this.$el.append('<div class="row ammount-remaining"><div class="ammount currency"></div><div class="right-control" rel="add-account-entry">+</div></div>');
+      this.$el.append('<div class="row ammount-remaining"><input class="ammount currency" /></div>');
       this.updateAmmountRemaining();
 
       return this;
@@ -84,21 +99,12 @@ jQuery(function($){
         bank_entry_id: this.model.get('id'),
         ammount_cents: difference
       });
-      this.$('input.ammount:last').focus();
+      this.$('.row.account-entry input.ammount:last').focus();
     },
     updateAmmountRemaining: function(){
       var difference = this.model.accountEntryAmmountCentsDifference();
-      this.$('.row.ammount-remaining .ammount').html(centsToCurrency(difference));
+      this.$('.row.ammount-remaining .ammount').val(centsToCurrency(difference));
       this.$('.row.ammount-remaining')[difference === 0 ? 'hide' : 'show']();
-    },
-    updateSave: function(){
-      var changed = this.model.accountEntries.any(function(entry){
-        return entry.isNew() || entry.hasChanged();
-      });
-      this.$('*[rel="save-bank-entry"]')[changed ? 'show' : 'hide']();
-    },
-    saveBankEntry: function(){
-      this.model.accountEntries.invoke('save');
     }
   });
   window.BankEntries = new BankEntriesCollection();

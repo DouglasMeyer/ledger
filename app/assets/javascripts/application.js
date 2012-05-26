@@ -41,9 +41,17 @@ window.AccountEntry = Backbone.Model.extend({
     account_name: '',
     notes: ''
   },
+  urlRoot: '/account_entries',
   sync: function(method, model, options){
-    options.contentType = 'application/json';
-    options.data = JSON.stringify({ account_entry: model.toJSON() });
+    options = _.extend({}, {
+      contentType: 'application/json',
+      data: JSON.stringify({ account_entry: {
+        bank_entry_id: model.get('bank_entry_id'),
+                notes: model.get('notes'),
+        ammount_cents: model.get('ammount_cents'),
+         account_name: model.get('account_name')
+      } })
+    }, options);
     return Backbone.sync.apply(this, arguments);
   }
 });
