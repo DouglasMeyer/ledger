@@ -148,6 +148,6 @@ jQuery(function($){
     }
   });
 
-  table.find('.row.bank_entry').remove();
+  table.find('.bank-entry-view').remove();
   window.bankEntries = new BankEntriesView({ el: table });
 });

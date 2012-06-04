@@ -23,13 +23,14 @@
     .account Account
 
   - @bank_entries.each do |entry|
-    = div_for entry, :class => :row do
-      .date= entry.date
-      .description= entry.description
-      .notes= entry.notes
-      .ammount.currency= entry.ammount_cents / 100
-    - entry.account_entries do |entry|
-      = div_for entry, :class => :row do
+    .bank-entry-view
+      = div_for entry, :class => 'row' do
+        .date= entry.date
+        .description= entry.description
         .notes= entry.notes
         .ammount.currency= entry.ammount_cents / 100
-        .account= entry.account_name
+      - entry.account_entries.each do |ae|
+        = div_for ae, :class => 'row' do
+          .notes= ae.notes
+          .ammount.currency= ae.ammount_cents / 100
+          .account= ae.account_name
