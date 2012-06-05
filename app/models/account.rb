@@ -11,4 +11,9 @@ class Account < ActiveRecord::Base
   def balance_cents
     entries.pluck(:ammount_cents).sum
   end
+
+  def as_json(options)
+    (options[:methods] ||= []).push(:balance_cents)
+    super(options)
+  end
 end

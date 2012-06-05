@@ -18,6 +18,19 @@
 //= require_self
 //= require_tree .
 
+window.centsToCurrency = function(cents){
+  var string = (cents + '').split(''),
+      cents = [],
+      negative = string[0] === '-';
+  if (negative) { string.shift(); }
+  cents.unshift(string.pop() || '0');
+  cents.unshift(string.pop() || '0');
+  return (negative ? '-' : '') + (string.join('') || '0') + '.' + cents.join('');
+};
+window.currencyToCents = function(currency){
+  return currency ? Math.round(parseFloat(currency) * 100) : 0;
+};
+
 window.BankEntry = Backbone.Model.extend({
   initialize: function(){
     this.accountEntries = new AccountEntriesCollection();
@@ -62,7 +75,10 @@ window.BankEntriesCollection = Backbone.Collection.extend({
 });
 window.AccountsCollection = Backbone.Collection.extend({
   model: Account,
-  url: '/accounts'
+  url: '/accounts',
+
+  assets:      function(){ return this.filter(function(a){ return  a.get('asset'); }); },
+  liabilities: function(){ return this.filter(function(a){ return !a.get('asset'); }); }
 });
 window.AccountEntriesCollection = Backbone.Collection.extend({
   model: AccountEntry,

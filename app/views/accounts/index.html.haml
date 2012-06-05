@@ -5,14 +5,8 @@
 .accounts
   %table.assets
     %caption Assets
-    - @accounts.assets.each do |account|
-      %tr
-        %td= account.name
-        %td.currency= number_to_currency account.balance_cents / 100
+    = render @accounts.assets
 
   %table.liabilities
     %caption Liabilities
-    - @accounts.liabilities.each do |account|
-      %tr
-        %td= account.name
-        %td.currency= number_to_currency account.balance_cents / 100
+    = render @accounts.liabilities
