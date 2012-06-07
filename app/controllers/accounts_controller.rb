@@ -21,4 +21,13 @@ class AccountsController < ApplicationController
   rescue ActiveRecord::RecordInvalid
     render :new
   end
+
+  def show
+    @account = Account.find params[:id]
+  end
+
+  def distribute
+    @account = Account.find params[:id]
+    @accounts = Account.scoped
+  end
 end
