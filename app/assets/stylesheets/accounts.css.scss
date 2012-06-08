@@ -1,3 +1,7 @@
+.accounts {
+  @include clearfix;
+}
+
 table.assets, table.liabilities {
   width: 50%;
   float: left;

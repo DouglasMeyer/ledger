@@ -1,4 +1,9 @@
-%h1= "Distributing balance from #{@account.name} - #{number_to_currency @account.balance_cents/100.0}"
+%h1
+  Distributing balance from
+  = @account.name
+  -
+  .distribute-ammount
+    = number_to_currency @account.balance_cents/100.0
 
 :javascript
   window.accountId = #{@account.id};
@@ -6,14 +11,17 @@
 = content_tag :script, :type => 'text/x-template', :id => 'account-template' do
   %td <%= name %>
   %td.currency
-    %input.ammount
-  %td.currency <%= balance %>
+    %input.ammount.currency
+  %td.balance.currency <%= balance %>
 
-.accounts.distribute
-  %table.assets
-    %caption Assets
-    = render @accounts.assets
+= form_for [:distribute, @account] do |f|
+  .accounts.distribute
+    %table.assets
+      %caption Assets
+      = render @accounts.assets
 
-  %table.liabilities
-    %caption Liabilities
-    = render @accounts.liabilities
+    %table.liabilities
+      %caption Liabilities
+      = render @accounts.liabilities
+
+  = f.submit 'Distribute'

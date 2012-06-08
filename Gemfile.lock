@@ -1,3 +1,10 @@
+GIT
+  remote: git://github.com/coryschires/bourbon.git
+  revision: f75e682ab380598b143854e4385f417f808661fc
+  specs:
+    bourbon (2.0.0.rc1)
+      sass (>= 3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -124,6 +131,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bourbon!
   coffee-rails (~> 3.2.1)
   haml
   jquery-rails

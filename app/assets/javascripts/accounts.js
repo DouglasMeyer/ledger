@@ -3,13 +3,23 @@ jQuery(function($){
   if (!el.length) return;
 
   window.Accounts = new AccountsCollection();
+  window.AccountEntries = new AccountEntriesCollection();
 
   var AccountView = Backbone.View.extend({
     tagName: 'tr',
     template: _.template($('#account-template').html()),
+    events: {
+      'blur input.ammount': 'updateAmmount'
+    },
     initialize: function(){
       this.model.bind('change', this.update, this);
       this.model.bind('destroy', this.remove, this);
+      this.accountEntry = new AccountEntry({
+        account_name: this.model.get('name'),
+        ammount_cents: 0
+      });
+      AccountEntries.add(this.accountEntry);
+      this.accountEntry.bind('change', this.update, this);
     },
     render: function(){
       var json = this.model.toJSON();
@@ -19,7 +29,14 @@ jQuery(function($){
       return this;
     },
     update: function(){
-      this.$('input.account').val(centsToCurrency(0));
+      this.$('input.ammount').val(centsToCurrency(this.accountEntry.get('ammount_cents')));
+      this.$('td.balance').html(centsToCurrency(
+        this.model.get('balance_cents') +
+        this.accountEntry.get('ammount_cents')
+      ));
+    },
+    updateAmmount: function(){
+      this.accountEntry.set('ammount_cents', currencyToCents(this.$('input.ammount').val()));
     }
   });
   var AccountsView = Backbone.View.extend({
@@ -45,6 +62,9 @@ jQuery(function($){
   var LiabilitiesView = AccountsView.extend({ title: 'Liabilities', className: 'liabilities'              });
   var DistributeAccountView = Backbone.View.extend({
     initialize: function(){
+      AccountEntries.bind('add', this.updateDistributeAmmount, this);
+      AccountEntries.bind('reset', this.updateDistributeAmmount, this);
+      AccountEntries.bind('all', this.updateDistributeAmmount, this);
       this.render();
       Accounts.fetch();
     },
@@ -54,6 +74,13 @@ jQuery(function($){
       this.$el.append(assets.render().el);
       this.$el.append(liabilities.render().el);
       return this;
+    },
+    updateDistributeAmmount: function(){
+      var ammountCents = Accounts.get(window.accountId).get('balance_cents');
+      AccountEntries.each(function(ae){
+        ammountCents -= ae.get('ammount_cents');
+      });
+      $('.distribute-ammount').html(centsToCurrency(ammountCents));
     }
   });
 
