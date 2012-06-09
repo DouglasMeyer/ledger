@@ -12,7 +12,12 @@
     $notes_width: 400px;
     $ammount_width: 100px;
     $account_width: 100px;
-    & > * { position: absolute; padding: 2px 0 0 2px; }
+    & > * {
+      position: absolute;
+      padding: 2px 0 0 2px;
+      overflow: hidden;
+      height: 1.2em;
+    }
     .date {        width: $date_width;        left: 0px; }
     .description { width: $description_width; left: $date_width; }
     .notes {       left: $date_width + $description_width; right: $ammount_width + $account_width; }

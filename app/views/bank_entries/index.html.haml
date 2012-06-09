@@ -30,7 +30,7 @@
         .notes= entry.notes
         .ammount.currency= entry.ammount_cents / 100
       - entry.account_entries.each do |ae|
-        = div_for ae, :class => 'row' do
+        = div_for ae, :class => 'row account-entry' do
           .notes= ae.notes
           .ammount.currency= ae.ammount_cents / 100
           .account= ae.account_name
