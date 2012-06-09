@@ -29,6 +29,9 @@
   .bank-entry-view:nth-child(even) {
     background-color: #E8E8E8;
   }
+  .bank-entry-view.hasAmmountRemaining {
+    border: 1px solid red;
+  }
 
   *[rel="remove-account-entry"] {
     cursor: pointer;
