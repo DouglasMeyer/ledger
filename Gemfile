@@ -6,6 +6,7 @@ gem 'pg'
 gem 'haml'
 gem 'simple_form'
 gem 'bourbon', github: "coryschires/bourbon" # TODO: Remove fork once merged (2 Apr 2012)
+gem 'capybara'
 
 
 # Gems used only for assets and not required
@@ -28,3 +29,5 @@ gem 'jquery-rails'
 
 # To use debugger
 gem 'ruby-debug19', :require => 'ruby-debug', :group => [ :test, :development ]
+
+gem 'net-netrc', group: [ :development ]
