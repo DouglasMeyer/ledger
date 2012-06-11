@@ -1,0 +1,5 @@
+.row
+  .date= "<%= date %>"
+  .description= "<%= description %>"
+  .notes= "<%= notes %>"
+  .ammount.currency= "<%= ammount %>"

@@ -11,13 +11,3 @@ var centsToCurrency = function(cents){
 var currencyToCents = function(currency){
   return currency ? Math.round(parseFloat(currency) * 100) : 0;
 };
-
-var template = function(selector){
-  var template = undefined;
-  return function(){
-    if (template === undefined){
-      template = _.template(jQuery(selector).html());
-    }
-    return template.apply(this, arguments);
-  };
-};

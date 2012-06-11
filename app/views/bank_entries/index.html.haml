@@ -1,19 +1,5 @@
 %h1 Bank Entries
 
-= content_tag :script, :type => 'text/x-template', :id => 'bank-entry-template' do
-  .row
-    .date <%= date %>
-    .description <%= description %>
-    .notes <%= notes %>
-    .ammount.currency <%= ammount %>
-
-= content_tag :script, :type => 'text/x-template', :id => 'account-entry-template' do
-  .row.account-entry
-    .notes <%= notes %>
-    %input.ammount.currency
-    %input.account
-    .right-control(rel="remove-account-entry") -
-
 #bank-entries
   .row
     .date Date

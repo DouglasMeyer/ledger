@@ -1,5 +1,5 @@
 var AccountEntryView = Backbone.View.extend({
-  template: template('#account-entry-template'),
+  template: _.template(JST['templates/account_entry']),
   events: {
     'focus input': 'focusInput',
     'blur input.ammount': 'updateAmmount',

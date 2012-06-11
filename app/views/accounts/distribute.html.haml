@@ -8,12 +8,6 @@
 :javascript
   window.accountId = #{@account.id};
 
-= content_tag :script, :type => 'text/x-template', :id => 'account-template' do
-  %td <%= name %>
-  %td.currency
-    %input.ammount.currency
-  %td.balance.currency <%= balance %>
-
 = form_for [:distribute, @account] do |f|
   .accounts.distribute
     %table.assets

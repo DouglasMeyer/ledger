@@ -1,6 +1,6 @@
 var BankEntryView = Backbone.View.extend({
   className: 'bank-entry-view',
-  template: template('#bank-entry-template'),
+  template: _.template(JST['templates/bank_entry']),
   initialize: function(){
     this.model.bind('change', this.render, this);
     this.model.bind('destroy', this.remove, this);

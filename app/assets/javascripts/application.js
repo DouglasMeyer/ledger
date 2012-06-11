@@ -1,6 +1,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery-ui
+//= require haml
 //= require underscore-1.3.3-min
 //= require backbone-0.9.2-min
 //= require_self
