@@ -1,0 +1,2 @@
+%td= "<%= name %>"
+%td.currency= "<%= balance %>"

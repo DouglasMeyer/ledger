@@ -8,5 +8,5 @@ Sledger::Application.routes.draw do
   end
   resources :account_entries, :only => [ :index, :create, :update, :destroy ]
 
-  root :to => 'accounts#index'
+  root :to => 'static#home'
 end

@@ -7,9 +7,9 @@
     = csrf_meta_tags
 
   %body
-    %ul
+    %ul.navigation
       %li
-        = link_to 'Accounts', accounts_path
+        = link_to 'Accounts', '#', :class => :accounts
       %li
-        = link_to 'Bank Entries', bank_entries_path
+        = link_to 'Bank Entries', '#', :class => :bank_entries
     = yield

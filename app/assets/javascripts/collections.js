@@ -16,6 +16,3 @@ var AccountEntriesCollection = Backbone.Collection.extend({
   url: '/account_entries'
 });
 
-var Accounts = new AccountsCollection();
-var AccountEntries = new AccountEntriesCollection();
-var BankEntries = new BankEntriesCollection();
