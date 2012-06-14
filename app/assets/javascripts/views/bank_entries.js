@@ -1,17 +1,19 @@
 var BankEntriesView = Backbone.View.extend({
+  className: 'bank-entries',
   initialize: function(){
-    BankEntries.bind('add', this.addOne, this);
-    BankEntries.bind('reset', this.addAll, this);
-    BankEntries.bind('all', this.render, this);
-    Accounts.fetch();
-    BankEntries.fetch();
+    app.BankEntries.bind('add', this.addOne, this);
+    app.BankEntries.bind('reset', this.addAll, this);
+    app.BankEntries.bind('all', this.render, this);
   },
-  render: function(){},
+  render: function(){
+    this.addAll();
+    return this;
+  },
   addOne: function(bankEntry){
     var view = new BankEntryView({ model: bankEntry });
     this.$el.append(view.render().el);
   },
   addAll: function(){
-    BankEntries.each(this.addOne, this);
+    app.BankEntries.each(this.addOne, this);
   }
 });

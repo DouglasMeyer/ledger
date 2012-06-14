@@ -25,24 +25,42 @@ var AppRouter = Backbone.Router.extend({
     this.navigate('accounts');
   },
   accounts: function(){
-    this._loadAccounts(function(){
-      this.accountsView = new AccountsView();
-      $app.html(this.accountsView.render().el);
+    this._loadCollections('Accounts', function(){
+      if (!this.accountsView){
+        this.accountsView = new AccountsView();
+        this.accountsView.render();
+      }
+      $app.html(this.accountsView.el);
+    });
+  },
+  bank_entries: function(){
+    this._loadCollections('BankEntries', 'Accounts', function(){
+      if (!this.bankEntriesView){
+        this.bankEntriesView = new BankEntriesView();
+        this.bankEntriesView.render();
+      }
+      $app.html(this.bankEntriesView.el);
     });
   },
 
-  _loadAccounts: function(callback){
-    if (this.Accounts){
-      callback.apply(this);
+  _loadCollections: function(callback){
+    if (arguments.length === 1){
+      loading.hide();
+      callback.apply(app);
     } else {
-      loading.show();
-      this.Accounts = new AccountsCollection();
-      this.Accounts.fetch({
-        success: function(){
-          loading.hide();
-          callback.apply(this);
-        }
-      });
+      var args = _.toArray(arguments),
+          collection = args.shift();
+      if (app[collection]){
+        app._loadCollections.apply(app, args);
+      } else {
+        loading.show();
+        app[collection] = new window[collection+'Collection']();
+        app[collection].fetch({
+          success: function(){
+            app._loadCollections.apply(app, args);
+          }
+        });
+      }
     }
   }
 });
@@ -55,6 +73,10 @@ jQuery(function($){
 
   $('.navigation .accounts').click(function(e){
     e.preventDefault();
-    app.navigate('accounts');
+    app.navigate('accounts', { trigger: true });
+  });
+  $('.navigation .bank_entries').click(function(e){
+    e.preventDefault();
+    app.navigate('bank_entries', { trigger: true });
   });
 });

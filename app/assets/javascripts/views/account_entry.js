@@ -13,7 +13,7 @@ var AccountEntryView = Backbone.View.extend({
   render: function(){
     this.$el.html(this.template(this.model.toJSON()));
     this.$('input.account').autocomplete({
-      source: Accounts.pluck('name'),
+      source: app.Accounts.pluck('name'),
       autoFocus: true
     });
     this.update();
