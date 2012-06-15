@@ -85,7 +85,7 @@ module ImportStatement
     pp transactions
 
     transactions.each do |t|
-      ::BankEntry.create! do |e|
+      ::BankEntry.find_or_create_by_external_id!(t.id.to_s) do |e|
         e.date          = t.date
         e.ammount_cents = t.ammount_cents
         e.notes         = "#{t.type}: #{t.memo}"
@@ -94,12 +94,12 @@ module ImportStatement
       end
     end
 
-    missing = transactions.last.balance - ::BankEntry.pluck(:ammount_cents).sum
+    missing = BigDecimal.new(transactions.last.balance.to_s)*100 - ::BankEntry.pluck(:ammount_cents).sum
     unless missing.zero?
       e = ::BankEntry.create! do |e|
         e.date          = Date.today
-        e.ammount_cents = missing
-        e.description   = "The bank says we have an extra $#{missing}"
+        e.ammount_cents = missing.to_s
+        e.description   = "The bank says we have an extra $#{missing/100}"
       end
       puts e.description
     end

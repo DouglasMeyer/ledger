@@ -1,8 +1,5 @@
 var AccountListView = Backbone.View.extend({
   tagName: 'table',
-  initialize: function(){
-    app.Accounts.bind('reset', this.addAll, this);
-  },
   render: function(){
     this.$el.html('<caption>'+this.title+'</caption>');
     this.addAll();

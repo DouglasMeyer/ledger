@@ -4,7 +4,7 @@ namespace :statement do
   task :fetch => :environment do
     require Rails.root.join('lib/fetch_statement')
     FetchStatement.run
-    Rake.task['import'].invoke
+    #Rake::Task['statement:import'].invoke
   end
 
   desc 'Import statements from tmp/downloads directory'

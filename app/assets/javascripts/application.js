@@ -17,15 +17,20 @@ var AppRouter = Backbone.Router.extend({
     'accounts':     'accounts',
     'accounts/new': 'new_account',
     'accounts/:id': 'account',
-    'bank_entries':                'bank_entries',
-    'bank_entries/:id/distribute': 'distribute_bank_entry'
+    'bank_entries':     'bank_entries',
+    'bank_entries/:id': 'bank_entry'
+  },
+
+  initialize: function(){
+    this.Accounts = new AccountsCollection();
+    this.BankEntries = new BankEntriesCollection();
   },
 
   home: function(){
     this.navigate('accounts');
   },
   accounts: function(){
-    this._loadCollections('Accounts', function(){
+    this.load(this.Accounts, function(){
       if (!this.accountsView){
         this.accountsView = new AccountsView();
         this.accountsView.render();
@@ -34,7 +39,7 @@ var AppRouter = Backbone.Router.extend({
     });
   },
   bank_entries: function(){
-    this._loadCollections('BankEntries', 'Accounts', function(){
+    this.load(this.Accounts, this.BankEntries, function(){
       if (!this.bankEntriesView){
         this.bankEntriesView = new BankEntriesView();
         this.bankEntriesView.render();
@@ -42,22 +47,31 @@ var AppRouter = Backbone.Router.extend({
       $app.html(this.bankEntriesView.el);
     });
   },
+  bank_entry: function(id){
+    var accounts = new AccountsCollection();
+    var bankEntry = new BankEntry({ id: id });
+    this.load(accounts, bankEntry, bankEntry.accountEntries, function(){
+      var view = new DistributeBankEntryView({ model: bankEntry });
+      view.accounts = accounts;
+      $app.html(view.render().el);
+    });
+  },
 
-  _loadCollections: function(callback){
+  load: function(callback){
     if (arguments.length === 1){
       loading.hide();
-      callback.apply(app);
+      callback.apply(this);
     } else {
       var args = _.toArray(arguments),
-          collection = args.shift();
-      if (app[collection]){
-        app._loadCollections.apply(app, args);
+          fetchable = args.shift();
+      if (fetchable.loaded) {
+        this.load.apply(this, args);
       } else {
         loading.show();
-        app[collection] = new window[collection+'Collection']();
-        app[collection].fetch({
+        fetchable.fetch({
           success: function(){
-            app._loadCollections.apply(app, args);
+            fetchable.loaded = true;
+            app.load.apply(app, args);
           }
         });
       }

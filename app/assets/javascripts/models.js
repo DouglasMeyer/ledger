@@ -8,7 +8,8 @@ var AccountEntry = Backbone.Model.extend({
   },
   defaults: {
     account_name: '',
-    notes: ''
+    notes: '',
+    ammount_cents: 0
   },
   urlRoot: '/account_entries',
   sync: function(method, model, options){
@@ -29,9 +30,11 @@ var BankEntry = Backbone.Model.extend({
   initialize: function(){
     this.accountEntries = new AccountEntriesCollection();
     this.accountEntries.url += '?bank_entry=' + this.get('id');
+    this.accountEntries.bankEntry = this;
 
     this.set('ammount_cents', parseInt(this.get('ammount_cents')));
   },
+  urlRoot: '/bank_entries',
   accountEntryAmmountCentsDifference: function(){
     var sum = this.accountEntries.reduce(function(sum, entry){
       return sum + entry.get('ammount_cents');

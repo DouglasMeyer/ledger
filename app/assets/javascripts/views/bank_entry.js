@@ -12,7 +12,7 @@ var BankEntryView = Backbone.View.extend({
   render: function(){
     var json = this.model.toJSON();
     json.ammount = centsToCurrency(json.ammount_cents);
-    this.$el.append(this.template(json));
+    this.$el.html(this.template(json));
 
     this.model.accountEntries.fetch();
     this.accountEntriesView = new AccountEntriesView({
@@ -20,7 +20,7 @@ var BankEntryView = Backbone.View.extend({
     });
     this.$el.append(this.accountEntriesView.render().el);
 
-    this.$el.append('<div class="row ammount-remaining"><input class="ammount currency" /></div>');
+    this.$el.append('<div class="row ammount-remaining"><a href="#bank_entries/'+this.model.get('id')+'" rel="distribute-to-accounts">Distribute to accounts</a><input class="ammount currency" /></div>');
     this.updateAmmountRemaining();
 
     return this;
@@ -38,19 +38,5 @@ var BankEntryView = Backbone.View.extend({
     this.$('.row.ammount-remaining .ammount').val(centsToCurrency(difference));
     this.$('.row.ammount-remaining')[difference === 0 ? 'hide' : 'show']();
     this.$el[difference === 0 ? 'removeClass' : 'addClass']('hasAmmountRemaining');
-  },
-  distribute: function(){
-    var view = new DistributeBankEntryView();
-    view.render().$el.dialog({
-      modal: true,
-      buttons: {
-        "Divy-up": function(){
-          $(this).dialog('close');
-        },
-        "cancel": function(){
-          $(this).dialog('close');
-        }
-      }
-    });
   }
 });

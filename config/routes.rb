@@ -1,5 +1,5 @@
 Sledger::Application.routes.draw do
-  resources :bank_entries, :only => :index
+  resources :bank_entries, :only => [ :index, :show ]
 
   resources :accounts,  :only => [ :index, :new, :create, :show ] do
     member do

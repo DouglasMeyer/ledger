@@ -6,4 +6,11 @@ class BankEntriesController < ApplicationController
       format.json { render :json => @bank_entries }
     end
   end
+
+  def show
+    @bank_entry = BankEntry.find(params[:id])
+    respond_to do |format|
+      format.json { render :json => @bank_entry }
+    end
+  end
 end
