@@ -3,8 +3,20 @@ var BankEntryView = Backbone.View.extend({
   template: _.template(JST['templates/bank_entry']),
   initialize: function(){
     this.model.bind('change', this.render, this);
-    this.model.bind('destroy', this.remove, this);
-    this.model.accountEntries.bind('all', this.updateAmmountRemaining, this);
+    var accountEntries = this.model.accountEntries;
+    accountEntries.bind('all', this.updateAmmountRemaining, this);
+    accountEntries.loading = true;
+    accountEntries.fetch({
+      success: function(){
+        delete accountEntries.loading;
+        accountEntries.trigger('fetch');
+      }
+    });
+  },
+  remove: function(){
+    this.model.unbind(null, null, this);
+    this.model.accountEntries.unbind(null, null, this);
+    this.constructor.__super__.remove.apply(this, arguments);
   },
   events: {
     'focus .ammount-remaining input': 'addAccountEntry'
@@ -14,7 +26,6 @@ var BankEntryView = Backbone.View.extend({
     json.ammount = centsToCurrency(json.ammount_cents);
     this.$el.html(this.template(json));
 
-    this.model.accountEntries.fetch();
     this.accountEntriesView = new AccountEntriesView({
       collection: this.model.accountEntries
     });
@@ -35,8 +46,9 @@ var BankEntryView = Backbone.View.extend({
   },
   updateAmmountRemaining: function(){
     var difference = this.model.accountEntryAmmountCentsDifference();
+    var loading = this.model.accountEntries.loading;
     this.$('.row.ammount-remaining .ammount').val(centsToCurrency(difference));
-    this.$('.row.ammount-remaining')[difference === 0 ? 'hide' : 'show']();
-    this.$el[difference === 0 ? 'removeClass' : 'addClass']('hasAmmountRemaining');
+    this.$('.row.ammount-remaining')[loading || difference === 0 ? 'hide' : 'show']();
+    this.$el[loading || difference === 0 ? 'removeClass' : 'addClass']('hasAmmountRemaining');
   }
 });

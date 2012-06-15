@@ -10,7 +10,7 @@
 //= require_tree .
 //= require_self
 
-var loading, $app;
+var loading, $app, currentView;
 var AppRouter = Backbone.Router.extend({
   routes: {
     '': 'home',
@@ -30,30 +30,25 @@ var AppRouter = Backbone.Router.extend({
     this.navigate('accounts');
   },
   accounts: function(){
+    this.showView(null);
     this.load(this.Accounts, function(){
-      if (!this.accountsView){
-        this.accountsView = new AccountsView();
-        this.accountsView.render();
-      }
-      $app.html(this.accountsView.el);
+      this.showView(new AccountsView());
     });
   },
   bank_entries: function(){
+    this.showView(null);
     this.load(this.Accounts, this.BankEntries, function(){
-      if (!this.bankEntriesView){
-        this.bankEntriesView = new BankEntriesView();
-        this.bankEntriesView.render();
-      }
-      $app.html(this.bankEntriesView.el);
+      this.showView(new BankEntriesView());
     });
   },
   bank_entry: function(id){
+    this.showView(null);
     var accounts = new AccountsCollection();
     var bankEntry = new BankEntry({ id: id });
     this.load(accounts, bankEntry, bankEntry.accountEntries, function(){
       var view = new DistributeBankEntryView({ model: bankEntry });
       view.accounts = accounts;
-      $app.html(view.render().el);
+      this.showView(view);
     });
   },
 
@@ -75,6 +70,17 @@ var AppRouter = Backbone.Router.extend({
           }
         });
       }
+    }
+  },
+  showView: function(view){
+    if (currentView) {
+      currentView.remove();
+      currentView.unbind();
+      delete currentView;
+    }
+    if (view) {
+      currentView = view;
+      $app.html(view.render().el);
     }
   }
 });

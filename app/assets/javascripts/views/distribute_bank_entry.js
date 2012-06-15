@@ -8,6 +8,10 @@ var DistributeBankEntryView = (function(){
     initialize: function(){
       this.model.accountEntries.bind('change', this.update, this);
     },
+    remove: function(){
+      this.model.accountEntries.unbind(null, null, this);
+      this.constructor.__super__.remove.apply(this, arguments);
+    },
     render: function(){
       var json = this.model.toJSON();
       json.ammount = centsToCurrency(json.ammount_cents);

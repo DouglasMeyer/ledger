@@ -10,6 +10,10 @@ var AccountEntryView = Backbone.View.extend({
     this.model.bind('change', this.update, this);
     this.model.bind('destroy', this.remove, this);
   },
+  remove: function(){
+    this.model.unbind(null, null, this);
+    this.constructor.__super__.remove.apply(this, arguments);
+  },
   render: function(){
     this.$el.html(this.template(this.model.toJSON()));
     this.$('input.account').autocomplete({
