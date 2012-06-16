@@ -3,16 +3,13 @@ var AccountEntriesView = Backbone.View.extend({
     this.total = options.total;
     this.collection.bind('add', this.addOne, this);
     this.collection.bind('reset', this.addAll, this);
-    this.collection.bind('all', this.render, this);
   },
   remove: function(){
     this.collection.unbind(null, null, this);
     this.constructor.__super__.remove.apply(this, arguments);
   },
   render: function(){
-    this.collection.each(function(accountEntry){
-      this.$el.append(new AccountEntryView({ model: accountEntry }));
-    }, this);
+    this.addAll();
     return this;
   },
   addOne: function(accountEntry){

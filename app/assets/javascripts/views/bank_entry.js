@@ -5,13 +5,6 @@ var BankEntryView = Backbone.View.extend({
     this.model.bind('change', this.render, this);
     var accountEntries = this.model.accountEntries;
     accountEntries.bind('all', this.updateAmmountRemaining, this);
-    accountEntries.loading = true;
-    accountEntries.fetch({
-      success: function(){
-        delete accountEntries.loading;
-        accountEntries.trigger('fetch');
-      }
-    });
   },
   remove: function(){
     this.model.unbind(null, null, this);
@@ -46,9 +39,8 @@ var BankEntryView = Backbone.View.extend({
   },
   updateAmmountRemaining: function(){
     var difference = this.model.accountEntryAmmountCentsDifference();
-    var loading = this.model.accountEntries.loading;
     this.$('.row.ammount-remaining .ammount').val(centsToCurrency(difference));
-    this.$('.row.ammount-remaining')[loading || difference === 0 ? 'hide' : 'show']();
-    this.$el[loading || difference === 0 ? 'removeClass' : 'addClass']('hasAmmountRemaining');
+    this.$('.row.ammount-remaining')[difference === 0 ? 'hide' : 'show']();
+    this.$el[difference === 0 ? 'removeClass' : 'addClass']('hasAmmountRemaining');
   }
 });
