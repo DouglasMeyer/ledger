@@ -3,8 +3,7 @@ var BankEntryView = Backbone.View.extend({
   template: _.template(JST['templates/bank_entry']),
   initialize: function(){
     this.model.bind('change', this.render, this);
-    var accountEntries = this.model.accountEntries;
-    accountEntries.bind('all', this.updateAmmountRemaining, this);
+    this.model.accountEntries.bind('all', this.updateAmmountRemaining, this);
   },
   remove: function(){
     this.model.unbind(null, null, this);

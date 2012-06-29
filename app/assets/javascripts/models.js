@@ -30,10 +30,14 @@ var BankEntry = Backbone.Model.extend({
   initialize: function(){
     this.accountEntries = new AccountEntriesCollection(this.get('account_entries'));
     this.accountEntries.bankEntry = this;
+    this.bind('change:account_entries', this.updateAccountEntries, this);
 
     this.set('ammount_cents', parseInt(this.get('ammount_cents')));
   },
   urlRoot: '/bank_entries',
+  updateAccountEntries: function(){
+    this.accountEntries.reset(this.get('account_entries'));
+  },
   accountEntryAmmountCentsDifference: function(){
     var sum = this.accountEntries.reduce(function(sum, entry){
       return sum + entry.get('ammount_cents');

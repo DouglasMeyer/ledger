@@ -43,11 +43,13 @@ var AppRouter = Backbone.Router.extend({
   },
   bank_entry: function(id){
     this.showView(null);
-    var accounts = new AccountsCollection();
-    var bankEntry = new BankEntry({ id: id });
+    var accounts = new AccountsCollection(),
+        bankEntry = new BankEntry({ id: id });
+    if (app.BankEntries.loaded) {
+      bankEntry = app.BankEntries.get(id);
+    }
     this.load(accounts, bankEntry, function(){
-      var view = new DistributeBankEntryView({ model: bankEntry });
-      view.accounts = accounts;
+      var view = new DistributeBankEntryView({ model: bankEntry, accounts: accounts });
       this.showView(view);
     });
   },

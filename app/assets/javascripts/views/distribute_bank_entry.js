@@ -5,7 +5,14 @@ var DistributeBankEntryView = (function(){
     events: {
       'click input[name="distribute"]': 'distribute'
     },
-    initialize: function(){
+    initialize: function(options){
+      this.accounts = options.accounts;
+      this.model.accountEntries.each(function(ae){
+        var account = this.accounts.detect(function(a){
+          return a.get('name') === ae.get('account_name');
+        }, this);
+        account.set('balance_cents', account.get('balance_cents') - ae.get('ammount_cents'));
+      }, this);
       this.model.accountEntries.bind('change', this.update, this);
     },
     remove: function(){
@@ -16,12 +23,6 @@ var DistributeBankEntryView = (function(){
       var json = this.model.toJSON();
       json.ammount = centsToCurrency(json.ammount_cents);
       this.$el.html(this.template(json));
-      this.model.accountEntries.each(function(ae){
-        var account = this.accounts.detect(function(a){
-          return a.get('name') === ae.get('account_name');
-        });
-        if (account) account.set('balance_cents', account.get('balance_cents') - ae.get('ammount_cents'));
-      }, this);
       var assetListView = new DistributeAssetListView({
         collection: this.model.accountEntries
       });
@@ -42,11 +43,26 @@ var DistributeBankEntryView = (function(){
       this.$('.ammount-to-distribute').html(centsToCurrency(this.model.get('ammount_cents') - distributedAmmount));
     },
     distribute: function(){
+      var model = this.model,
+          saving = 0,
+          onSuccess = function(ae){
+            saving -= 1;
+            if (saving === 0){
+              delete model.loaded;
+              app.load(model, function(){
+                app.navigate('bank_entries', { trigger: true });
+              });
+            }
+          };
       this.model.accountEntries.each(function(ae){
-        if (ae.get('ammount_cents') !== 0) ae.save();
-      })
-      app.load(this.model, this.model.accountEntries, function(){
-        app.navigate('bank_entries', { trigger: true });
+        if (!(ae.get('ammount_cents') === 0 && ae.isNew())){
+          saving += 1;
+          if (ae.get('ammount_cents') === 0) {
+            ae.destroy({ wait: true, success: onSuccess });
+          } else {
+            ae.save(null, { success: onSuccess });
+          }
+        }
       });
     }
   });
@@ -71,12 +87,18 @@ var DistributeBankEntryView = (function(){
       this.accountEntry = this.collection.detect(function(ae){
         return ae.get('account_name') === this.model.get('name');
       }, this);
-      if (!this.accountEntry) {
+      if (!this.accountEntry){
         this.accountEntry = this.collection.add({
           account_name: this.model.get('name'),
           bank_entry_id: this.collection.bankEntry.get('id')
         }).last();
       }
+      this.collection.each(function(ae){
+        if (ae !== this.accountEntry && ae.get('account_name') === this.model.get('name')){
+          this.accountEntry.set('ammount_cents', this.accountEntry.get('ammount_cents') + ae.get('ammount_cents'));
+          ae.set('ammount_cents', 0);
+        }
+      }, this);
     },
     render: function(){
       AccountView.prototype.render.apply(this, arguments);

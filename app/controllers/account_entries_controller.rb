@@ -26,7 +26,7 @@ class AccountEntriesController < ApplicationController
     account_entry = AccountEntry.find params[:id]
     account_entry.destroy
     respond_to do |format|
-      format.json { render :nothing => true }
+      format.json { render :text => '' }
     end
   end
 end
