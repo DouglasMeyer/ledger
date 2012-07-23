@@ -27,7 +27,7 @@ var AppRouter = Backbone.Router.extend({
   },
 
   home: function(){
-    this.navigate('accounts');
+    this.navigate('accounts', { trigger: true });
   },
   accounts: function(){
     this.showView(null);
