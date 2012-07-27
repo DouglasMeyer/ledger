@@ -93,11 +93,11 @@ jQuery(function($){
   window.app = new AppRouter();
   Backbone.history.start();
 
-  $('.navigation .accounts').click(function(e){
+  $('.navigation [rel="accounts"]').click(function(e){
     e.preventDefault();
     app.navigate('accounts', { trigger: true });
   });
-  $('.navigation .bank_entries').click(function(e){
+  $('.navigation [rel="bank_entries"]').click(function(e){
     e.preventDefault();
     app.navigate('bank_entries', { trigger: true });
   });

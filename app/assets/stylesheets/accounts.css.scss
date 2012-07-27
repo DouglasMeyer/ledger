@@ -1,13 +1,17 @@
 .accounts {
-  @include clearfix;
+  position: relative;
 }
 
 table.assets, table.liabilities {
+  position: absolute;
   width: 50%;
-  float: left;
   padding: 10px 10%;
 
   td {
     border-bottom: 1px solid #CCC;
   }
+}
+
+table.liabilities {
+  left: 50%;
 }
