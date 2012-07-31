@@ -1,15 +1,37 @@
 @import "bourbon";
 @import "jquery.ui.autocomplete";
 
+// Reset
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; width: 100%; }
 body { position: relative; }
 
+// Modules
 .currency {
   text-align: right;
 }
 
-.loading { text-align: center; }
+// Layout
+.navigation {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 20px;
+  font-size: 120%;
+
+  li {
+    display: inline-block;
+    margin: 2px 2em;
+  }
+}
+.app, .loading {
+  position: absolute;
+  top: 25px; left: 0; right: 0; bottom: 0;
+}
+.loading {
+  text-align: center;
+  background-color: rgba(128,128,128, 0.4);
+  padding-top: 20%;
+}
 
 @import "accounts";
 @import "bank_entries";
