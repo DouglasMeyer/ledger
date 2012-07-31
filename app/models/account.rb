@@ -1,5 +1,5 @@
 class Account < ActiveRecord::Base
-  attr_accessible :name, :asset
+  attr_accessible :name, :asset, :position
 
   validates :name, :presence => true, :uniqueness => true
 

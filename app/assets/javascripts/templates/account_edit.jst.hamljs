@@ -1,0 +1,4 @@
+%td.gripper
+%td.name
+  %input
+%td.balance.currency= "<%= balance %>"

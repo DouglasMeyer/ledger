@@ -1,5 +1,8 @@
 var Account = Backbone.Model.extend({
-  urlRoot: '/accounts'
+  urlRoot: '/accounts',
+  defaults: {
+    balance_cents: 0
+  }
 });
 
 var AccountEntry = Backbone.Model.extend({

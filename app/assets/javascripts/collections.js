@@ -26,7 +26,22 @@ var AccountsCollection = Backbone.Collection.extend({
   url: '/accounts',
 
   assets:      function(){ return this.filter(function(a){ return  a.get('asset'); }); },
-  liabilities: function(){ return this.filter(function(a){ return !a.get('asset'); }); }
+  liabilities: function(){ return this.filter(function(a){ return !a.get('asset'); }); },
+
+  save: function(callback){
+    var collection = this,
+        saving = 0,
+        onSuccess = function(account){
+          saving -= 1;
+          if (saving === 0){
+            callback.call(collection);
+          }
+        };
+    this.each(function(account){
+      saving += 1;
+      account.save(null, { success: onSuccess });
+    });
+  }
 });
 
 var AccountEntriesCollection = Backbone.Collection.extend({

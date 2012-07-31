@@ -54,9 +54,12 @@ var AppRouter = Backbone.Router.extend({
     });
   },
 
+  loading: function(isLoading){
+    loading[isLoading === false ? 'hide' : 'show']();
+  },
   load: function(callback){
     if (arguments.length === 1){
-      loading.hide();
+      this.loading(false);
       callback.apply(this);
     } else {
       var args = _.toArray(arguments),
@@ -64,7 +67,7 @@ var AppRouter = Backbone.Router.extend({
       if (fetchable.loaded) {
         this.load.apply(this, args);
       } else {
-        loading.show();
+        this.loading();
         fetchable.fetch({
           success: function(){
             fetchable.loaded = true;

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120516133803) do
+ActiveRecord::Schema.define(:version => 20120731134117) do
 
   create_table "account_entries", :force => true do |t|
     t.integer  "account_id",    :null => false
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(:version => 20120516133803) do
     t.boolean  "asset",      :default => true, :null => false
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
+    t.integer  "position"
   end
 
   add_index "accounts", ["name"], :name => "index_accounts_on_name", :unique => true

@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
   def index
-    @accounts = Account.scoped
+    @accounts = Account.order(:position)
     respond_to do |format|
       format.html
       format.json { render :json => @accounts }
@@ -16,7 +16,7 @@ class AccountsController < ApplicationController
     @account.update_attributes! params[:account]
     respond_to do |format|
       format.html { redirect_to :accounts }
-      format.json { render :json => account }
+      format.json { render :json => @account }
     end
   rescue ActiveRecord::RecordInvalid
     render :new
@@ -24,6 +24,14 @@ class AccountsController < ApplicationController
 
   def show
     @account = Account.find params[:id]
+  end
+
+  def update
+    @account = Account.find params[:id]
+    @account.update_attributes! params[:account]
+    respond_to do |format|
+      format.json { render :json => @account }
+    end
   end
 
   def distribute
