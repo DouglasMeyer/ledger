@@ -13,20 +13,7 @@ table.assets, table.liabilities {
 
   .gripper {
     cursor: ns-resize;
-    width: 20px;
     border-bottom: none;
-    &:before {
-      content: '';
-      display: block;
-      height: 2px;
-      width: 10px;
-      margin: 0 auto;
-      border: {
-        width: 2px 0;
-        style: solid;
-        color: #DDD;
-      }
-    }
   }
 }
 

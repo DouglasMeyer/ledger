@@ -1,4 +1,5 @@
 %td.gripper
+  .ui-icon.ui-icon-grip-solid-horizontal
 %td.name
   %input
 %td.balance.currency= "<%= balance %>"
