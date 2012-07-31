@@ -12,6 +12,7 @@ var AccountListView = Backbone.View.extend({
   },
   remove: function(){
     app.Accounts.unbind(null, null, this);
+    this.constructor.__super__.remove.apply(this, arguments);
   },
   render: function(){
     this.$el.html('<caption>'+this.title+'</caption>');
@@ -33,7 +34,7 @@ var AccountListView = Backbone.View.extend({
     if (account.get('asset') == this.asset) this.addOne(account);
   },
   accountsUpdated: function(e, ui){
-    var asset = this.asset;
+    var asset = this.asset || false;
     this.$('tr').each(function(index){
       var model = $(this).data('view').model;
       model.set({
