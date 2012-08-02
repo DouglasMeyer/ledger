@@ -1,7 +1,0 @@
-%h1= @account.name
-
-.field
-  %label Balance
-  .value= number_to_currency @account.balance_cents/100.0
-
-= link_to 'Distribute Balance', [:distribute, @account]

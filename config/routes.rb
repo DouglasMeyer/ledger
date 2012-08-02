@@ -1,12 +1,13 @@
-Sledger::Application.routes.draw do
-  resources :bank_entries, :only => [ :index, :show ]
+require 'api_constraints'
 
-  resources :accounts,  :only => [ :index, :new, :create, :show, :update ] do
-    member do
-      get :distribute
+Sledger::Application.routes.draw do
+  namespace :api, :defaults => { :format => 'json' } do
+    scope :module => :v1, :constraints => ApiConstraints.new(:version => 1, :default => :true) do
+      resources :accounts, :only => [ :index, :create, :update ]
+      resources :bank_entries, :only => [ :index, :show ]
+      resources :account_entries, :only => [ :index, :create, :update, :destroy ]
     end
   end
-  resources :account_entries, :only => [ :index, :create, :update, :destroy ]
 
   root :to => 'static#home'
 end

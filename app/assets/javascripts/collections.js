@@ -1,6 +1,6 @@
 var BankEntriesCollection = Collection.extend({
   model: BankEntry,
-  url: '/bank_entries',
+  url: '/api/bank_entries',
   loadMore: function(options){
     options.url = this.more;
     options.add = true;
@@ -10,7 +10,7 @@ var BankEntriesCollection = Collection.extend({
 
 var AccountsCollection = Collection.extend({
   model: Account,
-  url: '/accounts',
+  url: '/api/accounts',
 
   assets:      function(){ return this.filter(function(a){ return  a.get('asset'); }); },
   liabilities: function(){ return this.filter(function(a){ return !a.get('asset'); }); }
@@ -18,6 +18,6 @@ var AccountsCollection = Collection.extend({
 
 var AccountEntriesCollection = Collection.extend({
   model: AccountEntry,
-  url: '/account_entries'
+  url: '/api/account_entries'
 });
 

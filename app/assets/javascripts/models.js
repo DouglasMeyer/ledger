@@ -1,5 +1,5 @@
 var Account = Backbone.Model.extend({
-  urlRoot: '/accounts',
+  urlRoot: '/api/accounts',
   defaults: {
     balance_cents: 0
   }
@@ -14,7 +14,7 @@ var AccountEntry = Backbone.Model.extend({
     notes: '',
     ammount_cents: 0
   },
-  urlRoot: '/account_entries',
+  urlRoot: '/api/account_entries',
   sync: function(method, model, options){
     options = _.extend({}, {
       contentType: 'application/json',
@@ -37,7 +37,7 @@ var BankEntry = Backbone.Model.extend({
 
     this.set('ammount_cents', parseInt(this.get('ammount_cents')));
   },
-  urlRoot: '/bank_entries',
+  urlRoot: '/api/bank_entries',
   updateAccountEntries: function(){
     this.accountEntries.reset(this.get('account_entries'));
   },
