@@ -1,3 +1,13 @@
+var Model = Backbone.Model.extend({
+  save: function(){
+    if (this.get('_delete')){
+      return this.destroy();
+    } else {
+      return Backbone.Model.prototype.save.apply(this, arguments);
+    }
+  }
+});
+
 var Collection = Backbone.Collection.extend({
 
   save: function(callback){

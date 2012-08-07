@@ -3,3 +3,5 @@
 %td.name
   %input
 %td.balance.currency= "<%= balance %>"
+%td.delete
+  .ui-icon.ui-icon-close

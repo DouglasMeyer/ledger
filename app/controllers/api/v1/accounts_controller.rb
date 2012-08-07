@@ -1,13 +1,27 @@
 class Api::V1::AccountsController < Api::V1::BaseController
   def index
-    respond_with Account.order(:position)
+    respond_with accounts
   end
 
   def create
-    respond_with Account.create(params[:account])
+    respond_with accounts.create(params[:account])
   end
 
   def update
-    respond_with Account.update(params[:id], params[:account])
+    account.update_attributes!(params[:account])
+    respond_with account
+  end
+
+  def destroy
+    account.update_attributes!(:deleted_at => Time.now)
+    respond_with account
+  end
+
+private
+  def accounts
+    @accounts ||= Account.where("deleted_at IS NULL").order(:position)
+  end
+  def account
+    @account ||= accounts.find(params[:id])
   end
 end

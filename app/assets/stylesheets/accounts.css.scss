@@ -1,7 +1,3 @@
-.accounts {
-  position: relative;
-}
-
 table.assets, table.liabilities {
   position: absolute;
   width: 50%;
@@ -14,6 +10,16 @@ table.assets, table.liabilities {
   .gripper {
     cursor: ns-resize;
     border-bottom: none;
+  }
+  .delete {
+    cursor: pointer;
+    border-bottom: none;
+  }
+  tr.deleted {
+    &, input {
+      color: gray;
+      text-decoration: line-through;
+    }
   }
 }
 

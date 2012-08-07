@@ -1,11 +1,11 @@
-var Account = Backbone.Model.extend({
+var Account = Model.extend({
   urlRoot: '/api/accounts',
   defaults: {
     balance_cents: 0
   }
 });
 
-var AccountEntry = Backbone.Model.extend({
+var AccountEntry = Model.extend({
   initialize: function(){
     this.set('ammount_cents', parseInt(this.get('ammount_cents')));
   },
@@ -29,7 +29,7 @@ var AccountEntry = Backbone.Model.extend({
   }
 });
 
-var BankEntry = Backbone.Model.extend({
+var BankEntry = Model.extend({
   initialize: function(){
     this.accountEntries = new AccountEntriesCollection(this.get('account_entries'));
     this.accountEntries.bankEntry = this;
