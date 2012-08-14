@@ -31,12 +31,16 @@ var AppRouter = Backbone.Router.extend({
     this.navigate('accounts', { trigger: true });
   },
   accounts: function(){
+    $('.navigation .current').removeClass('current');
+    $('.navigation [rel="accounts"]').addClass('current');
     this.showView(null);
     this.load(this.Accounts, function(){
       this.showView(new AccountsView());
     });
   },
   bank_entries: function(){
+    $('.navigation .current').removeClass('current');
+    $('.navigation [rel="bank_entries"]').addClass('current');
     this.showView(null);
     this.load(this.Accounts, this.BankEntries, function(){
       this.showView(new BankEntriesView());

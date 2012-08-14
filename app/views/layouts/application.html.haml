@@ -8,8 +8,8 @@
 
   %body
     %ul.navigation
-      %li
-        = link_to 'Accounts', '#', :rel => :accounts
-      %li
-        = link_to 'Bank Entries', '#', :rel => :bank_entries
+      %li(rel="accounts")>
+        = link_to 'Accounts', '#'
+      %li(rel="bank_entries")>
+        = link_to 'Bank Entries', '#'
     = yield
