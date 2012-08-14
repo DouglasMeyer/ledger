@@ -14,7 +14,7 @@ body { position: relative; font-size: 16px; }
 // Layout
 $navigation_height: 38px;
 .navigation {
-  font-family: sans-serif;
+  font-family: $helvetica;
   position: absolute;
   top: 0; left: 0; right: 0;
   font-size: 18px;
