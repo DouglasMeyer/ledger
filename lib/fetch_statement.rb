@@ -10,6 +10,7 @@ module FetchStatement
       profile["download.default_directory"] = Rails.root.join('tmp/downloads').to_s
       Capybara::Selenium::Driver.new(app, :browser => :chrome, :profile => profile)
     end
+    Capybara.default_wait_time = 30
 
     #Capybara.default_driver = Capybara.javascript_driver = :chrome
 
@@ -22,7 +23,7 @@ module FetchStatement
       session.fill_in 'Username', :with => netrc.login
       session.fill_in 'password', :with => netrc.password
     end
-    session.click_button 'Login'
+    session.click_button 'Log in'
 
 
     unless session.has_xpath? XPath::HTML.link('Accounts')
