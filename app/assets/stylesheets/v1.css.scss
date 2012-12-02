@@ -58,5 +58,5 @@ $navigation_height: 38px;
   padding-top: 20%;
 }
 
-@import "accounts";
-@import "bank_entries";
+@import "./v1/accounts";
+@import "./v1/bank_entries";

@@ -1,7 +1,7 @@
 var DistributeBankEntryView = (function(){
 
   var View = Backbone.View.extend({
-    template: _.template(JST['templates/distribute_bank_entry']),
+    template: _.template(JST['v1/templates/distribute_bank_entry']),
     events: {
       'click input[name="distribute"]': 'distribute'
     },

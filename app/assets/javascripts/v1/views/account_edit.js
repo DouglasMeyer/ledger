@@ -1,6 +1,6 @@
 var AccountEditView = Backbone.View.extend({
   tagName: 'tr',
-  template: _.template(JST['templates/account_edit']),
+  template: _.template(JST['v1/templates/account_edit']),
   events: {
     'blur .name input': 'updateName',
     'click .delete': 'delete'

@@ -4,11 +4,11 @@
 //= require haml
 //= require underscore-1.3.3-min
 //= require backbone-0.9.2-min
-//= require ./helpers
-//= require ./lib
-//= require ./models
-//= require ./collections
-//= require_tree .
+//= require ./v1/helpers
+//= require ./v1/lib
+//= require ./v1/models
+//= require ./v1/collections
+//= require_tree ./v1/
 //= require_self
 
 var loading, $app, currentView;

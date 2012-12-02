@@ -1,6 +1,6 @@
 var AccountView = Backbone.View.extend({
   tagName: 'tr',
-  template: _.template(JST['templates/account']),
+  template: _.template(JST['v1/templates/account']),
   render: function(){
     var json = this.model.toJSON();
     json.balance = centsToCurrency(json.balance_cents);
