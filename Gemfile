@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.3'
 
 gem 'pg'
-gem 'haml'
+gem 'haml', github: 'haml/haml'
 gem 'haml-sprockets'
 gem 'simple_form'
 gem 'bourbon', :github => "coryschires/bourbon" # TODO: Remove fork once merged (2 Apr 2012)

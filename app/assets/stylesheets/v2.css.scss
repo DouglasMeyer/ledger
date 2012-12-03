@@ -1,0 +1,12 @@
+@import "bourbon";
+
+// Reset
+* {
+  margin: 0;
+  padding: 0;
+  @include box-sizing(border-box);
+}
+html, body { height: 100%; width: 100%; }
+body { position: relative; font-size: 16px; }
+
+@import "./v2/accounts";

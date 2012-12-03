@@ -12,6 +12,9 @@ class Account < ActiveRecord::Base
   def balance_cents
     entries.pluck(:ammount_cents).sum
   end
+  def balance
+    balance_cents / 100.0
+  end
 
   def as_json(options)
     (options[:methods] ||= []).push(:balance_cents)

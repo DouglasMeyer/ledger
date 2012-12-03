@@ -6,6 +6,13 @@ Sledger::Application.routes.draw do
     scope(module: "v#{version}", &block) if default
   end
 
+
+  version 2 do
+    resources :accounts, :only => :index
+
+    root :to => 'accounts#index'
+  end
+
   version 1, true do
     namespace :api, :defaults => { :format => 'json' } do
       scope :module => :v1, :constraints => ApiConstraints.new(:version => 1, :default => :true) do

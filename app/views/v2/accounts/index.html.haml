@@ -1,0 +1,11 @@
+.assets-list
+  %h2 Assets
+  %ul
+    - @accounts.assets.each do |account|
+      %li= render account
+
+.liabilities-list
+  %h2 Liabilities
+  %ul
+    - @accounts.liabilities.each do |account|
+      %li= render account
