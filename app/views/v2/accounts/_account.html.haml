@@ -1,3 +1,2 @@
-%span.name= account.name
-%span.balance(class="#{'negative' if account.balance < 0}")
-  = number_to_currency account.balance
+%span= account.name
+= currency account.balance, 'balance', 'span'

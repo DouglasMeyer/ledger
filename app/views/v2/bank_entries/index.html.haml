@@ -1,0 +1,15 @@
+%ul.bank-entries
+  - @bank_entries.each do |bank_entry|
+    %li
+      .date= bank_entry.date
+      .description= bank_entry.description
+      -#.notes= bank_entry.notes
+      = currency bank_entry.ammount, :ammount
+      - if bank_entry.account_entries.count == 1
+        .account= bank_entry.account_entries.first.account_name
+      - else
+        - bank_entry.account_entries.each do |account_entry|
+          .account-entry
+            = currency account_entry.ammount, :ammount
+            .account= account_entry.account_name
+            -#.notes= account_entry.notes

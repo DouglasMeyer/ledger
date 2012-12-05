@@ -1,0 +1,25 @@
+body.bank_entries {
+
+  .bank-entries {
+    position: absolute;
+    top: 1em; left: 50%; margin-left: -40em;
+    width: 80em;
+    list-style-type: none;
+
+    li {
+      border-top: 1px dashed #DDD;
+      padding: 0.2ex 0;
+      &:first-child { border-top: none; }
+
+      .date, .description, .ammount, .account {
+        display: inline-block;
+      }
+      .date { width: 8em; }
+      //.description { width: 40em; }
+      .ammount { float: right; width: 8em; }
+      .account { float: right; }
+      .account-entry { display: block; height: 1.2em; }
+    }
+  }
+
+}

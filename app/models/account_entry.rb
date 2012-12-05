@@ -13,6 +13,10 @@ class AccountEntry < ActiveRecord::Base
     self.account = Account.where(:name => name).first
   end
 
+  def ammount
+    ammount_cents / 100.0
+  end
+
   def as_json(options={})
     (options[:methods] ||= []).push(:account_name)
     super(options)

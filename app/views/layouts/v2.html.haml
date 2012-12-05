@@ -7,4 +7,7 @@
     = csrf_meta_tags
 
   %body(class="#{controller_name} #{action_name}")
+    %ul.navigation
+      %li.accounts= link_to "Accounts", v2_root_path
+      %li.entries= link_to "Entries", v2_bank_entries_path
     = yield

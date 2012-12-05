@@ -9,6 +9,7 @@ Sledger::Application.routes.draw do
 
   version 2 do
     resources :accounts, :only => :index
+    resources :bank_entries, :only => :index
 
     root :to => 'accounts#index'
   end

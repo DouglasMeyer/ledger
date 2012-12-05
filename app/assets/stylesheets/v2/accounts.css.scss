@@ -16,10 +16,7 @@ body.accounts {
       @include clearfix;
     }
 
-    .balance {
-      float: right;
-      &.negative { color: red; }
-    }
+    .balance { float: right; }
   }
   .assets-list { right: 50%; }
   .liabilities-list { left: 50%; }
