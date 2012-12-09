@@ -1,0 +1,13 @@
+= form_for [ :v2, @bank_entry ] do |f|
+  .date= @bank_entry.date
+  .description= @bank_entry.description
+  = currency @bank_entry.ammount_remaining, :ammount
+  .account-entries
+    = f.fields_for :account_entries do |ae|
+      = render partial: 'edit_account_entry', locals: { ae: ae }
+  .actions
+    = f.submit 'Save', data: { action: :save }
+    = f.button 'Add entry', data: { action: :add }
+    .template-account-entry(style="display:none;")
+      = f.fields_for :account_entries, @bank_entry.account_entries.build, child_index: 'new_account_entry' do |ae|
+        = render partial: 'edit_account_entry', locals: { ae: ae }

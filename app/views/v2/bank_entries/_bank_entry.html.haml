@@ -1,0 +1,8 @@
+.date= bank_entry.date
+.description= bank_entry.description
+= currency bank_entry.ammount_remaining, :ammount
+= link_to 'edit', edit_v2_bank_entry_path(bank_entry), :data => { action: :edit }
+- bank_entry.account_entries.each do |account_entry|
+  .account-entry
+    = currency account_entry.ammount, :ammount
+    .account= account_entry.account_name

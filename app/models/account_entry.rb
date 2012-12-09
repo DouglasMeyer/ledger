@@ -1,5 +1,5 @@
 class AccountEntry < ActiveRecord::Base
-  attr_accessible :account_name, :notes, :bank_entry_id, :ammount_cents
+  attr_accessible :account_name, :notes, :bank_entry_id, :ammount_cents, :ammount
 
   validates :bank_entry, :account, :presence => true
 
@@ -14,7 +14,10 @@ class AccountEntry < ActiveRecord::Base
   end
 
   def ammount
-    ammount_cents / 100.0
+    (ammount_cents || 0) / 100.0
+  end
+  def ammount= val
+    self.ammount_cents = val.to_f * 100
   end
 
   def as_json(options={})
