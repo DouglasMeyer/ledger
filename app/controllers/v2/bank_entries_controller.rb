@@ -2,7 +2,8 @@ module V2
   class BankEntriesController < BaseController
 
     def index
-      bank_entries # populate @bank_entries
+      @account_names = Account.order(:name).pluck(:name)
+      @bank_entries = bank_entries.includes(account_entries: :account)
     end
 
     def edit
@@ -11,12 +12,8 @@ module V2
     end
 
     def update
-      params[:bank_entry][:account_entries_attributes].delete(:new_account_entry)
-      if bank_entry.update_attributes(params[:bank_entry])
-        render bank_entry, layout: false
-      else
-        render :edit, layout: false
-      end
+      bank_entry.update_attributes!(params[:bank_entry])
+      render text: ''
     end
 
   private

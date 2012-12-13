@@ -1,8 +1,10 @@
-.date= bank_entry.date
-.description= bank_entry.description
-= currency bank_entry.ammount_remaining, :ammount
-= link_to 'edit', edit_v2_bank_entry_path(bank_entry), :data => { action: :edit }
-- bank_entry.account_entries.each do |account_entry|
-  .account-entry
-    = currency account_entry.ammount, :ammount
-    .account= account_entry.account_name
+= form_for [ :v2, bank_entry ] do |f|
+  .date= bank_entry.date
+  .description= bank_entry.description
+  - bank_entry.account_entries.build(ammount: bank_entry.ammount_remaining) if bank_entry.account_entries.empty?
+  = currency bank_entry.ammount_remaining, :ammount
+  = f.fields_for :account_entries do |ae|
+    .account-entry
+      = ae.hidden_field :_destroy
+      .account= ae.select :account_name, @account_names, include_blank: true
+      .ammount= ae.text_field :ammount, class: 'currency'

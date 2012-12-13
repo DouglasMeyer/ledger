@@ -9,7 +9,7 @@ class BankEntry < ActiveRecord::Base
   end
 
   def ammount_remaining
-    (ammount_cents - account_entries.sum(&:ammount_cents)) / 100.0
+    (ammount_cents - account_entries.map(&:ammount_cents).sum) / 100.0
   end
 
   def as_json(options={})
