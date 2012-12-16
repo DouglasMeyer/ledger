@@ -8,6 +8,11 @@
 }
 html, body { height: 100%; width: 100%; }
 body { position: relative; font-size: medium; line-height: 1.2; }
+input, select {
+  background-color: white;
+  border: 1px solid #888;
+}
+input { padding: 0 1ex; }
 
 // Elements
 .currency {
