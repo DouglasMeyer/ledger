@@ -1,10 +1,11 @@
-= form_for [ :v2, bank_entry ] do |f|
+= form_for [ :v2, bank_entry ], html: { data: { ammount: bank_entry.ammount } } do |f|
   .date= bank_entry.date
   .description= bank_entry.description
-  - bank_entry.account_entries.build(ammount: bank_entry.ammount_remaining) if bank_entry.account_entries.empty?
-  = currency bank_entry.ammount_remaining, :ammount
+  - bank_entry.account_entries.build(ammount: bank_entry.ammount_remaining) unless bank_entry.ammount_remaining.zero?
   = f.fields_for :account_entries do |ae|
     .account-entry
       = ae.hidden_field :_destroy
       .account= ae.select :account_name, @account_names, include_blank: true
       .ammount= ae.text_field :ammount, class: 'currency'
+  .actions
+    = f.submit 'Save'

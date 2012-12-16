@@ -1,19 +1,14 @@
 module V2
   class BankEntriesController < BaseController
+    before_filter :load_account_names
 
     def index
-      @account_names = Account.order(:name).pluck(:name)
       @bank_entries = bank_entries.includes(account_entries: :account)
-    end
-
-    def edit
-      bank_entry # populate @bank_entry
-      render layout: false
     end
 
     def update
       bank_entry.update_attributes!(params[:bank_entry])
-      render text: ''
+      render bank_entry
     end
 
   private
@@ -22,6 +17,10 @@ module V2
     end
     def bank_entry
       @bank_entry ||= bank_entries.find(params[:id])
+    end
+
+    def load_account_names
+      @account_names = Account.order(:name).pluck(:name)
     end
   end
 end

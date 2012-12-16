@@ -6,20 +6,18 @@ body.bank_entries {
     width: 80em;
     list-style-type: none;
 
+    form .actions { display: none; }
+    form.changed .actions { display: initial; }
+    .focus { background-color: #F0F0F0; }
+
     li {
       position: relative;
       min-height: 1.2em;
-      border-top: 1px dashed #DDD;
-      padding: 0.1em 0;
-      &:first-child { border-top: none; }
-      &:before {
-        content: "";
-        display: block;
-        height: 1.2em;
-      }
+      border-bottom: 1px dashed #DDD;
+      &:last-child { border-bottom: none; }
 
       .date, .description, .ammount, .account {
-        position: absolute; top: 0.1em;
+        position: absolute; top: 0.1em; z-index: 100;
       }
       .date { width: 8em; }
       .description { left: 8em; }
@@ -27,7 +25,7 @@ body.bank_entries {
       .account { width: 10em; right: 8em; }
       .account-entry {
         position: relative;
-        height: 1.2em;
+        height: 1.4em;
         input { width: 100%; }
       }
     }
