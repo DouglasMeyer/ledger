@@ -1,24 +1,14 @@
 body.accounts {
 
-  .assets-list, .liabilities-list {
-    position: absolute;
-    display: inline-block;
-    top: 0; bottom: 0;
-    width: 25em;
+  .accounts-table {
+    width: 50em;
+    margin: 0 auto;
 
-    padding: 1em 2em;
+    .assets-list, .liabilities-list {
+      padding: 1em 2em;
 
-    h2 { text-align: center; }
-
-    ul { list-style-type: none; }
-    li {
-      border-bottom: 1px dotted #DDD;
-      @include clearfix;
+      .balance { float: right; }
     }
-
-    .balance { float: right; }
   }
-  .assets-list { right: 50%; }
-  .liabilities-list { left: 50%; }
 
 }

@@ -1,0 +1,16 @@
+= form_for [ :v2, @bank_entry ], html: { class: 'accounts-table' } do |f|
+  .assets-list
+    %h2 Assets
+    %ul
+      = f.fields_for :account_entries, @assets do |ae|
+        %li= render partial: 'account', locals: { f: ae }
+      -# @accounts.assets.each do |account|
+
+  .liabilities-list
+    %h2 Liabilities
+    %ul
+      = f.fields_for :account_entries, @liabilities do |ae|
+        %li= render partial: 'account', locals: { f: ae }
+      -# @accounts.liabilities.each do |account|
+  .actions
+    = f.submit 'Save'

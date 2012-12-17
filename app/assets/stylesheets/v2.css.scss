@@ -19,6 +19,18 @@ input { padding: 0 1ex; }
   text-align: right;
   &.negative { color: red; }
 }
+.accounts-table {
+  @include clearfix;
+  .assets-list, .liabilities-list {
+    float: left;
+    width: 50%;
+    padding: 0 2em;
+
+    h2 { text-align: center; }
+    ul { list-style-type: none; }
+    li { border-bottom: 1px dotted #DDD; }
+  }
+}
 
 // Layout
 .navigation {
