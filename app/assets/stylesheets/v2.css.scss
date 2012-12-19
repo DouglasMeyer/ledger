@@ -24,12 +24,13 @@ input { padding: 0 1ex; }
   .assets-list, .liabilities-list {
     float: left;
     width: 50%;
-    padding: 0 2em;
 
     h2 { text-align: center; }
     ul { list-style-type: none; }
     li { border-bottom: 1px dotted #DDD; }
   }
+  .assets-list { padding-right: 2em; }
+  .liabilities-list { padding-left: 2em; }
 }
 
 // Layout

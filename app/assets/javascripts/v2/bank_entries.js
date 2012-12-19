@@ -1,30 +1,33 @@
 jQuery(function($){
 
-  var submitBankEntry = function(){
-    var form = $(this);
-    form.find('.account-entry').filter(function(){
-      var accountEntry = $(this);
-      return accountEntry.find('select[name$="[account_name]"]').val() === '' ||
-             Math.round(accountEntry.find('input[name$="[ammount]"]') * 100) === 0;
-    }).each(function(){
-      $('input[name$="[_destroy]"]', this).val('true');
-    });
+  var destroyBlank = function(accountEntries){
+        accountEntries.filter(function(){
+          var accountEntry = $(this);
+          return accountEntry.find('select[name$="[account_name]"]').val() === '' ||
+                 Math.round(accountEntry.find('input[name$="[ammount]"]').val() * 100) === 0;
+        }).each(function(){
+          $('input[name$="[_destroy]"]', this).val('true');
+        });
+      },
+      submitBankEntry = function(){
+        var form = $(this);
+        destroyBlank(form.find('.account-entry'));
 
-    $.ajax({
-      url: form.attr('action'),
-      data: form.serialize(),
-      type: 'PUT',
-      context: this,
-      complete: function(xhr, status){
-        $(this).closest('li')
-          .html(xhr.responseText)
-          .find('form')
-            .submit(submitBankEntry);
-      }
-    });
+        $.ajax({
+          url: form.attr('action'),
+          data: form.serialize(),
+          type: 'PUT',
+          context: this,
+          complete: function(xhr, status){
+            $(this).closest('li')
+              .html(xhr.responseText)
+              .find('form')
+                .submit(submitBankEntry);
+          }
+        });
 
-    return false;
-  };
+        return false;
+      };
 
   $('.bank-entries').on('change', 'select, input', function(){
     var form = $(this).closest('form'),
@@ -62,4 +65,8 @@ jQuery(function($){
       $(this).closest('.account-entry').removeClass('focus');
     });
 
+
+  $('form.accounts-table').submit(function(){
+    destroyBlank($('li', this));
+  });
 });

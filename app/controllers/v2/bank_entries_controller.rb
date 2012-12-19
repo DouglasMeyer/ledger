@@ -7,38 +7,17 @@ module V2
     end
 
     def edit
-      #bank_entry # populate @bank_entry
-      #Account.where("deleted_at IS NULL").each do |account|
-      #  bank_entry.account_entries.where(account_id: account).tap do |ae|
-      #    ae.build unless ae.any?
-      #  end
-      #end
-      #@assets, @liabilities = bank_entry.account_entries.sort_by{|ae| ae.account.position }.partition do |account_entry|
-      #  account_entry.account.asset?
-      #end
-
-      @assets, @liabilities = [], []
-      Account.where("deleted_at IS NULL").order(:position).each do |account|
-        aes = bank_entry.account_entries.where(account_id: account.id).all
-        aes << bank_entry.account_entries.build({ account_id: account.id }, without_protection: true) unless aes.any?
-        aes.first.ammount_cents
-        aes[1..-1].each do |ae|
-          #ae._destroy = true
-          aes.first.ammount_cents += ae.ammount_cents
-        end
-        if account.asset?
-          @assets += aes
-        else
-          @liabilities += aes
-        end
-      end
-      @assets.each{|a| puts a.account.name }
-      @liabilities.each{|a| puts a.account.name }
+      bank_entry # populate @bank_entry
+      @accounts = Account.where("deleted_at IS NULL").order(:position)
     end
 
     def update
       bank_entry.update_attributes!(params[:bank_entry])
-      render bank_entry
+      if request.xhr?
+        render bank_entry
+      else
+        redirect_to action: :index
+      end
     end
 
   private

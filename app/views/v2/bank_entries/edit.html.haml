@@ -1,16 +1,23 @@
-= form_for [ :v2, @bank_entry ], html: { class: 'accounts-table' } do |f|
+= form_for [ :v2, @bank_entry ], html: { class: 'accounts-table', data: { ammount: @bank_entry.ammount } } do |f|
+  %h2
+    %span#distribute-ammount.currency= @bank_entry.ammount_remaining
+    &nbsp;left to distribute from:
+
+  .bank-entry
+    .date= @bank_entry.date
+    .description= @bank_entry.description
+    = currency @bank_entry.ammount, :ammount
+
   .assets-list
     %h2 Assets
     %ul
-      = f.fields_for :account_entries, @assets do |ae|
-        %li= render partial: 'account', locals: { f: ae }
-      -# @accounts.assets.each do |account|
+      - @accounts.assets.each do |account|
+        = account_entry_fields f, account
 
   .liabilities-list
     %h2 Liabilities
     %ul
-      = f.fields_for :account_entries, @liabilities do |ae|
-        %li= render partial: 'account', locals: { f: ae }
-      -# @accounts.liabilities.each do |account|
+      - @accounts.liabilities.each do |account|
+        = account_entry_fields f, account
   .actions
     = f.submit 'Save'

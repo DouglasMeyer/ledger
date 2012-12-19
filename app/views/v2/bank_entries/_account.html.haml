@@ -1,3 +1,6 @@
-.account= f.object.account.name
+= f.hidden_field :_destroy
+.account
+  = f.hidden_field :account_name
+  = f.object.account.name
 .ammount= f.text_field :ammount, class: 'currency'
-.balance.currency= f.object.account.balance
+.balance.currency= (f.object.account.balance_cents + f.object.ammount_cents) / 100.0
