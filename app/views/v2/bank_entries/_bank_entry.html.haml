@@ -1,8 +1,9 @@
 = form_for [ :v2, bank_entry ], html: { data: { ammount: bank_entry.ammount } } do |f|
   .date= bank_entry.date
   .description= bank_entry.description
-  .distribute= link_to 'Distribute', [ :edit, :v2, bank_entry ]
   - bank_entry.account_entries.build(ammount: bank_entry.ammount_remaining) unless bank_entry.ammount_remaining.zero?
+  - if bank_entry.account_entries.last.new_record?
+    .distribute= link_to 'Distribute', [ :edit, :v2, bank_entry ]
   = f.fields_for :account_entries do |ae|
     .account-entry
       = ae.hidden_field :_destroy
@@ -10,3 +11,4 @@
       .ammount= ae.text_field :ammount, class: 'currency'
   .actions
     = f.submit 'Save'
+    = link_to 'cancel', '#', class: 'cancel'

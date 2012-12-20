@@ -6,6 +6,10 @@ module V2
       @bank_entries = bank_entries.includes(account_entries: :account)
     end
 
+    def show
+      render bank_entry
+    end
+
     def edit
       bank_entry # populate @bank_entry
       @accounts = Account.where("deleted_at IS NULL").order(:position)

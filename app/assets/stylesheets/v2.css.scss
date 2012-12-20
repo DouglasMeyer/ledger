@@ -7,7 +7,13 @@
   @include box-sizing(border-box);
 }
 html, body { height: 100%; width: 100%; }
-body { position: relative; font-size: medium; line-height: 1.2; }
+body {
+  position: relative;
+  font-size: medium;
+  line-height: 1.2;
+  color: #444;
+}
+h1, h2, h3 { color: #222; }
 input, select {
   background-color: white;
   border: 1px solid #888;

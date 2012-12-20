@@ -23,8 +23,10 @@ body.bank_entries {
     margin: 1em 8em;
     list-style-type: none;
 
+    form .actions > * { margin-right: 1em; }
     form .actions { display: none; }
     form.changed .actions { display: initial; }
+    form.changed .distribute { display: none; }
     .focus { background-color: #F0F0F0; }
 
     li {
