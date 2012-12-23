@@ -2,7 +2,13 @@ module V2
   module BankEntriesHelper
 
     def account_balance_without_bank_entry(account, bank_entry)
-      account.entries.where("id NOT IN (?)", bank_entry.account_entries.pluck(:id)).pluck(:ammount_cents).sum / 100.0
+      ids = bank_entry.account_entries.pluck(:id)
+      if ids.any?
+        account_entries = account.entries.where("id NOT IN (?)", ids)
+      else
+        account_entries = account.entries
+      end
+      account_entries.pluck(:ammount_cents).sum / 100.0
     end
 
     def account_entry_fields(f, account)

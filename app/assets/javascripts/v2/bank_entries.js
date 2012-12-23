@@ -6,23 +6,6 @@ var destroyBlank = function(accountEntries){
       }).each(function(){
         $('input[name$="[_destroy]"]', this).val('true');
       });
-    },
-    submitBankEntry = function(callback){
-      var form = $(this);
-      destroyBlank(form.find('.account-entry'));
-
-      $.ajax({
-        url: form.attr('action'),
-        data: form.serialize(),
-        type: 'PUT',
-        context: this,
-        complete: function(xhr, status){
-          $(this).closest('li').html(xhr.responseText);
-          callback(this);
-        }
-      });
-
-      return false;
     };
 var BankEntriesView = function(el){
   this.el = $(el);
@@ -89,9 +72,24 @@ BankEntriesView.prototype.setup = function(el){
 
   // Handle form submissions
   $('form', el).submit(function(){
-    submitBankEntry(function(){
-      view.setup(this);
+    var form = $(this);
+    destroyBlank(form.find('.account-entry'));
+
+    $.ajax({
+      url: form.attr('action'),
+      data: form.serialize(),
+      type: 'PUT',
+      context: this,
+      complete: function(xhr, status){
+        var li = $(this).closest('li');
+        li.html(xhr.responseText);
+        view.setup(li);
+      }
     });
+
+    form.closest('li').next('li').find('select:visible, input:visible').first().focus();
+
+    return false;
   });
 };
 var DistributeBankEntryView = function(el){
@@ -115,7 +113,7 @@ DistributeBankEntryView.prototype.updateAccountEntry = function(input){
 DistributeBankEntryView.prototype.updateDistributeAmmount = function(){
   var ammountRemaining = this.el.data('ammount') * 100;
   this.el.find('li input[name$="[ammount]"]').each(function(){
-    ammountRemaining = Math.round(ammountRemaining - this.value * 100)
+    ammountRemaining = Math.round(ammountRemaining - this.value.replace(/,/g, '') * 100)
   });
   this.el.find('#distribute-ammount').currency(ammountRemaining / 100);
 };
