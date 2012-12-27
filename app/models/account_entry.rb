@@ -17,7 +17,8 @@ class AccountEntry < ActiveRecord::Base
     (ammount_cents || 0) / 100.0
   end
   def ammount= val
-    self.ammount_cents = (val.to_f * 100).round
+    val = val.gsub(/,/, '').to_f if val.is_a? String
+    self.ammount_cents = (val * 100).round
   end
 
   def as_json(options={})
