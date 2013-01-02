@@ -45,7 +45,7 @@ input { padding: 0 1ex; }
 .navigation {
   font-size: 110%;
   @include linear-gradient(tint(black, 20%), black);
-  .accounts, .entries {
+  .accounts, .entries, .searches {
     display: inline-block;
     border-right: 1px solid black;
     a {
@@ -58,7 +58,8 @@ input { padding: 0 1ex; }
     }
   }
   body.accounts & .accounts,
-  body.bank_entries & .entries {
+  body.bank_entries & .entries,
+  body.searches & .searches {
     background-color: black;
   }
 }

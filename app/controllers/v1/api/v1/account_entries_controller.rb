@@ -1,5 +1,5 @@
 module V1
-  class Api::V1::AccountEntriesController < BaseController
+  class Api::V1::AccountEntriesController < Api::V1::BaseController
     def index
       account_entries = AccountEntry.scoped
       account_entries = account_entries.where(:bank_entry_id => params[:bank_entry]) if params[:bank_entry]

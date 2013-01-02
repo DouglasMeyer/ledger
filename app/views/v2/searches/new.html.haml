@@ -1,0 +1,26 @@
+= form_for [ :v2, @search ] do |f|
+  .field
+    = f.label :name
+    = f.text_field :name
+  = "Search for "
+  %em bank entries
+  = " where "
+  = f.select :attribute, f.object.class.attributes
+  = f.select :operator, f.object.class.operators
+  = f.text_field :ammount
+
+  .field
+    Find
+    ~ select_tag "count", options_for_select([ 'all', 'latest' ])
+    entries where
+    ~ select_tag "attribute", options_for_select([ 'ammount remaining', 'description' ])
+    ~ select_tag "operator", options_for_select([ "isn't", 'is like' ])
+    ~ text_field_tag "value"
+
+  .field
+    = f.submit 'Search'
+
+%ul.bank-entries
+  - @search.bank_entries.each do |bank_entry|
+    %li
+      = render bank_entry
