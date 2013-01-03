@@ -1,9 +1,8 @@
 @import "bourbon";
+@import "normalize";
 
 // Reset
 * {
-  margin: 0;
-  padding: 0;
   @include box-sizing(border-box);
 }
 html, body { height: 100%; width: 100%; }
@@ -19,8 +18,10 @@ h1, h2, h3 { color: #222; }
 input, select {
   background-color: white;
   border: 1px solid #888;
+  font-size: 0.8em;
 }
 input { padding: 0 1ex; }
+ul { margin: 0; padding: 0; }
 
 // Elements
 .currency {
