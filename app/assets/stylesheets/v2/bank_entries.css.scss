@@ -19,6 +19,19 @@
 
 body.bank_entries {
 
+  form.filters {
+    margin: 0 4em;
+
+    h3, .date, .distribute, .account, input[type="submit"] {
+      display: inline-block;
+      margin: 1ex 1em;
+    }
+    input, select {
+      margin-left: 1ex;
+      margin-right: 1ex;
+    }
+  }
+
   .bank-entries {
     margin: 1em 8em;
     list-style-type: none;
