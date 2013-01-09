@@ -29,7 +29,6 @@ ul { margin: 0; padding: 0; }
   &.negative { color: red; }
 }
 .accounts-table {
-  @include clearfix;
   .assets-list, .liabilities-list {
     float: left;
     width: 50%;

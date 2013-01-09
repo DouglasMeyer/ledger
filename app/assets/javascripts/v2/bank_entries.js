@@ -97,8 +97,14 @@ var DistributeBankEntryView = function(el){
   var view = this;
 
   this.el.submit(function(){ destroyBlank($('li', this)); });
-  this.el.on('change', 'input', function(){ view.updateAccountEntry(this); });
+  this.el.on('change', 'input[name="distribute_as_income"]', function(){ view.markAsIncome(); });
+  this.el.on('change', 'li input[name$="[ammount]"]', function(){ view.updateAccountEntry(this); });
   this.el.find('li input[name$="[ammount]"]').trigger('change');
+};
+DistributeBankEntryView.prototype.markAsIncome = function(){
+  this.el.toggleClass('is-income',
+    this.el.find('input[name="distribute_as_income"]').is(':checked')
+  )
 };
 DistributeBankEntryView.prototype.updateAccountEntry = function(input){
   var bankEntry = $(input).closest('li'),

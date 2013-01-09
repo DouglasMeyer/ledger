@@ -3,4 +3,5 @@
   = f.hidden_field :account_name
   = f.object.account.name
 .ammount= f.text_field :ammount, class: "currency#{' negative' if f.object.ammount_cents < 0}"
+.strategy &middot;
 = currency (account_balance * 100 + f.object.ammount_cents) / 100.0, 'balance'
