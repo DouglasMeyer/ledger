@@ -6,7 +6,7 @@ gem 'pg'
 gem 'haml', github: 'haml/haml'
 gem 'haml-sprockets'
 gem 'simple_form'
-gem 'bourbon', :github => "coryschires/bourbon" # TODO: Remove fork once merged (2 Apr 2012)
+gem 'bourbon'
 gem 'capybara'
 
 
