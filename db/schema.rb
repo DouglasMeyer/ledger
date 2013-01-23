@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120805034946) do
+ActiveRecord::Schema.define(:version => 20130110040811) do
 
   create_table "account_entries", :force => true do |t|
     t.integer  "account_id",    :null => false
@@ -20,15 +20,17 @@ ActiveRecord::Schema.define(:version => 20120805034946) do
     t.text     "notes"
     t.datetime "created_at",    :null => false
     t.datetime "updated_at",    :null => false
+    t.integer  "strategy_id"
   end
 
   create_table "accounts", :force => true do |t|
-    t.string   "name",                         :null => false
-    t.boolean  "asset",      :default => true, :null => false
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
+    t.string   "name",                          :null => false
+    t.boolean  "asset",       :default => true, :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
     t.integer  "position"
     t.datetime "deleted_at"
+    t.integer  "strategy_id"
   end
 
   add_index "accounts", ["name"], :name => "index_accounts_on_name", :unique => true
@@ -44,5 +46,10 @@ ActiveRecord::Schema.define(:version => 20120805034946) do
   end
 
   add_index "bank_entries", ["external_id"], :name => "index_bank_entries_on_external_id", :unique => true
+
+  create_table "strategies", :force => true do |t|
+    t.string  "strategy_type",                               :default => "fixed", :null => false
+    t.decimal "variable",      :precision => 9, :scale => 2
+  end
 
 end

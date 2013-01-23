@@ -9,7 +9,7 @@
     = currency @bank_entry.ammount, :ammount
 
   %div
-    = check_box_tag 'distribute_as_income', nil, params[:distribute_as_income]
+    = check_box_tag 'distribute_as_income', nil, @distribute_as_income
     = label_tag 'distribute_as_income'
 
   .assets-list

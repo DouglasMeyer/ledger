@@ -1,0 +1,13 @@
+= hidden_field_tag :id, @strategy.id
+= hidden_field_tag :value, @strategy.value(@bank_entry)
+%h3= params[:account_entry][:account_name]
+%div= strategy_dot(@strategy, @bank_entry, ammount: params[:account_entry][:ammount], text: true)
+
+- unless @strategy.new_record?
+  %div= strategy_title(@strategy)
+  - unless params[:account_entry][:ammount].to_f == @strategy.value(@bank_entry)
+    = link_to "#", class: 'use-strategy' do
+      Use Strategy
+      = currency @strategy.value(@bank_entry), 'ammount', 'span'
+
+= link_to "Set Strategy", new_v2_strategy_path(bank_entry_id: params[:bank_entry_id], account_entry: params[:account_entry].slice(:account_name, :ammount))

@@ -99,29 +99,105 @@ var DistributeBankEntryView = function(el){
   this.el.submit(function(){ destroyBlank($('li', this)); });
   this.el.on('change', 'input[name="distribute_as_income"]', function(){ view.markAsIncome(); });
   this.el.on('change', 'li input[name$="[ammount]"]', function(){ view.updateAccountEntry(this); });
+  this.el.on('click', 'li .strategy', function(e){ view.showStrategy(this, e); });
+
+  this.el.find('input[name="distribute_as_income"]').trigger('change');
   this.el.find('li input[name$="[ammount]"]').trigger('change');
 };
 DistributeBankEntryView.prototype.markAsIncome = function(){
-  this.el.toggleClass('is-income',
-    this.el.find('input[name="distribute_as_income"]').is(':checked')
-  )
+  var isIncome = this.el.find('input[name="distribute_as_income"]').is(':checked'),
+      view = this;
+  this.el.toggleClass('is-income', isIncome);
+  this.el.find('li').each(function(){
+    view.useStrategy($(this), isIncome);
+  });
+};
+DistributeBankEntryView.prototype.useStrategy = function(accountEntry, use){
+  var ammount = accountEntry.find('input[name$="[ammount]"]'),
+      strategy = accountEntry.find('.strategy');
+  if (use === undefined) use = true;
+
+  if (use) {
+    accountEntry.find('.strategy input').val(strategy.data('id'));
+    ammount.currency(strategy.data('value'));
+    ammount.trigger('change');
+  } else {
+    accountEntry.find('.strategy input').val(null);
+  }
 };
 DistributeBankEntryView.prototype.updateAccountEntry = function(input){
-  var bankEntry = $(input).closest('li'),
-      ammountInput = bankEntry.find('input[name$="[ammount]"]'),
-      ammount = ammountInput.currency();
+  var accountEntry = $(input).closest('li'),
+      ammountInput = accountEntry.find('input[name$="[ammount]"]'),
+      ammount = ammountInput.currency(),
+      strategyAmmount = accountEntry.find('.strategy').data('value'),
+      usingStrategy = (ammount === parseFloat(strategyAmmount));
+
   ammountInput.currency(ammount);
-  bankEntry.find('.balance').currency(
-    bankEntry.data('account-balance') + ammount
+  accountEntry.find('.balance').currency(
+    accountEntry.data('account-balance') + ammount
   );
   this.updateDistributeAmmount();
-};
+  if (accountEntry.find('.strategy input').val()){
+    accountEntry.find('.strategy-dot')
+      .toggleClass('using', usingStrategy)
+      .toggleClass('not-using', !usingStrategy);
+  }
+}.delay();
 DistributeBankEntryView.prototype.updateDistributeAmmount = function(){
   var ammountRemaining = this.el.data('ammount') * 100;
   this.el.find('li input[name$="[ammount]"]').each(function(){
     ammountRemaining = Math.round(ammountRemaining - this.value.replace(/,/g, '') * 100)
   });
   this.el.find('#distribute-ammount').currency(ammountRemaining / 100);
+};
+DistributeBankEntryView.prototype.showStrategy = function(control, event){
+  var view = this,
+      accountEntry = $(control).closest('li'),
+      strategyId = accountEntry.find('.strategy').data('id') || 0,
+      el = jQuery('<div class="strategy-view"></div>')
+        .css({
+          position: 'absolute', top: event.pageY, left: event.pageX
+        })
+        .appendTo(document.body)
+        .load('/v2/strategies/'+strategyId+'?'+jQuery.param({
+          bank_entry_id: this.el.attr('id').match(/\d+/)[0],
+          account_entry: {
+            ammount: accountEntry.find('.ammount input').val(),
+            account_name: accountEntry.find('.account input').val()
+          }
+        }));
+  el.on('mousedown', function(e){ e.stopPropagation(); });
+  $('body').on('mousedown', function(){ el.remove(); });
+  el.on('click', 'a.use-strategy', function(e){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    view.useStrategy(accountEntry);
+    el.remove();
+  });
+  el.on('click', 'a', function(e){
+    e.preventDefault();
+    el.load(this.href);
+  });
+  el.on('click', 'form input[type="submit"]', function(e){
+    e.preventDefault();
+    var form = $(this).closest('form');
+    $.ajax({
+      type: 'POST',
+      url: form.attr('action'),
+      data: form.serialize(),
+      success: function(data, status, xhr){
+        el.html(xhr.responseText);
+        accountEntry.find('.strategy')
+          .data('id',         el.find('input[name="id"]'   ).val() )
+          .data('value',      el.find('input[name="value"]').val() )
+          .find('input').val( el.find('input[name="id"]'   ));
+        accountEntry.find('input[name$="[ammount]"]').trigger('change');
+      },
+      complete: function(xhr, status){
+        el.html(xhr.responseText);
+      }
+    });
+  });
 };
 
 jQuery(function($){

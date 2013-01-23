@@ -10,6 +10,7 @@ Sledger::Application.routes.draw do
   version 2 do
     resources :accounts, :only => :index
     resources :bank_entries, :only => [ :index, :show, :update, :edit ]
+    resources :strategies, :only => [ :show, :new, :create ]
     resources :searches, :only => [ :new, :create ]
 
     root :to => 'accounts#index'

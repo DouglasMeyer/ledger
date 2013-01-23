@@ -1,4 +1,5 @@
 //= require jquery
+//= require_self
 //= require_tree ./v2/
 
 var currency = {
@@ -28,11 +29,31 @@ jQuery.fn.extend({
       } else {
         elem.text(currency.format(value));
       }
+      return this;
+    } else {
+      return currency.parse(isInput ? elem.val() : elem.text());
     }
-    return currency.parse(isInput ? elem.val() : elem.text());
   }
 
 });
+
+//NOTE: this may be a bit of over-kill, but it works.
+Function.prototype.delay = function(time, keyFunc){
+  var func = this,
+      timers = {},
+      keyFunc = keyFunc || function(that, args){ return args[0].id; };
+  return function(){
+    var that = this,
+        args = arguments,
+        key = keyFunc(this, arguments),
+        timer = timers[key];
+    if (timer) clearTimeout(timer);
+    timers[key] = setTimeout(function(){
+      func.apply(that, args);
+      timers[key] = undefined;
+    }, time);
+  };
+};
 
 jQuery(function($){
 

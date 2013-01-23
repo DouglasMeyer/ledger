@@ -5,6 +5,7 @@ class Account < ActiveRecord::Base
   validate :zero_balance_when_deleting
 
   has_many :entries, :class_name => 'AccountEntry'
+  belongs_to :strategy
 
   scope :assets,      where(:asset => true )
   scope :liabilities, where(:asset => false)

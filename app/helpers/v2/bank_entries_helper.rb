@@ -19,6 +19,8 @@ module V2
                         f.object.account_entries.build({account_id: account.id, ammount_cents: 0}, without_protection: true)
                       end
       account_entry.ammount_cents += account_entries.sum(&:ammount_cents)
+      account_entry.strategy ||= account.strategy
+      account_entry.ammount ||= account_entry.strategy.value(f.object)
 
       f.fields_for(:account_entries, account_entries){ |ae|
         ae.hidden_field :_destroy, value: true

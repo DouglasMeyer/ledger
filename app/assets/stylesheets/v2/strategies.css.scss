@@ -1,0 +1,38 @@
+form.strategy-form {
+  input[type="radio"]:checked + label + div {
+    display: initial !important;
+  }
+}
+
+.strategy-view {
+  width: 27ex;
+  background-color: white;
+  border: 1px solid #333;
+  padding: 1ex;
+
+  h3 {
+    margin: -1ex -1ex 1ex;
+    padding: 0.2em 1em;
+    background-color: #644;
+    color: white;
+  }
+  input[type="text"] { width: 100%; }
+  .currency { float: right; }
+  a { display: block; }
+}
+
+.strategy-dot {
+  display: inline-block;
+  font-size: 150%;
+  width: 1ex;
+  height: 1ex;
+  line-height: 1ex;
+  &.using {
+    color: blue;
+    text-shadow: 1px 1px 2px blue, 2px 2px 4px blue;
+  }
+  &.not-using {
+    color: red;
+    text-shadow: 1px 1px 2px red, 2px 2px 4px red;
+  }
+}

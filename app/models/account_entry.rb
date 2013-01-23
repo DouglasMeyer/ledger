@@ -1,10 +1,13 @@
 class AccountEntry < ActiveRecord::Base
-  attr_accessible :account_name, :notes, :bank_entry_id, :ammount_cents, :ammount
+  attr_accessible :account_name, :notes, :bank_entry_id, :ammount_cents, :ammount, :strategy_id
 
   validates :bank_entry, :account, :presence => true
 
   belongs_to :bank_entry
   belongs_to :account
+  belongs_to :strategy
+
+  accepts_nested_attributes_for :strategy
 
   def account_name
     account && account.name
