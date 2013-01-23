@@ -1,3 +1,28 @@
+$primary-color: #644;
+
+ul.combo-button {
+  list-style-type: none;
+  input[type="radio"] { display: none; }
+  label {
+    display: block;
+    padding: 2px 1ex;
+    @include background-image(linear-gradient(lighten($primary-color, 5%) 0, darken($primary-color, 5%) 100%));
+    color: white;
+    border: 1px solid darken($primary-color, 20%);
+    border-top-width: 0;
+    text-shadow: 1px 1px 1px black;
+  }
+  input[type="radio"]:checked + label {
+    @include background-image(linear-gradient(darken($primary-color, 15%) 0, darken($primary-color, 5%) 15%));
+  }
+  li:first-child label {
+    @include border-top-radius(1ex);
+    border-top-width: 1px;
+  }
+  li:last-child label {
+    @include border-bottom-radius(1ex);
+  }
+}
 form.strategy-form {
   input[type="radio"]:checked + label + div {
     display: initial !important;
@@ -13,7 +38,7 @@ form.strategy-form {
   h3 {
     margin: -1ex -1ex 1ex;
     padding: 0.2em 1em;
-    background-color: #644;
+    background-color: $primary-color;
     color: white;
   }
   input[type="text"] { width: 100%; }
