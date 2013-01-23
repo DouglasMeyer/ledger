@@ -1,5 +1,0 @@
-.row.account-entry
-  .notes=  "<%= notes %>"
-  %input.ammount.currency
-  %input.account
-  .right-control(rel="remove-account-entry")= "-"
