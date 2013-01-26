@@ -20,7 +20,9 @@
 body.bank_entries {
 
   form.filters {
-    margin: 0 4em;
+    $filters_width: 55em;
+    text-align: center;
+    background-color: white;
 
     h3, .date, .distribute, .account, input[type="submit"] {
       display: inline-block;
@@ -30,10 +32,35 @@ body.bank_entries {
       margin-left: 1ex;
       margin-right: 1ex;
     }
+
+    @media (max-width: $filters_width) {
+      h3 {
+        display: block;
+        &:after {
+          content: ' v';
+          font-weight: normal;
+          font-size: 90%;
+        }
+      }
+    }
+
+    input[name="show_filters"] {
+      display: none;
+
+      @media (max-width: $filters_width) {
+        & ~ * { display: none; }
+        &:checked ~ * { display: initial; }
+      }
+    }
   }
 
+  // This is more of a min-width
+  $bank-entry-width: 45em;
   .bank-entries {
     margin: 1em 8em;
+    @media (max-width: $bank-entry-width // bank-entry width
+                    + 16em // margins
+                    ) { margin: 1em; }
     list-style-type: none;
 
     form .actions > * { margin-right: 1em; }
@@ -44,13 +71,24 @@ body.bank_entries {
 
     li {
       @include bank_entry;
+
+      @media (max-width: $bank-entry-width) {
+        padding-top: 1.2em;
+        .description { right: 0; }
+        margin-top: 1.2em;
+        padding-bottom: 1.2em;
+      }
+
       border-bottom: 1px dashed #DDD;
       &:last-child { border-bottom: none; }
 
       .date, .description, .distribute, .ammount, .account {
         z-index: 100;
       }
-      .distribute { right: 18.5em; }
+      .distribute {
+        right: 18.5em;
+        @media (max-width: $bank-entry-width) { right: 0; }
+      }
       .account-entry {
         position: relative;
         height: 1.4em;

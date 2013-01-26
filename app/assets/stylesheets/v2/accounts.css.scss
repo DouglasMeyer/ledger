@@ -2,10 +2,12 @@ body.accounts {
 
   .accounts-table {
     width: 50em;
+    @media (max-width: 50em) { width: auto; }
     margin: 0 auto;
 
     .assets-list, .liabilities-list {
       padding: 1em 2em;
+      @media (max-width: 50em){ padding: 1em 1em 2em; }
 
       .balance { float: right; }
     }

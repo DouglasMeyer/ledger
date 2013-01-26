@@ -1,5 +1,7 @@
 = form_tag v2_bank_entries_path, method: :get, class: 'filters' do
-  %h3 Filter entries
+  = label_tag 'show_filters' do
+    %h3 Filter entries
+  = check_box_tag 'show_filters'
   .date
     = label_tag :within
     = select_tag :within, options_for_select(@within.keys, params[:within]), include_blank: true

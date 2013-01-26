@@ -32,6 +32,7 @@ ul { margin: 0; padding: 0; }
   .assets-list, .liabilities-list {
     float: left;
     width: 50%;
+    @media (max-width: 35em) { width: 100%; }
 
     h2 { text-align: center; }
     ul { list-style-type: none; }
@@ -44,15 +45,22 @@ ul { margin: 0; padding: 0; }
 // Layout
 .navigation {
   font-size: 110%;
+  width: 100%;
   @include linear-gradient(tint(black, 20%), black);
   .accounts, .entries, .searches {
     display: inline-block;
     border-right: 1px solid black;
+    width: 10em;
+    @media (max-width: 10em // width of the link
+                      * 3   // number of links
+                      * 1.1 // font-size
+                      + 1em // scroll-bar
+                      ) { width: 33.3%; }
     a {
       display: inline-block;
-      height: 1.5em;
-      width: 10em;
-      margin: 0.5ex;
+      height: 2em;
+      line-height: 2em;
+      width: 100%;
       text-align: center;
       color: #CCC;
     }

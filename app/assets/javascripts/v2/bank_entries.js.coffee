@@ -33,7 +33,7 @@ BankEntriesView = (el)->
           .replace(/([\[_])\d+([\]_])/g, '$1'+(new Date).getTime()+'$2')
         blankAccountEntry = lastAccountEntry.after(html).next()
       blankAccountEntry.find('input[name$="[ammount]"]').currency(ammountRemaining / 100)
-      if blankAccountEntry.is('.focus')
+      if form.find('input[type="submit"]:focus')
         setTimeout(->
           $('select:visible, input:visible', blankAccountEntry).first().focus()
         , 10)
@@ -48,10 +48,10 @@ BankEntriesView = (el)->
   # Highlight the account entry
   $('.bank-entries')
     .on('focus', 'select, input', ->
-      $(this).closest('.account-entry').addClass('focus')
+      $(this).closest('li').addClass('focus')
     )
     .on('blur', 'select, input', ->
-      $(this).closest('.account-entry').removeClass('focus')
+      $(this).closest('li').removeClass('focus')
     )
 BankEntriesView.prototype.setup = (el)->
   view = this
