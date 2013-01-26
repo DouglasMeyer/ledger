@@ -24,6 +24,9 @@ module V2
         @bank_entries = bank_entries.join_aggrigate_account_entries
           .where('bank_entries.ammount_cents != aggrigate_account_entries.ammount_cents OR aggrigate_account_entries.ammount_cents IS NULL')
       end
+      @bank_entry_pages = bank_entries.count / 25
+      @bank_entries = bank_entries.offset(params[:page].to_i * 25) if params[:page]
+      @bank_entries = bank_entries.limit(25)
     end
 
     def show
@@ -47,7 +50,7 @@ module V2
 
   private
     def bank_entries
-      @bank_entries ||= BankEntry.order("bank_entries.date DESC, bank_entries.id DESC").limit(100)
+      @bank_entries ||= BankEntry.order("bank_entries.date DESC, bank_entries.id DESC")
     end
     def bank_entry
       @bank_entry ||= bank_entries.find(params[:id])
