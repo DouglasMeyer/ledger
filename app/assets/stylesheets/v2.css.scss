@@ -35,12 +35,15 @@ ul { margin: 0; padding: 0; }
     @media (max-width: 35em) { width: 100%; }
 
     h2 { text-align: center; }
+    h3 { margin-bottom: 0; font-size: 80%; font-weight: normal; text-transform: uppercase; }
     ul { list-style-type: none; }
     li { border-bottom: 1px dotted #DDD; }
   }
   .assets-list { padding-right: 2em; }
   .liabilities-list { padding-left: 2em; }
 }
+
+form .actions { clear: both; }
 
 // Layout
 .navigation {
@@ -75,3 +78,4 @@ ul { margin: 0; padding: 0; }
 @import "./v2/accounts";
 @import "./v2/bank_entries";
 @import "./v2/strategies";
+@import "./v2/icon-fonts";

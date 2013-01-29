@@ -13,4 +13,29 @@ body.accounts {
     }
   }
 
+  form.accounts-table {
+    li {
+      position: relative; height: 0.3em + 1.2em + 1.2em + 0.3em;
+
+      &:first-child .up { display: none; }
+      &:last-child .down { display: none; }
+    }
+    .up, .down {
+      cursor: pointer;
+      &:before { font-size: 75%; }
+    }
+    .up, .down, .category, .name, .balance { position: absolute; }
+
+    .up, .category { bottom: 1.5em; }
+    .down, .name { top: 1.5em; }
+    .balance { top: 1em; }
+
+    .up, .down { left: 0; width: 1em; }
+    .category, .name { left: 1em; right: 6em; }
+    .balance { right: 0; width: 6em; }
+
+    input[type="text"] { width: 100%; }
+    .category input { border-width: 0 0 1px; }
+  }
+
 }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130110040811) do
+ActiveRecord::Schema.define(:version => 20130126155917) do
 
   create_table "account_entries", :force => true do |t|
     t.integer  "account_id",    :null => false
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20130110040811) do
     t.integer  "position"
     t.datetime "deleted_at"
     t.integer  "strategy_id"
+    t.string   "category"
   end
 
   add_index "accounts", ["name"], :name => "index_accounts_on_name", :unique => true

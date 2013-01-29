@@ -2,11 +2,21 @@
   .assets-list
     %h2 Assets
     %ul
+      - category = nil
       - @accounts.assets.each do |account|
+        - if category != account.category
+          - category = account.category
+          %li
+            %h3= category
         %li= render account
 
   .liabilities-list
     %h2 Liabilities
     %ul
+      - category = nil
       - @accounts.liabilities.each do |account|
+        - if category != account.category
+          - category = account.category
+          %li
+            %h3= category
         %li= render account
