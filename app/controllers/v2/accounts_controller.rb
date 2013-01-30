@@ -22,7 +22,14 @@ module V2
 
       def accounts_attributes=(attributes)
         attributes.each do |_, values|
-          accounts.detect{|a| a.id.to_s == values['id'] }.assign_attributes values
+          id = values.delete(:id)
+          destroy = values.delete(:_destroy)
+          account = accounts.detect{|a| a.id.to_s == id } || Account.new
+          if destroy == '1'
+            next if account.new_record?
+            values = { deleted_at: Time.now }
+          end
+          account.update_attributes! values
         end
       end
     private

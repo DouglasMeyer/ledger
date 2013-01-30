@@ -1,5 +1,12 @@
 body.accounts {
 
+  &.index {
+    .edit-accounts {
+      text-decoration: none;
+      margin: 1ex;
+    }
+  }
+
   .accounts-table {
     width: 50em;
     @media (max-width: 50em) { width: auto; }
@@ -14,11 +21,21 @@ body.accounts {
   }
 
   form.accounts-table {
+    h2 .icon-plus {
+      display: inline-block;
+      margin-left: 1em;
+      font-size: 0.5em;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
     li {
       position: relative; height: 0.3em + 1.2em + 1.2em + 0.3em;
 
       &:first-of-type .up { display: none; }
       &:last-of-type .down { display: none; }
+
+      &.deleted { opacity: 0.3; }
     }
     .up, .down {
       cursor: pointer;
@@ -33,6 +50,8 @@ body.accounts {
     .up, .down { left: 0; width: 1em; }
     .category, .name { left: 1em; right: 6em; }
     .balance { right: 0; width: 6em; }
+
+    input[name$="[_destroy]"] { position: absolute; bottom: 0; right: 0; }
 
     input[type="text"] { width: 100%; }
     .category input { border-width: 0 0 1px; }

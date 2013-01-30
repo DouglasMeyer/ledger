@@ -1,6 +1,8 @@
 class Account < ActiveRecord::Base
   attr_accessible :name, :asset, :category, :position, :deleted_at
 
+  default_scope { where('deleted_at IS NULL') }
+
   validates :name, :presence => true, :uniqueness => true
   validate :zero_balance_when_deleting
 

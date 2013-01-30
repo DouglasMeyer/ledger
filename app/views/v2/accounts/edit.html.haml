@@ -1,12 +1,16 @@
 = form_for @edit_accounts, as: :accounts, url: v2_accounts_path, html: { class: 'accounts-table' } do |f|
   .assets-list
-    %h2 Assets
+    %h2
+      Assets
+      .icon-plus
     %ul
       = f.fields_for :accounts, f.object.assets.all do |account_f|
         %li= render partial: 'edit_account', locals: { f: account_f }
 
   .liabilities-list
-    %h2 Liabilities
+    %h2
+      Liabilities
+      .icon-plus
     %ul
       = f.fields_for :accounts, f.object.liabilities.all do |account_f|
         %li= render partial: 'edit_account', locals: { f: account_f }
