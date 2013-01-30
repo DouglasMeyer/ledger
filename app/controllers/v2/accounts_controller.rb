@@ -5,9 +5,8 @@ module V2
       extend ActiveModel::Naming
       include ActiveModel::MassAssignmentSecurity
       include ActiveModel::Conversion
-      #ActiveRecord::NestedAttributes::ClassMethods
       def initialize(attributes={})
-        update_attributes(attributes)
+        assign_attributes(attributes)
       end
       def persisted?; true; end
       def id; ''; end
@@ -17,17 +16,17 @@ module V2
       attr_accessible :accounts
 
       def update_attributes!(attributes)
-        update_attributes(attributes)
+        assign_attributes(attributes)
         accounts.each &:save!
       end
 
       def accounts_attributes=(attributes)
         attributes.each do |_, values|
-          accounts.detect{|a| a.id.to_s == values['id'] }.update_attributes values
+          accounts.detect{|a| a.id.to_s == values['id'] }.assign_attributes values
         end
       end
     private
-      def update_attributes(attributes)
+      def assign_attributes(attributes)
         attributes.each do |name, value|
           send("#{name}=", value)
         end

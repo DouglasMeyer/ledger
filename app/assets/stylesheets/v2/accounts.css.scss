@@ -17,8 +17,8 @@ body.accounts {
     li {
       position: relative; height: 0.3em + 1.2em + 1.2em + 0.3em;
 
-      &:first-child .up { display: none; }
-      &:last-child .down { display: none; }
+      &:first-of-type .up { display: none; }
+      &:last-of-type .down { display: none; }
     }
     .up, .down {
       cursor: pointer;

@@ -1,5 +1,5 @@
 class Account < ActiveRecord::Base
-  attr_accessible :name, :asset, :position, :deleted_at
+  attr_accessible :name, :asset, :category, :position, :deleted_at
 
   validates :name, :presence => true, :uniqueness => true
   validate :zero_balance_when_deleting

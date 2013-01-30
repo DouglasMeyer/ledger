@@ -1,26 +1,30 @@
 EditAccountView = (el)->
   @el = $(el)
-  view = this
 
-  @el.on 'click', '.up', (e) -> view.accountPositionUp(this, e)
-  @el.on 'click', '.down', (e) -> view.accountPositionDown(this, e)
+  @el.on 'click', '.up', (e) => @accountPositionUp(e)
+  @el.on 'click', '.down', (e) => @accountPositionDown(e)
 
-EditAccountView.prototype.accountPositionUp = (el, e) ->
-  account = $(el).closest('li')
-  previousAccount = account.prev('li')
+EditAccountView.prototype.accountPositionUp = (e) ->
+  account = $(e.target).closest('li')
+  previousAccount = account.prevAll('li:first')
   if previousAccount.length
-    positionPath = 'input[name$="[position]"]'
-    position = account.find(positionPath).val()
-    previousPosition = previousAccount.find(positionPath).val()
-    account.find(positionPath).val( previousPosition )
-    previousAccount.find(positionPath).val( position )
-    account.remove()
-    previousAccount.before( account )
+    @swapPositions previousAccount, account
 
-EditAccountView.prototype.accountPositionDown = (el, e) ->
-  nextAccount = $(el).closest('li').next('li')
+EditAccountView.prototype.accountPositionDown = (e) ->
+  account = $(e.target).closest('li')
+  nextAccount = account.nextAll('li:first')
   if nextAccount
-    @accountPositionUp nextAccount, e
+    @swapPositions account, nextAccount
+
+EditAccountView.prototype.swapPositions = (first_account, second_account) ->
+  positionPath = 'input[name$="[position]"]'
+
+  position = first_account.find(positionPath).val()
+  first_account.find(positionPath).val( second_account.find(positionPath).val() )
+  second_account.find(positionPath).val( position )
+
+  second_account.remove()
+  first_account.before( second_account )
 
 jQuery ($)->
   $('body.accounts.edit form.accounts-table').each -> new EditAccountView(this)
