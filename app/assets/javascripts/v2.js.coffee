@@ -35,6 +35,9 @@ jQuery.fn.extend
     else
       return currency.parse( if isInput then elem.val() else elem.text() )
 
+jQuery.expr[':'].named = (elem, index, arg) ->
+  jQuery(elem).is "[name$=\"[#{arg[3]}]\"]"
+
 #NOTE: this may be a bit of over-kill, but it works.
 Function.prototype.delay = (time, keyFunc) ->
   func = this
