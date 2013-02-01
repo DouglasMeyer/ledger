@@ -1,6 +1,6 @@
 class Strategy < ActiveRecord::Base
   attr_accessor :ammount
-  attr_accessible :strategy_type, :variable, :ammount
+  attr_accessible :strategy_type, :variable, :ammount, :notes
 
   has_one :account
 

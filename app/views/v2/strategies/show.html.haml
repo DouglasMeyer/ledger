@@ -5,6 +5,8 @@
 
 - unless @strategy.new_record?
   %div= strategy_title(@strategy)
+  - if @strategy.notes
+    .notes= @strategy.notes
   - unless params[:account_entry][:ammount].to_f == @strategy.value(@bank_entry)
     = link_to "#", class: 'use-strategy' do
       Use Strategy

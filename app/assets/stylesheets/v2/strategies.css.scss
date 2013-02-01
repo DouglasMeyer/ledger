@@ -41,9 +41,20 @@ form.strategy-form {
     background-color: $primary-color;
     color: white;
   }
-  input[type="text"] { width: 100%; }
+  input[type="text"], textarea { width: 100%; }
   .currency { float: right; }
   a { display: block; }
+  .notes {
+    @extend pre;
+    font-family: inherit;
+    font-size: 100%;
+    box-shadow: 1px 1px 4px #222 inset;
+    padding: 1ex 0.5ex;
+    margin: 0.5ex -0.5ex;
+    border-radius: 0.5ex;
+    color: #222;
+    background-color: #F3F3F3;
+  }
 }
 
 .strategy-dot {

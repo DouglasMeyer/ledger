@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130126155917) do
+ActiveRecord::Schema.define(:version => 20130201001423) do
 
   create_table "account_entries", :force => true do |t|
     t.integer  "account_id",    :null => false
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20130126155917) do
   create_table "strategies", :force => true do |t|
     t.string  "strategy_type",                               :default => "fixed", :null => false
     t.decimal "variable",      :precision => 9, :scale => 2
+    t.text    "notes"
   end
 
 end
