@@ -1,6 +1,6 @@
 require 'api_constraints'
 
-Sledger::Application.routes.draw do
+Ledger::Application.routes.draw do
   def self.version(version, default=false, &block)
     namespace version, &block
     scope(module: version, &block) if default

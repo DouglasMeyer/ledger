@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Sledger::Application.load_tasks
+Ledger::Application.load_tasks
