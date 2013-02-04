@@ -15,8 +15,7 @@
 
 %ul.bank-entries
   - @bank_entries.each do |bank_entry|
-    %li
-      = render bank_entry
+    %li= render bank_entry
 
 - if params[:page].to_i > 0
   = link_to "Previous Page", bank_entries_path(params.merge(page: params[:page].to_i - 1))

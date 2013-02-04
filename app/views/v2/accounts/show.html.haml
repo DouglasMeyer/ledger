@@ -1,0 +1,13 @@
+%h2.account
+  = @account.name
+  = currency @account.balance, 'balance', 'span'
+
+%ul.bank-entries
+  - @account.bank_entries.each do |bank_entry|
+    %li
+      .date= bank_entry.date
+      .description= bank_entry.description
+      - bank_entry.account_entries.each do |account_entry|
+        %div(class="#{account_entry.account_name == @account.name ? 'focus ' : ''}account-entry")
+          .account= account_entry.account_name
+          = currency account_entry.ammount_cents / 100.0, 'ammount'

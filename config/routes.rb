@@ -8,7 +8,7 @@ Sledger::Application.routes.draw do
 
 
   version "v2", true do
-    resources :accounts, only: :index do
+    resources :accounts, only: [ :index, :show ] do
       collection do
         get :edit
         put :update

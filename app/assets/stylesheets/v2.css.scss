@@ -49,6 +49,68 @@ ul { margin: 0; padding: 0; }
   .liabilities-list { padding-left: 2em; }
 }
 
+@mixin bank_entry {
+  position: relative;
+  min-height: 1.2em;
+
+  .date, .description, .distribute, .ammount, .account {
+    position: absolute; top: 0.1em;
+  }
+  .date { width: 8em; }
+  .description {
+    left: 8em;
+    right: 18em;
+    overflow: hidden;
+    white-space: pre;
+    text-overflow: ellipsis;
+  }
+  .ammount { width: 8em; right: 0; }
+  .account { width: 10em; right: 8em; }
+}
+
+// This is more of a min-width
+$bank-entry-width: 45em;
+.bank-entries {
+  margin: 1em 8em;
+  @media (max-width: $bank-entry-width
+                  + 16em // margins
+                  ) { margin: 1em; }
+  list-style-type: none;
+
+  form .actions > * { margin-right: 1em; }
+  form .actions { display: none; }
+  form.changed .actions { display: initial; }
+  form.changed .distribute { display: none; }
+  .focus { background-color: #F0F0F0; }
+
+  li {
+    @include bank_entry;
+
+    @media (max-width: $bank-entry-width) {
+      padding-top: 1.2em;
+      .description { right: 0; }
+      margin-top: 1.2em;
+      padding-bottom: 1.2em;
+    }
+
+    border-bottom: 1px dashed #DDD;
+    &:last-child { border-bottom: none; }
+
+    .date, .description, .distribute, .ammount, .account {
+      z-index: 100;
+    }
+    .distribute {
+      right: 18.5em;
+      @media (max-width: $bank-entry-width) { right: 0; }
+    }
+    .account-entry {
+      position: relative;
+      height: 1.4em;
+      input { width: 100%; }
+    }
+  }
+}
+
 form .actions { clear: both; }
 
 // Layout

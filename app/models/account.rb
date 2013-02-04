@@ -8,6 +8,7 @@ class Account < ActiveRecord::Base
 
   has_many :entries, :class_name => 'AccountEntry'
   belongs_to :strategy
+  has_many :bank_entries, through: :entries
 
   scope :assets,      where(:asset => true )
   scope :liabilities, where(:asset => false)

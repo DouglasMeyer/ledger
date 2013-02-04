@@ -16,4 +16,5 @@ end
 AccountEntry.blueprint do
   account { Account.make }
   bank_entry { BankEntry.make }
+  ammount_cents { object.bank_entry.ammount_remaining * rand * 100 }
 end

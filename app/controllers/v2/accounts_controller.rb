@@ -44,6 +44,10 @@ module V2
       accounts # populate @accounts
     end
 
+    def show
+      @account = Account.find(params[:id])
+    end
+
     def edit
       @edit_accounts = Accounts.new accounts: accounts # populate @accounts
     end

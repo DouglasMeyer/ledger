@@ -7,6 +7,15 @@ body.accounts {
     }
   }
 
+  &.show {
+    h2.account {
+      width: 15em;
+      margin-left: auto;
+      margin-right: auto;
+      .balance { float: right; }
+    }
+  }
+
   .accounts-table {
     width: 50em;
     @media (max-width: 50em) { width: auto; }
