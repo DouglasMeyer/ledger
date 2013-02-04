@@ -14,6 +14,12 @@ class BankEntry < ActiveRecord::Base
     ON aggrigate_account_entries.bank_entry_id = bank_entries.id
   ENDSQL
 
+  scope :needs_distribution, join_aggrigate_account_entries.where(<<-ENDSQL)
+      bank_entries.ammount_cents != aggrigate_account_entries.ammount_cents OR
+      ( aggrigate_account_entries.ammount_cents IS NULL AND
+        bank_entries.ammount_cents != 0 )
+    ENDSQL
+
   def ammount
     ammount_cents / 100.0
   end

@@ -16,4 +16,15 @@ describe BankEntry do
       BankEntry.join_aggrigate_account_entries.find(be.id).should_not be_nil
     end
   end
+
+  describe ".needs_distribution" do
+    it "has entries that need distribution" do
+      BankEntry.make! ammount_cents: 0
+      BankEntry.make! ammount_cents: 10
+      be = BankEntry.make!
+      AccountEntry.make! bank_entry: be, ammount_cents: be.ammount_cents
+
+      BankEntry.needs_distribution.count.should eq(1)
+    end
+  end
 end

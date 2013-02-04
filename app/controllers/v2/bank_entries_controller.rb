@@ -21,8 +21,7 @@ module V2
         @bank_entries = bank_entries.where('accounts.name' => account_name)
       end
       if (needs_distribution = params[:needs_distribution]).present?
-        @bank_entries = bank_entries.join_aggrigate_account_entries
-          .where('bank_entries.ammount_cents != aggrigate_account_entries.ammount_cents OR (aggrigate_account_entries.ammount_cents IS NULL AND bank_entries.ammount_cents != 0)')
+        @bank_entries = bank_entries.needs_distribution
       end
       @bank_entry_pages = bank_entries.count / 25
       @bank_entries = bank_entries.offset(params[:page].to_i * 25) if params[:page]

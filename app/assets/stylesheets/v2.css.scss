@@ -141,6 +141,19 @@ form .actions { clear: both; }
   body.searches & .searches {
     background-color: black;
   }
+  .count {
+    position: absolute;
+    display: inline-block;
+    top: 1px;
+    height: 1.4em;
+    line-height: 1;
+    font-size: 75%;
+    font-weight: bold;
+    background: #C00;
+    color: white;
+    border-radius: 1.3ex;
+    padding: 3px;
+  }
 }
 
 @import "./v2/accounts";
