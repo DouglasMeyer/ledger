@@ -1,40 +1,5 @@
 body.bank_entries {
 
-  form.filters {
-    $filters_width: 55em;
-    text-align: center;
-    background-color: white;
-
-    h3, .date, .distribute, .account, input[type="submit"] {
-      display: inline-block;
-      margin: 1ex 1em;
-    }
-    input, select {
-      margin-left: 1ex;
-      margin-right: 1ex;
-    }
-
-    @media (max-width: $filters_width) {
-      h3 {
-        display: block;
-        &:after {
-          content: ' v';
-          font-weight: normal;
-          font-size: 90%;
-        }
-      }
-    }
-
-    input[name="show_filters"] {
-      display: none;
-
-      @media (max-width: $filters_width) {
-        & ~ * { display: none; }
-        &:checked ~ * { display: initial; }
-      }
-    }
-  }
-
   form.accounts-table {
     width: 50em;
     margin: 1em auto;

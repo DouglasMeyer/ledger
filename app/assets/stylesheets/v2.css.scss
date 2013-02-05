@@ -118,15 +118,15 @@ form .actions { clear: both; }
   font-size: 110%;
   width: 100%;
   @include linear-gradient(tint(black, 20%), black);
-  .accounts, .entries, .searches {
+  .accounts, .entries {
     display: inline-block;
     border-right: 1px solid black;
     width: 10em;
     @media (max-width: 10em // width of the link
-                      * 3   // number of links
+                      * 2   // number of links
                       * 1.1 // font-size
                       + 1em // scroll-bar
-                      ) { width: 33.3%; }
+                      ) { width: 50%; }
     a {
       display: inline-block;
       height: 2em;
@@ -137,8 +137,7 @@ form .actions { clear: both; }
     }
   }
   body.accounts & .accounts,
-  body.bank_entries & .entries,
-  body.searches & .searches {
+  body.bank_entries & .entries {
     background-color: black;
   }
   .count {
