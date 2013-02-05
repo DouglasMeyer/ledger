@@ -39,7 +39,7 @@ jQuery.expr[':'].named = (elem, index, arg) ->
   jQuery(elem).is "[name$=\"[#{arg[3]}]\"]"
 
 #NOTE: this may be a bit of over-kill, but it works.
-Function.prototype.delay = (time, keyFunc) ->
+Function::delay = (time, keyFunc) ->
   func = this
   timers = {}
   keyFunc = keyFunc || (that, args) -> args[0].id
