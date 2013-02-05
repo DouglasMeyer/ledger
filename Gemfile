@@ -27,9 +27,11 @@ gem 'jquery-rails'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
-# To use debugger
-gem 'ruby-debug19', :require => 'ruby-debug', :group => [ :test, :development ]
+group :development, :test do
+  gem 'ruby-debug19', require:  'ruby-debug'
+  gem 'rspec-rails'
+  gem 'test_rails_js', '~> 0.1.2'
+end
 
-gem 'rspec-rails', group: [ :test, :development ]
 gem 'machinist', group: :test
-gem 'net-netrc', group: [ :development ]
+gem 'net-netrc', group: :development

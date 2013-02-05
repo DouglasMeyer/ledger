@@ -6,7 +6,7 @@ destroyBlank = (accountEntries) ->
   ).each(->
     $('input:named(_destroy)', this).val('true')
   )
-BankEntriesView = (el)->
+window.BankEntriesView = (el)->
   @el = $(el)
   #FIXME: el is @el, fix?
   @setup(el)
@@ -24,7 +24,7 @@ BankEntriesView = (el)->
       ammount.currency(value)
       ammountRemaining = Math.round(ammountRemaining - value * 100)
     blankAccountEntry = form.find('.account-entry').filter(->
-      !$('select:named(account_name)', this).get(0).value
+      $('select:named(account_name)', this).val() == ''
     ).last()
     if ammountRemaining != 0
       if blankAccountEntry.length == 0
@@ -32,7 +32,10 @@ BankEntriesView = (el)->
         html = lastAccountEntry.get(0).outerHTML
           .replace(/([\[_])\d+([\]_])/g, '$1'+(new Date).getTime()+'$2')
         blankAccountEntry = lastAccountEntry.after(html).next()
+      else
+        ammountRemaining = Math.round(ammountRemaining + blankAccountEntry.find('input:named(ammount)').currency() * 100)
       blankAccountEntry.find('input:named(ammount)').currency(ammountRemaining / 100)
+      blankAccountEntry.find('select:named(account_name)').val(null)
       if form.find('input[type="submit"]:focus')
         setTimeout(->
           $('select:visible, input:visible', blankAccountEntry).first().focus()

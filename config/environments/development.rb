@@ -34,4 +34,7 @@ Ledger::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  config.test_rails_js.tests_paths += %w(/**/tests/**/*.coffee)
+  config.test_rails_js.global_assets.stylesheets += %w(test_it v2)
 end
