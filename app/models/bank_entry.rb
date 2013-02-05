@@ -1,4 +1,5 @@
 class BankEntry < ActiveRecord::Base
+  default_scope order("bank_entries.date DESC, bank_entries.id DESC")
   has_many :account_entries
   accepts_nested_attributes_for :account_entries, allow_destroy: true
 
@@ -15,10 +16,10 @@ class BankEntry < ActiveRecord::Base
   ENDSQL
 
   scope :needs_distribution, join_aggrigate_account_entries.where(<<-ENDSQL)
-      bank_entries.ammount_cents != aggrigate_account_entries.ammount_cents OR
-      ( aggrigate_account_entries.ammount_cents IS NULL AND
-        bank_entries.ammount_cents != 0 )
-    ENDSQL
+    bank_entries.ammount_cents != aggrigate_account_entries.ammount_cents OR
+    ( aggrigate_account_entries.ammount_cents IS NULL AND
+      bank_entries.ammount_cents != 0 )
+  ENDSQL
 
   def ammount
     ammount_cents / 100.0

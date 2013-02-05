@@ -88,14 +88,12 @@ DistributeBankEntryView = (el)->
   @el.on 'change', 'li input:named(ammount)', -> view.updateAccountEntry(this)
   @el.on 'click', 'li .strategy', (e)-> view.showStrategy(this, e)
 
-  @el.find('input[name="distribute_as_income"]').trigger('change')
   @el.find('li input:named(ammount)').trigger('change')
 DistributeBankEntryView.prototype.markAsIncome = ->
-  isIncome = this.el.find('input[name="distribute_as_income"]').is(':checked')
+  isIncome = @el.find('input[name="distribute_as_income"]').is(':checked')
   view = this
-  this.el.toggleClass('is-income', isIncome)
-  this.el.find('li').each ->
-    view.useStrategy($(this), isIncome)
+  @el.toggleClass('is-income', isIncome)
+  @el.find('li[data-account-balance]').each -> view.useStrategy($(this), isIncome)
 DistributeBankEntryView.prototype.useStrategy = (accountEntry, use)->
   ammount = accountEntry.find('input:named(ammount)')
   strategy = accountEntry.find('.strategy')

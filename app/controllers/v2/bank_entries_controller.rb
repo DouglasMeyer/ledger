@@ -13,19 +13,19 @@ module V2
         '1 year' => 1.year.ago
       }
 
-      @bank_entries = bank_entries.includes(account_entries: :account)
+      @bank_entries = BankEntry.includes(account_entries: :account)
       if (within = params[:within]).present? && @within[within]
-        @bank_entries = bank_entries.where(date: (@within[within]...Time.now))
+        @bank_entries = @bank_entries.where(date: (@within[within]...Time.now))
       end
       if (account_name = params[:account_name]).present?
-        @bank_entries = bank_entries.where('accounts.name' => account_name)
+        @bank_entries = @bank_entries.where('accounts.name' => account_name)
       end
       if (needs_distribution = params[:needs_distribution]).present?
-        @bank_entries = bank_entries.needs_distribution
+        @bank_entries = @bank_entries.needs_distribution
       end
-      @bank_entry_pages = bank_entries.count / 25
-      @bank_entries = bank_entries.offset(params[:page].to_i * 25) if params[:page]
-      @bank_entries = bank_entries.limit(25)
+      @bank_entry_pages = @bank_entries.count / 25
+      @bank_entries = @bank_entries.offset(params[:page].to_i * 25) if params[:page]
+      @bank_entries = @bank_entries.limit(25)
     end
 
     def show
@@ -48,11 +48,8 @@ module V2
     end
 
   private
-    def bank_entries
-      @bank_entries ||= BankEntry.order("bank_entries.date DESC, bank_entries.id DESC")
-    end
     def bank_entry
-      @bank_entry ||= bank_entries.find(params[:id])
+      @bank_entry ||= BankEntry.find(params[:id])
     end
 
     def load_account_names

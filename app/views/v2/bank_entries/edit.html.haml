@@ -1,4 +1,5 @@
-= form_for [ :v2, @bank_entry ], html: { class: 'accounts-table', data: { ammount: @bank_entry.ammount } } do |f|
+- classes = "accounts-table#{' is-income' if @distribute_as_income}"
+= form_for [ :v2, @bank_entry ], html: { class: classes, data: { ammount: @bank_entry.ammount } } do |f|
   %h2
     %span#distribute-ammount.currency= @bank_entry.ammount_remaining
     &nbsp;left to distribute from:
