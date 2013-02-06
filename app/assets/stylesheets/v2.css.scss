@@ -6,10 +6,9 @@
   @include box-sizing(border-box);
 }
 html, body { height: 100%; width: 100%; }
-html { overflow: hidden; }
+html { overflow: auto; }
 body {
   position: relative;
-  overflow: auto;
   font-size: medium;
   line-height: 1.2;
   color: #444;
