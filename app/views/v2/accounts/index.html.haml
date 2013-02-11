@@ -1,3 +1,6 @@
+- content_for :navigation do
+  = link_to '', edit_v2_accounts_path, title: 'Edit Accounts', class: 'icon-pencil'
+
 .accounts-table
   .assets-list
     %h2 Assets
@@ -20,6 +23,3 @@
           %li
             %h3= category
         %li= render account
-
-= link_to edit_v2_accounts_path(), class: 'edit-accounts' do
-  .icon-pencil

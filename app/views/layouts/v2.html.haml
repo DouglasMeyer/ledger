@@ -8,13 +8,12 @@
     %meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1")
 
   %body(class="#{controller_name} #{action_name}")
-    %ul.navigation
-      %li.accounts= link_to "Accounts", v2_root_path
-      %li.entries
-        = link_to v2_bank_entries_path do
-          Entries
-          - needs_distribution_count = BankEntry.needs_distribution.count
-          - if needs_distribution_count > 0
-            -#= link_to needs_distribution_count, "#", class: 'count'
-            %span.count= needs_distribution_count
+    .navigation
+      = link_to "Accounts", v2_root_path, class: 'accounts'
+      = link_to v2_bank_entries_path, class: 'entries' do
+        Entries
+        - needs_distribution_count = BankEntry.needs_distribution.count
+        - if needs_distribution_count > 0
+          %span.count= needs_distribution_count
+      .page-actions= yield :navigation
     = yield
