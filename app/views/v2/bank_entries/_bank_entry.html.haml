@@ -1,8 +1,16 @@
 = form_for [ :v2, bank_entry ], html: { data: { ammount: bank_entry.ammount } } do |f|
-  .date= bank_entry.date
-  .description= bank_entry.description
+  .date
+    - if bank_entry.from_bank?
+      = bank_entry.date
+    - else
+      = f.text_field :date#, type: 'date'
+  .description
+    - if bank_entry.from_bank?
+      = bank_entry.description
+    - else
+      = f.text_field :description
   - bank_entry.account_entries.build(ammount: bank_entry.ammount_remaining) unless bank_entry.ammount_remaining.zero?
-  - if (last_ae = bank_entry.account_entries.last) && last_ae.new_record?
+  - if !bank_entry.new_record? && (last_ae = bank_entry.account_entries.last) && last_ae.new_record?
     .distribute= link_to 'Distribute', [ :edit, :v2, bank_entry ]
   = f.fields_for :account_entries do |ae|
     .account-entry

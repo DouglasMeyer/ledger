@@ -97,6 +97,7 @@ $bank-entry-width: 45em;
 
     .date, .description, .distribute, .ammount, .account {
       z-index: 100;
+      input { width: 100%; }
     }
     .distribute {
       right: 18.5em;
@@ -105,7 +106,6 @@ $bank-entry-width: 45em;
     .account-entry {
       position: relative;
       height: 1.4em;
-      input { width: 100%; }
     }
   }
 }

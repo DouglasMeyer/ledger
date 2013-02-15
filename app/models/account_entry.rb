@@ -1,5 +1,6 @@
 class AccountEntry < ActiveRecord::Base
   attr_accessible :account_name, :notes, :bank_entry_id, :ammount_cents, :ammount, :strategy_id
+  attr_accessible :account_name, :ammount, as: :creator
 
   validates :bank_entry, :account, :presence => true
 

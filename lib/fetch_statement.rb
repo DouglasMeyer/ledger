@@ -48,7 +48,8 @@ module FetchStatement
 
     session.check "checkbox"
     session.find('input[value="com.s1.common.download.user.spanByDates"]').set(true)
-    session.fill_in 'beginDate', :with => BankEntry.pluck(:date).max.strftime('%m/%d/%y')
+    latest_bank_entry_date = BankEntry.from_bank.first.date.strftime('%m/%d/%y')
+    session.fill_in 'beginDate', :with => latest_bank_entry_date
     session.fill_in 'endDate',   :with => Date.today.strftime('%m/%d/%y')
     session.click_button 'Download'
 

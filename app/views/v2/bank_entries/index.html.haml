@@ -1,3 +1,8 @@
+- content_for :navigation do
+  = link_to '', '#', title: 'Add Entry', class: 'icon-plus'
+
+#new-bank-entry(style="display:none;")= render @new_bank_entry
+
 %ul.bank-entries
   - @bank_entries.each do |bank_entry|
     %li= render bank_entry

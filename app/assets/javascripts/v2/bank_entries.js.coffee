@@ -13,6 +13,16 @@ class window.BankEntriesView
     @setup(el)
     view = this
 
+    $('.page-actions .icon-plus').click (e) =>
+      e.preventDefault()
+      $('<li />', { html: $('#new-bank-entry').html() })
+        .prependTo(@el)
+        .find('form')
+          .attr('id', null)
+          .submit(-> view.submitBankEntry(this))
+        .end()
+        .find('input').trigger 'change'
+
     @el.on 'change', 'select, input', ->
       form = $(this).closest('form')
       ammountRemaining = form.data('ammount') * 100
@@ -46,8 +56,12 @@ class window.BankEntriesView
     this.el.on 'click', '.cancel', (e) ->
       e.preventDefault()
       form = $(this).closest('form')
-      form.closest('li').load form.attr('action'), ->
-        view.setup(this)
+      bankEntry = form.closest('li')
+      if form.hasClass('new_bank_entry')
+        bankEntry.remove()
+      else
+        bankEntry.load form.attr('action'), ->
+          view.setup(this)
 
     # Highlight the account entry
     $('.bank-entries')
@@ -66,23 +80,24 @@ class window.BankEntriesView
       ammount.currency(ammount.currency())
 
     # Handle form submissions
-    $('form', el).submit ->
-      form = $(this)
-      destroyBlank(form.find('.account-entry'))
+    $('form', el).submit -> view.submitBankEntry(this)
+  submitBankEntry: (form)->
+    form = $(form)
+    destroyBlank(form.find('.account-entry'))
 
-      $.ajax
-        url: form.attr('action')
-        data: form.serialize()
-        type: 'PUT'
-        context: this
-        complete: (xhr, status) ->
-          li = $(this).closest('li')
-          li.html(xhr.responseText)
-          view.setup(li)
+    $.ajax
+      url: form.attr('action')
+      data: form.serialize()
+      type: 'POST' # form data should have: _method: 'PUT' / 'POST'
+      context: form
+      complete: (xhr, status) =>
+        li = $(form).closest('li')
+        li.html(xhr.responseText)
+        @setup(li)
 
-      form.closest('li').next('li').find('select:visible, input:visible').first().focus()
+    form.closest('li').next('li').find('select:visible, input:visible').first().focus()
 
-      return false
+    return false
 
 class window.DistributeBankEntryView
   constructor: (el)->
