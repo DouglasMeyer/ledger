@@ -22,6 +22,42 @@ describe BankEntry do
     it "is false when external_id is nil" do
       BankEntry.new.from_bank?.should be(false)
     end
+
+    it "prevents changes to external_id" do
+      be = BankEntry.make!(external_id: 1)
+      be.external_id = nil
+      be.valid?.should be(false)
+      be.errors[:external_id].should eq([I18n.t('errors.messages.immutable')])
+    end
+
+    it "prevents changes to date" do
+      be = BankEntry.make!(external_id: 1)
+      be.date = 1.week.ago
+      be.valid?.should be(false)
+      be.errors[:date].should eq([I18n.t('errors.messages.immutable')])
+    end
+
+    it "prevents changes to description" do
+      be = BankEntry.make!(external_id: 1)
+      be.description = "Something new"
+      be.valid?.should be(false)
+      be.errors[:description].should eq([I18n.t('errors.messages.immutable')])
+    end
+
+    it "prevents changes to ammount_cents" do
+      be = BankEntry.make!(external_id: 1)
+      be.ammount_cents = 123_45
+      be.valid?.should be(false)
+      be.errors[:ammount_cents].should eq([I18n.t('errors.messages.immutable')])
+    end
+
+    it "allows changes when not from_bank?" do
+      be = BankEntry.make!(external_id: nil)
+      be.date = 1.week.ago
+      be.description = "Something new"
+      be.ammount_cents = 123_45
+      be.valid?.should be(true)
+    end
   end
 
   describe ".join_aggrigate_account_entries" do

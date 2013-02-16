@@ -36,7 +36,7 @@ module V2
 
     def create
       account_entries_attributes = params[:bank_entry].delete(:account_entries_attributes)
-      new_bank_entry.assign_attributes(params[:bank_entry], as: :creator)
+      new_bank_entry.assign_attributes(params[:bank_entry])
       new_bank_entry.save!
       new_bank_entry.update_attributes!(account_entries_attributes: account_entries_attributes)
       render new_bank_entry

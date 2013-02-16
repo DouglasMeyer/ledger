@@ -3,8 +3,9 @@ class BankEntry < ActiveRecord::Base
   has_many :account_entries
   accepts_nested_attributes_for :account_entries, allow_destroy: true
 
-  attr_accessible :account_entries_attributes
-  attr_accessible :date, :description, :account_entries_attributes, :ammount_cents, as: :creator
+  attr_accessible :date, :description, :account_entries_attributes, :ammount_cents
+
+  validate :fields_from_bank_do_not_update
 
   scope :reverse_order, order(:date, :id)
   scope :join_aggrigate_account_entries, joins(<<-ENDSQL)
@@ -71,4 +72,15 @@ class BankEntry < ActiveRecord::Base
       end
     end
   end
+
+private
+  def fields_from_bank_do_not_update
+    return if new_record?
+    errors.add(:external_id, :immutable) if external_id_changed?
+    return unless from_bank?
+    errors.add(:date, :immutable) if date_changed?
+    errors.add(:description, :immutable) if description_changed?
+    errors.add(:ammount_cents, :immutable) if ammount_cents_changed?
+  end
+
 end
