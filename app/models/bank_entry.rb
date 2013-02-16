@@ -6,6 +6,7 @@ class BankEntry < ActiveRecord::Base
   attr_accessible :account_entries_attributes
   attr_accessible :date, :description, :account_entries_attributes, :ammount_cents, as: :creator
 
+  scope :reverse_order, order(:date, :id)
   scope :join_aggrigate_account_entries, joins(<<-ENDSQL)
     LEFT OUTER JOIN (
       SELECT SUM(ammount_cents) AS ammount_cents,
@@ -42,5 +43,32 @@ class BankEntry < ActiveRecord::Base
   def as_json(options={})
     (options[:methods] ||= []).push(:account_entries)
     super(options)
+  end
+
+  def self.to_csv
+    CSV.generate do |csv|
+      csv << [ 'Date', 'Check #', 'Description', 'Debit', 'Credit', 'Status', 'Balance', 'id', 'Category' ]
+      all.each do |bank_entry|
+        debit = -bank_entry.ammount if bank_entry.ammount < 0
+        credit = bank_entry.ammount if bank_entry.ammount > 0
+        account_name = ''
+        if bank_entry.account_entries.length == 1
+          account_entry = bank_entry.account_entries.first
+          debit = -account_entry.ammount if account_entry.ammount < 0
+          credit = account_entry.ammount if account_entry.ammount > 0
+          account_name = account_entry.account_name
+        end
+        csv << [ bank_entry.date.strftime('%m/%d/%Y'), bank_entry.notes, bank_entry.description, debit, credit, '', '$', bank_entry.external_id, account_name ]
+        if bank_entry.account_entries.length > 1
+          bank_entry.account_entries.each do |account_entry|
+            csv << [ '', '', '',
+              (-account_entry.ammount if account_entry.ammount < 0),
+              (account_entry.ammount if account_entry.ammount > 0),
+              '', '', '', account_entry.account_name
+            ]
+          end
+        end
+      end
+    end
   end
 end

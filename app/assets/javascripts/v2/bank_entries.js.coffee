@@ -9,7 +9,6 @@ destroyBlank = (accountEntries) ->
 class window.BankEntriesView
   constructor: (el)->
     @el = $(el)
-    #FIXME: el is @el, fix?
     @setup(el)
     view = this
 
