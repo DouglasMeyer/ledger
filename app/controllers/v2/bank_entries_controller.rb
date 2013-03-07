@@ -26,7 +26,10 @@ module V2
     end
 
     def update
-      bank_entry.update_attributes!(params[:bank_entry])
+      bank_entry_params = params.permit(bank_entry: { account_entries_attributes: [
+        :account_name, :ammount
+      ]})
+      bank_entry.update_attributes! bank_entry_params
       if request.xhr?
         render bank_entry
       else
@@ -35,10 +38,12 @@ module V2
     end
 
     def create
-      account_entries_attributes = params[:bank_entry].delete(:account_entries_attributes)
-      new_bank_entry.assign_attributes(params[:bank_entry])
+      new_bank_entry.assign_attributes params.require(:bank_entry).permit(:date, :description)
       new_bank_entry.save!
-      new_bank_entry.update_attributes!(account_entries_attributes: account_entries_attributes)
+
+      new_bank_entry.update_attributes!(params.require(:bank_entry).permit(account_entries_attributes: [
+        :account_name, :ammount
+      ]))
       render new_bank_entry
     end
 

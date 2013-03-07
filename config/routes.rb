@@ -19,4 +19,6 @@ Ledger::Application.routes.draw do
 
     root :to => 'accounts#index'
   end
+
+  match '/api' => 'api#bulk', via: :post
 end

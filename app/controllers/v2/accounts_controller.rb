@@ -3,7 +3,6 @@ module V2
 
     class Accounts
       extend ActiveModel::Naming
-      include ActiveModel::MassAssignmentSecurity
       include ActiveModel::Conversion
       def initialize(attributes={})
         assign_attributes(attributes)
@@ -13,7 +12,6 @@ module V2
 
       attr_accessor :accounts
       delegate :assets, :liabilities, to: :accounts
-      attr_accessible :accounts
 
       def update_attributes!(attributes)
         assign_attributes(attributes)
@@ -52,7 +50,7 @@ module V2
       @edit_accounts = Accounts.new accounts: accounts # populate @accounts
     end
 
-    def update
+    def update # update all accounts
       @edit_accounts = Accounts.new accounts: accounts
       @edit_accounts.update_attributes! params[:accounts]
       redirect_to action: :index
@@ -61,6 +59,10 @@ module V2
   private
     def accounts
       @accounts ||= Account.where("deleted_at IS NULL").order(:position)
+    end
+
+    def accounts_attributes
+      params.permit(accounts: [ :name, :asset, :category, :position ]) # Deleted
     end
   end
 end

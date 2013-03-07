@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.11'
+gem 'rails', '4.0.0.beta1'
 
 gem 'pg'
 gem 'haml', github: 'haml/haml'
@@ -12,8 +12,8 @@ gem 'capybara'
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+  gem 'sass-rails',   '~> 4.0.0.beta1'
+  gem 'coffee-rails', '~> 4.0.0.beta1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platform => :ruby
@@ -34,5 +34,9 @@ group :development, :test do
   gem 'test_rails_js', '~> 0.1.2'
 end
 
+group :development do
+  gem 'net-netrc', require: false
+  gem 'httparty', require: false
+end
+
 gem 'machinist', group: :test
-gem 'net-netrc', group: :development

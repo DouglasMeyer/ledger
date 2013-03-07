@@ -1,14 +1,13 @@
 class BankEntry < ActiveRecord::Base
-  default_scope order("bank_entries.date DESC, bank_entries.id DESC")
+  default_scope { order("bank_entries.date DESC, bank_entries.id DESC") }
   has_many :account_entries
   accepts_nested_attributes_for :account_entries, allow_destroy: true
 
-  attr_accessible :date, :description, :account_entries_attributes, :ammount_cents
-
+  validates :external_id, uniqueness: true
   validate :fields_from_bank_do_not_update
 
-  scope :reverse_order, order(:date, :id)
-  scope :join_aggrigate_account_entries, joins(<<-ENDSQL)
+  scope :reverse_order, -> { order(:date, :id) }
+  scope :join_aggrigate_account_entries, -> { joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
       SELECT SUM(ammount_cents) AS ammount_cents,
              bank_entry_id
@@ -18,13 +17,13 @@ class BankEntry < ActiveRecord::Base
     ON aggrigate_account_entries.bank_entry_id = bank_entries.id
   ENDSQL
 
-  scope :needs_distribution, join_aggrigate_account_entries.where(<<-ENDSQL)
+  scope :needs_distribution, -> { join_aggrigate_account_entries.where(<<-ENDSQL) }
     bank_entries.ammount_cents != aggrigate_account_entries.ammount_cents OR
     ( aggrigate_account_entries.ammount_cents IS NULL AND
       bank_entries.ammount_cents != 0 )
   ENDSQL
 
-  scope :from_bank, where("external_id IS NOT NULL")
+  scope :from_bank, -> { where("external_id IS NOT NULL") }
   def from_bank?
     external_id.present?
   end

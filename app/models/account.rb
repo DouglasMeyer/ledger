@@ -1,6 +1,4 @@
 class Account < ActiveRecord::Base
-  attr_accessible :name, :asset, :category, :position, :deleted_at
-
   default_scope { where('deleted_at IS NULL') }
 
   validates :name, :presence => true, :uniqueness => true
@@ -10,8 +8,8 @@ class Account < ActiveRecord::Base
   belongs_to :strategy
   has_many :bank_entries, through: :entries
 
-  scope :assets,      where(:asset => true )
-  scope :liabilities, where(:asset => false)
+  scope :assets,      -> { where(:asset => true ) }
+  scope :liabilities, -> { where(:asset => false) }
 
   def balance_cents
     entries.pluck(:ammount_cents).sum

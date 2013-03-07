@@ -11,10 +11,10 @@ describe V2::BankEntriesController do
         bank_entry: {
           date: '2013-02-13',
           description: 'test',
-          account_entries_attributes: {
-            0 => { account_name: 'Doug Blow', ammount: '-8.00' },
-            1 => { account_name: 'Grocery', ammount: '8.00' }
-          }
+          account_entries_attributes: [
+            { account_name: 'Doug Blow', ammount: '-8.00' },
+            { account_name: 'Grocery',   ammount:  '8.00' }
+          ]
         }
 
       bank_entry = BankEntry.last

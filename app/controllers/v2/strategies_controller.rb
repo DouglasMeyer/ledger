@@ -25,7 +25,7 @@ module V2
     def load_strategy
       @strategy =
         Strategy.where(id: params[:id]).first ||
-        Strategy.new(params[:strategy])
+        Strategy.new(params.permit(strategy: [ :strategy_type, :variable, :ammount, :notes ])
     end
   end
 end
