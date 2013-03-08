@@ -1,7 +1,11 @@
 namespace :statement do
 
+  def json_file
+    @json_file ||= Rails.root + 'tmp' + 'new_bank_entries.json'
+  end
+
   desc 'Fetch, Send, and Import statement'
-  task :default => [ :fetch, :send, :import ]
+  task :default => [ :fetch, :import, :send ]
 
   desc 'Fetch statement from Harris'
   task :fetch => :environment do
@@ -12,7 +16,6 @@ namespace :statement do
 
   task :parse => :environment do
     require Rails.root + 'lib' + 'parse_statement'
-    json_file = Rails.root + 'tmp' + 'new_bank_entries.json'
     bank_entries = JSON.parse(File.read(json_file)) rescue []
 
     (Rails.root + 'tmp' + 'downloads').entries.each do |statement|
@@ -31,7 +34,6 @@ namespace :statement do
 
     netrc = Net::Netrc.locate('harrisbank.com')
     request = []
-    json_file = Rails.root + 'tmp' + 'new_bank_entries.json'
     JSON.parse(File.read(json_file)).each do |bank_entry|
       request << { action: :create, type: :bank_entry, data: bank_entry }
     end

@@ -82,7 +82,6 @@ module ImportStatement
 
     transactions = StatementEntry.parse(file).sort_by{|tr| tr.id }
     return unless transactions.any?
-    pp transactions
 
     transactions.each do |t|
       ::BankEntry.find_or_create_by_external_id!(t.id.to_s) do |e|
