@@ -4,9 +4,6 @@ namespace :statement do
     @json_file ||= Rails.root + 'tmp' + 'new_bank_entries.json'
   end
 
-  desc 'Fetch, Send, and Import statement'
-  task :default => [ :fetch, :import, :send ]
-
   desc 'Fetch statement from Harris'
   task :fetch => :environment do
     require Rails.root + 'lib' + 'fetch_statement'
@@ -22,7 +19,7 @@ namespace :statement do
       statement = Rails.root + 'tmp' + 'downloads' + statement
       next unless statement.file?
       bank_entries += ParseStatement.run(statement).compact
-      #statement.delete
+      statement.delete
     end
     File.open(json_file, 'w'){ |f| f.write(bank_entries.to_json) }
   end
@@ -37,8 +34,8 @@ namespace :statement do
     JSON.parse(File.read(json_file)).each do |bank_entry|
       request << { action: :create, type: :bank_entry, data: bank_entry }
     end
-    response = HTTParty.post "http://localhost:3001/api.json", {
-#      basic_auth: { username: netrc.login, password: netrc.password },
+    response = HTTParty.post "http://pi:8001/api.json", {
+      basic_auth: { username: netrc.login, password: netrc.password },
       body: { body: request.to_json }
     }
     bank_entries = JSON.parse(response.body).map do |bank_entry|
@@ -54,13 +51,15 @@ namespace :statement do
 
   desc 'Import statements from tmp/downloads directory'
   task :import => :environment do
-    require Rails.root + 'lib' + 'import_statement'
-    dir = Rails.root.join('tmp/downloads')
-    statements = dir.entries.map{|e| dir + e }.select(&:file?)
-    statements.each do |statement|
-      ImportStatement.run(statement)
-      statement.delete
+    #FIXME: I need to do something with the bank balance
+    JSON.parse(File.read(json_file)).each do |attributes|
+      unless BankEntry.where(external_id: attributes['external_id']).any?
+        BankEntry.create!(attributes)
+      end
     end
   end
 
 end
+
+desc 'Fetch, Send, and Import statement'
+task :statement => [ 'statement:fetch', 'statement:import', 'statement:send' ]

@@ -16,7 +16,7 @@ module V2
       account_entry = if account_entries.any?
                         account_entries.shift
                       else
-                        f.object.account_entries.build({account_id: account.id, ammount_cents: 0}, without_protection: true)
+                        f.object.account_entries.build(account_id: account.id, ammount_cents: 0)
                       end
       account_entry.ammount_cents += account_entries.sum(&:ammount_cents)
       account_entry.strategy ||= account.strategy
