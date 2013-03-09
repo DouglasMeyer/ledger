@@ -3,7 +3,7 @@ class BankEntry < ActiveRecord::Base
   has_many :account_entries
   accepts_nested_attributes_for :account_entries, allow_destroy: true
 
-  validates :external_id, uniqueness: true
+  validates :external_id, uniqueness: true, allow_nil: true
   validate :fields_from_bank_do_not_update
 
   scope :reverse_order, -> { order(:date, :id) }
