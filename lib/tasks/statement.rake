@@ -34,11 +34,14 @@ namespace :statement do
     JSON.parse(File.read(json_file)).each do |bank_entry|
       request << { action: :create, type: :bank_entry, data: bank_entry }
     end
-    response = HTTParty.post "http://pi:8001/api.json", {
+    response = HTTParty.post "http://ledger.herokuapp.com/api.json", {
       basic_auth: { username: netrc.login, password: netrc.password },
       body: { body: request.to_json }
     }
-    bank_entries = JSON.parse(response.body).map do |bank_entry|
+    json_response = JSON.parse(response.body)
+    pp json_response
+    return unless json_response.is_a?(Array)
+    bank_entries = json_response.map do |bank_entry|
       if errors = bank_entry['errors']
         unless errors['external_id'].include?('has already been taken')
           pp errors
@@ -51,7 +54,6 @@ namespace :statement do
 
   desc 'Import statements from tmp/downloads directory'
   task :import => :environment do
-    #FIXME: I need to do something with the bank balance
     JSON.parse(File.read(json_file)).each do |attributes|
       unless BankEntry.where(external_id: attributes['external_id']).any?
         BankEntry.create!(attributes)

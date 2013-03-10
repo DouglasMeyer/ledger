@@ -1,10 +1,14 @@
 class BankEntry < ActiveRecord::Base
+  attr_accessor :bank_balance_cents
+
   default_scope { order("bank_entries.date DESC, bank_entries.id DESC") }
   has_many :account_entries
   accepts_nested_attributes_for :account_entries, allow_destroy: true
 
   validates :external_id, uniqueness: true, allow_nil: true
   validate :fields_from_bank_do_not_update
+
+  after_create :ensures_ledger_sum
 
   scope :reverse_order, -> { order(:date, :id) }
   scope :join_aggrigate_account_entries, -> { joins(<<-ENDSQL) }
@@ -80,6 +84,14 @@ private
     errors.add(:date, :immutable) if date_changed?
     errors.add(:description, :immutable) if description_changed?
     errors.add(:ammount_cents, :immutable) if ammount_cents_changed?
+  end
+
+  def ensures_ledger_sum
+    if bank_balance_cents
+      ammount_cents = bank_balance_cents - BankEntry.sum(:ammount_cents)
+      BankEntry.create!(ammount_cents: ammount_cents, date: date,
+                        description: "Updating balance to match bank's balance.")
+    end
   end
 
 end
