@@ -36,8 +36,10 @@ namespace :statement do
     end
     response = HTTParty.post "http://ledger.herokuapp.com/api.json", {
       basic_auth: { username: netrc.login, password: netrc.password },
-      body: { body: request.to_json },
-      rollbackAll: false
+      body: {
+        body: request.to_json,
+        rollbackAll: false
+      }
     }
     json_response = JSON.parse(response.body)
     pp json_response
