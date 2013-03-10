@@ -1,5 +1,5 @@
 @import "bourbon";
-@import "normalize";
+@import "normalize.css";
 
 // Reset
 * {
@@ -160,7 +160,7 @@ form .actions { clear: both; }
   }
 }
 
-@import "./v2/accounts";
-@import "./v2/bank_entries";
-@import "./v2/strategies";
-@import "./v2/icon-fonts";
+@import "./v2/accounts.css";
+@import "./v2/bank_entries.css";
+@import "./v2/strategies.css";
+@import "./v2/icon-fonts.css";
