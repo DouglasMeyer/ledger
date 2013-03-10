@@ -1,5 +1,3 @@
-require 'api_constraints'
-
 Ledger::Application.routes.draw do
   def self.version(version, default=false, &block)
     namespace version, &block
