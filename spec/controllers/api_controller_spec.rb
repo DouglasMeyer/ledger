@@ -79,7 +79,7 @@ describe ApiController do
     before do
       @account1_data = { 'asset' => true }
       @account2_data = { 'name' => 'New Account', 'asset' => true }
-      post :bulk, rollbackAll: false, body: [
+      post :bulk, rollbackAll: "false", body: [
         { reference: 'failed creation', action: :create, type: :account, data: @account1_data },
         { reference: 'actual created',  action: :create, type: :account, data: @account2_data }
       ].to_json

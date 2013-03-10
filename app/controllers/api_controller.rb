@@ -3,7 +3,7 @@ class ApiController < ApplicationController
   def bulk
     response_json = []
     request_failed = false
-    rollback = params[:rollbackAll] != false
+    rollback = params[:rollbackAll] != "false"
 
     ActiveRecord::Base.transaction do
       JSON.parse(params[:body]).each do |command|
