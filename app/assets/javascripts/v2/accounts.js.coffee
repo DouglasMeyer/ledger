@@ -8,12 +8,14 @@ class window.EditAccountView
     @el.on 'change', 'input:named(_destroy)', (e) => @markAsDeleted(e)
 
   addAccount: (e)->
-    lastAccount = $(e.target).closest('h2').next('ul').find('li:last')
+    templateAccount = @el.find('.template')
+    accountList = $(e.target).closest('h2').next('ul')
     $('<li />',
-      html: lastAccount.html().replace(/\[\d+\]/g, "[#{(new Date()).valueOf()}]")
-    ).insertAfter(lastAccount)
-      .find('input:named(position)').val(lastAccount.find().val('input:named(position)') + 1).end()
+      html: templateAccount.html().replace(/\[\d+\]/g, "[#{(new Date()).valueOf()}]")
+    ).appendTo(accountList)
+      .find('input:named(position)').val(accountList.find('li:last').val('input:named(position)') + 1).end()
       .find('input:named(_destroy)').val('').end()
+      .find('input:named(asset)').val(accountList.parent('.assets-list').length != 0).end()
       .find('.balance').text('$0.00').end()
       .find('.name input').val('').focus()
 

@@ -7,7 +7,6 @@ module V2
       def initialize(attributes={})
         assign_attributes(attributes)
       end
-      def persisted?; true; end
       def id; ''; end
 
       attr_accessor :accounts
