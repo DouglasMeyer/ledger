@@ -89,8 +89,10 @@ private
   def ensures_ledger_sum
     if bank_balance_cents
       ammount_cents = bank_balance_cents - BankEntry.sum(:ammount_cents)
-      BankEntry.create!(ammount_cents: ammount_cents, date: date,
-                        description: "Updating balance to match bank's balance.")
+      unless ammount_cents.zero?
+        BankEntry.create!(ammount_cents: ammount_cents, date: date,
+                          description: "Updating balance to match bank's balance.")
+      end
     end
   end
 

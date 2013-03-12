@@ -94,5 +94,12 @@ describe BankEntry do
       BankEntry.count.should eq(2)
       BankEntry.first.ammount_cents.should eq(90_00)
     end
+
+    it "doesn't create a bank_entry if there is no difference" do
+      BankEntry.make!
+      BankEntry.make!(ammount_cents: 12_34, bank_balance_cents: BankEntry.sum(:ammount_cents) + 12_34)
+
+      BankEntry.count.should eq(2)
+    end
   end
 end
