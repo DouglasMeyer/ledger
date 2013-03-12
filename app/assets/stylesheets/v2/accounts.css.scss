@@ -7,6 +7,15 @@ body.accounts {
       margin-right: auto;
       .balance { float: right; }
     }
+
+    .bank-entries li {
+      .balance {
+        position: absolute; top: 0.1em;
+        width: 8em; right: 0;
+      }
+      .ammount { width: 8em; right: 8em; }
+      .account { width: 8em; right: 16em; }
+    }
   }
 
   .accounts-table {

@@ -3,11 +3,10 @@
   = currency @account.balance, 'balance', 'span'
 
 %ul.bank-entries
-  - @account.bank_entries.each do |bank_entry|
+  - @account.account_entries.with_balance.each do |account_entry|
     %li
-      .date= bank_entry.date
-      .description= bank_entry.description
-      - bank_entry.account_entries.each do |account_entry|
-        %div(class="#{account_entry.account_name == @account.name ? 'focus ' : ''}account-entry")
-          .account= account_entry.account_name
-          = currency account_entry.ammount_cents / 100.0, 'ammount'
+      .date= account_entry.bank_entry.date
+      .description= account_entry.bank_entry.description
+      .account-entry
+        = currency account_entry.ammount_cents / 100.0, 'ammount'
+        = currency account_entry.balance_cents / 100.0, 'balance'
