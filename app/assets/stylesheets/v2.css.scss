@@ -57,13 +57,13 @@ ul { margin: 0; padding: 0; }
   .date { width: 8em; }
   .description {
     left: 8em;
-    right: 18em;
+    right: 20em;
     overflow: hidden;
     white-space: pre;
     text-overflow: ellipsis;
   }
-  .ammount { width: 8em; right: 0; }
-  .account { width: 10em; right: 8em; }
+  .account { width: 10em; right: 0; }
+  .ammount { width: 8em; right: 11em; }
 }
 
 // This is more of a min-width
@@ -96,10 +96,10 @@ $bank-entry-width: 45em;
 
     .date, .description, .distribute, .ammount, .account {
       z-index: 100;
-      input { width: 100%; }
+      input, select { width: 100%; }
     }
     .distribute {
-      right: 18.5em;
+      right: 20em;
       @media (max-width: $bank-entry-width) { right: 0; }
     }
     .account-entry {
