@@ -2,6 +2,10 @@ class window.EditAccountView
   constructor: (el)->
     @el = $(el)
 
+    @el.find('ul').each ->
+      $(this).find('li').each (index) ->
+        $(this).find('input:named(position)').val(index)
+
     @el.on 'click', 'h2 .icon-plus', (e) => @addAccount(e)
     @el.on 'click', '.up', (e) => @accountPositionUp(e)
     @el.on 'click', '.down', (e) => @accountPositionDown(e)
@@ -13,8 +17,8 @@ class window.EditAccountView
     $('<li />',
       html: templateAccount.html().replace(/\[\d+\]/g, "[#{(new Date()).valueOf()}]")
     ).appendTo(accountList)
-      .find('input:named(position)').val(accountList.find('li:last').val('input:named(position)') + 1).end()
-      .find('input:named(_destroy)').val('').end()
+      .find('input:named(position)').val(accountList.find('li').length - 1).end()
+      .find('input:named(_destroy)').attr('checked', null).end()
       .find('input:named(asset)').val(accountList.parent('.assets-list').length != 0).end()
       .find('.balance').text('$0.00').end()
       .find('.name input').val('').focus()

@@ -113,7 +113,7 @@ class window.DistributeBankEntryView
     isIncome = @el.find('input[name="distribute_as_income"]').is(':checked')
     view = this
     @el.toggleClass('is-income', isIncome)
-    @el.find('li[data-account-balance]').each -> view.useStrategy($(this), isIncome)
+    @el.find('li[data-account-balance]').each (_, ae) => @useStrategy($(ae), isIncome)
   useStrategy: (accountEntry, use)->
     ammount = accountEntry.find('input:named(ammount)')
     strategy = accountEntry.find('.strategy')

@@ -36,7 +36,7 @@ bankEntryHtml = (bankEntry)->
   </li>
   """
 
-TestIt 'BankEntriesView'
+TestIt 'BankEntriesView',
 
   'before all': ->
     @waitFor ->
