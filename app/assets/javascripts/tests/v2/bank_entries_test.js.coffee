@@ -61,8 +61,8 @@ TestIt 'BankEntriesView',
   'after each': ->
     view.remove()
 
-  'changing the ammount':
-    'should create a new account entry when there is more to distribute': ->
+  'changing the ammount when there is more to distribute':
+    'should create a new account entry': ->
       view.find('.account-entry:eq(0)')
         .find('[name$="[account_name]"]').val('Groceries').end()
         .find('[name$="[ammount]"]').val(10).trigger('change')
@@ -70,3 +70,21 @@ TestIt 'BankEntriesView',
       @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
       view.find('.account-entry:eq(0) [name$="[ammount]"]').val(-10).trigger('change')
       @assertEqual '-2.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+
+    'should update the last blank account entry': ->
+      view.find('.account-entry:eq(0)')
+        .find('[name$="[account_name]"]').val('Groceries').end()
+        .find('[name$="[ammount]"]').val(10).trigger('change')
+      @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+      view.find('.account-entry:eq(0)')
+        .find('[name$="[ammount]"]').val(15).trigger('change')
+      @assertEqual '-27.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+
+    'should not update the last blank account entry if it is what was changed': ->
+      view.find('.account-entry:eq(0)')
+        .find('[name$="[account_name]"]').val('Groceries').end()
+        .find('[name$="[ammount]"]').val(10).trigger('change')
+      @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+      view.find('.account-entry:eq(1)')
+        .find('[name$="[ammount]"]').val(5).trigger('change')
+      @assertEqual '5.00', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()

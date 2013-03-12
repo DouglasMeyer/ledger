@@ -20,10 +20,13 @@ class window.BankEntriesView
           .attr('id', null)
           .submit(-> view.submitBankEntry(this))
         .end()
-        .find('input').trigger 'change'
+        .find('input').trigger('change').end()
+        .find('input:visible:first')[0].focus()
 
     @el.on 'change', 'select, input', ->
-      form = $(this).closest('form')
+      input = $(this)
+      updatedAccountEntry = $(this).closest('.account-entry')
+      form = updatedAccountEntry.closest('form')
       ammountRemaining = form.data('ammount') * 100
       # Mark the BankEntry as changed
       form.addClass('changed')
@@ -34,7 +37,7 @@ class window.BankEntriesView
         ammount.currency(value)
         ammountRemaining = Math.round(ammountRemaining - value * 100)
       blankAccountEntry = form.find('.account-entry').filter(->
-        $('select:named(account_name)', this).val() == ''
+        $('select:named(account_name)', this).val() == '' && this != updatedAccountEntry[0]
       ).last()
       if ammountRemaining != 0
         if blankAccountEntry.length == 0
@@ -46,10 +49,6 @@ class window.BankEntriesView
           ammountRemaining = Math.round(ammountRemaining + blankAccountEntry.find('input:named(ammount)').currency() * 100)
         blankAccountEntry.find('input:named(ammount)').currency(ammountRemaining / 100)
         blankAccountEntry.find('select:named(account_name)').val(null)
-        if form.find('input[type="submit"]:focus')
-          setTimeout(->
-            $('select:visible, input:visible', blankAccountEntry).first().focus()
-          , 10)
 
     # Handle cancel
     this.el.on 'click', '.cancel', (e) ->
@@ -64,10 +63,10 @@ class window.BankEntriesView
 
     # Highlight the account entry
     $('.bank-entries')
-      .on('focus', 'select, input', ->
+      .on('focus', 'select, input, a', ->
         $(this).closest('li').addClass('focus')
       )
-      .on('blur', 'select, input', ->
+      .on('blur', 'select, input, a', ->
         $(this).closest('li').removeClass('focus')
       )
   setup: (el)->
