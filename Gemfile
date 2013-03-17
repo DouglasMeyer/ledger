@@ -41,3 +41,5 @@ group :development do
 end
 
 gem 'machinist', group: :test
+
+gem 'sentry-raven', group: :production
