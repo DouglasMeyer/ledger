@@ -7,7 +7,7 @@ class AccountEntry < ActiveRecord::Base
 
   accepts_nested_attributes_for :strategy
 
-  scope :join_aggrigate_account_entries, joins(<<-ENDSQL)
+  scope :join_aggrigate_account_entries, ->{ joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
       SELECT SUM(account_entries.ammount_cents) AS balance_cents,
              other_aes.id
@@ -25,10 +25,10 @@ class AccountEntry < ActiveRecord::Base
     ON aggrigate_account_entries.id = account_entries.id
   ENDSQL
 
-  scope :with_balance, join_aggrigate_account_entries
+  scope :with_balance, ->{ join_aggrigate_account_entries
                         .joins(:bank_entry)
                         .order("bank_entries.date DESC, bank_entries.id DESC")
-                        .select("account_entries.*, aggrigate_account_entries.balance_cents")
+                        .select("account_entries.*, aggrigate_account_entries.balance_cents") }
 
   def account_name
     account && account.name

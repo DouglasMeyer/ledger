@@ -150,17 +150,15 @@ class window.DistributeBankEntryView
     view = this
     accountEntry = $(control).closest('li')
     strategyId = accountEntry.find('.strategy').data('id') || 0
-    el = jQuery('<div class="strategy-view"></div>')
+    el = jQuery('<div class="strategy-view">Loading ...</div>')
       .css({
         position: 'absolute', top: event.pageY, left: event.pageX
       })
       .appendTo(document.body)
       .load('/v2/strategies/'+strategyId+'?'+jQuery.param({
         bank_entry_id: this.el.attr('id').match(/\d+/)[0],
-        account_entry: {
-          ammount: accountEntry.find('.ammount input').val(),
-          account_name: accountEntry.find('.account input').val()
-        }
+        account_id: accountEntry.find('.account input').val(),
+        entry_ammount: accountEntry.find('.ammount input').val()
       }))
     el.on 'mousedown', (e)-> e.stopPropagation()
     $('body').on 'mousedown', -> el.remove()

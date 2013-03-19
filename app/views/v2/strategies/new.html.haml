@@ -1,5 +1,5 @@
 = form_for @strategy,
-    url: v2_strategies_path(bank_entry_id: params[:bank_entry_id], account_entry: params[:account_entry].slice(:account_name, :ammount)),
+    url: v2_strategies_path(bank_entry_id: @bank_entry_id, account_id: @account_id, entry_ammount: @entry_ammount),
     html: { class: 'strategy-form' } do |f|
 
   = f.label :strategy_type, 'Type of Strategy'

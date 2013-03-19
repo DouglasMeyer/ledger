@@ -5,16 +5,22 @@ module V2
 
     def show
       @bank_entry = BankEntry.find(params[:bank_entry_id])
+      @account = Account.find(params[:account_id])
+      @entry_ammount = params[:entry_ammount].to_f
     end
 
     def new
+      @bank_entry_id = params[:bank_entry_id]
+      @account_id = params[:account_id]
+      @entry_ammount = params[:entry_ammount].to_f
     end
 
     def create
       if @strategy.save
-        account = Account.where(:name => params[:account_entry][:account_name]).first!
-        account.update_attribute(:strategy_id, @strategy.id)
+        @account = Account.find(params[:account_id])
+        @account.update_attribute(:strategy_id, @strategy.id)
         @bank_entry = BankEntry.find(params[:bank_entry_id])
+        @entry_ammount = params[:entry_ammount].to_f
         render action: :show
       else
         render action: :new

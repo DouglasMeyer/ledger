@@ -18,3 +18,9 @@ AccountEntry.blueprint do
   bank_entry { BankEntry.make }
   ammount_cents { object.bank_entry.ammount_remaining * rand * 100 }
 end
+
+Strategy.blueprint do
+  strategy_type { :fixed }
+  variable { (rand * 200_00).round / 100.0 - 100 }
+  notes { "Strategy ##{sn}" }
+end

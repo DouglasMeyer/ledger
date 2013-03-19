@@ -1,15 +1,15 @@
 = hidden_field_tag :id, @strategy.id
 = hidden_field_tag :value, @strategy.value(@bank_entry)
-%h3= params[:account_entry][:account_name]
-%div= strategy_dot(@strategy, @bank_entry, ammount: params[:account_entry][:ammount], text: true)
+%h3= @account.name
+%div= strategy_dot(@strategy, @bank_entry, ammount: @entry_ammount, text: true)
 
 - unless @strategy.new_record?
   %div= strategy_title(@strategy)
-  - if @strategy.notes
+  - if @strategy.notes.present?
     .notes= @strategy.notes
-  - unless params[:account_entry][:ammount].to_f == @strategy.value(@bank_entry)
+  - unless @entry_ammount == @strategy.value(@bank_entry)
     = link_to "#", class: 'use-strategy' do
       Use Strategy
       = currency @strategy.value(@bank_entry), 'ammount', 'span'
 
-= link_to "Set Strategy", new_v2_strategy_path(bank_entry_id: params[:bank_entry_id], account_entry: params[:account_entry].slice(:account_name, :ammount))
+= link_to "Set Strategy", new_v2_strategy_path(bank_entry_id: @bank_entry.id, account_id: @account.id, entry_ammount: @entry_ammount)
