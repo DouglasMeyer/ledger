@@ -28,7 +28,12 @@ module V2
     def update
       bank_entry.update_attributes! params.require(:bank_entry)
                                           .permit(account_entries_attributes: [
-                                                    :id, :account_name, :ammount, :_destroy ])
+                                                    :id,
+                                                    :account_name,
+                                                    :account_id,
+                                                    :ammount,
+                                                    :_destroy ]
+                                                 )
       if request.xhr?
         render bank_entry
       else
