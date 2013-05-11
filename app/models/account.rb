@@ -1,6 +1,4 @@
 class Account < ActiveRecord::Base
-  default_scope { where('deleted_at IS NULL') }
-
   validates :name, :presence => true, :uniqueness => true
   validate :zero_balance_when_deleting
 
@@ -9,6 +7,7 @@ class Account < ActiveRecord::Base
   has_many :bank_entries, through: :entries
   has_many :account_entries
 
+  scope :not_deleted, -> { where('deleted_at IS NULL') }
   scope :assets,      -> { where(:asset => true ) }
   scope :liabilities, -> { where(:asset => false) }
 

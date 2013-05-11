@@ -2,6 +2,17 @@ require File.expand_path '../../spec_helper', __FILE__
 
 describe V2::BankEntriesController do
 
+  describe "GET index" do
+    it "loads account_names" do
+      Account.make! name: 'Last'
+      Account.make! name: 'First'
+      Account.make! name: 'Deleted', deleted_at: 1.minute.ago
+
+      get :index
+      expect(assigns(:account_names)).to eq(['First', 'Last'])
+    end
+  end
+
   describe "POST create" do
     it "creates a bank_entry and account_entries" do
       Account.make! name: 'Doug Blow'

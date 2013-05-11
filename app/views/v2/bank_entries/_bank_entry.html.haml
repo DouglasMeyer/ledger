@@ -16,7 +16,7 @@
     .account-entry
       = ae.hidden_field :_destroy
       .ammount= ae.text_field :ammount, class: 'currency'
-      .account= ae.select :account_name, @account_names, include_blank: true
+      .account= ae.select :account_name, ([ae.object.account_name] + @account_names).uniq.compact, include_blank: true
   .actions
     = f.submit 'Save'
     = link_to 'cancel', '#', class: 'cancel'

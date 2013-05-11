@@ -2,6 +2,17 @@ require File.expand_path '../../spec_helper', __FILE__
 
 describe V2::AccountsController do
 
+  describe "GET index" do
+    it "loads accounts" do
+      account2 = Account.make! position: 3
+      Account.make! position: 2, deleted_at: 1.minute.ago
+      account1 = Account.make! position: 1
+
+      get :index
+      expect(assigns(:accounts)).to eq([ account1, account2 ])
+    end
+  end
+
   describe "PUT update" do
     it "updates all accounts" do
       account1 = Account.make!
@@ -39,7 +50,7 @@ describe V2::AccountsController do
         }
 
       account_to_keep.reload
-      expect{ Account.find(account_to_delete.id) }.to raise_error(ActiveRecord::RecordNotFound)
+      expect(account_to_delete.reload.deleted_at).to_not be(nil)
       expect(Account.where(name: 'crazy').first).to be(nil)
     end
 

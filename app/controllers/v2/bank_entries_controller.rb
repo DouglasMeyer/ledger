@@ -21,7 +21,7 @@ module V2
 
     def edit
       bank_entry # populate @bank_entry
-      @accounts = Account.where("deleted_at IS NULL").order(:position)
+      @accounts = Account.not_deleted.order(:position)
       @distribute_as_income = bank_entry.account_entries.where("account_entries.strategy_id IS NOT NULL").any?
     end
 
@@ -64,7 +64,7 @@ module V2
     end
 
     def load_account_names
-      @account_names = Account.order(:name).pluck(:name)
+      @account_names = Account.not_deleted.order(:name).pluck(:name)
     end
   end
 end

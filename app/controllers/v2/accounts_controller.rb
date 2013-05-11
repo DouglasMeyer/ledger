@@ -57,7 +57,7 @@ module V2
 
   private
     def accounts
-      @accounts ||= Account.where("deleted_at IS NULL").order(:position)
+      @accounts ||= Account.not_deleted.order(:position)
     end
 
     def accounts_attributes
