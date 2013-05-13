@@ -46,7 +46,7 @@ module V2
       new_bank_entry.save!
 
       new_bank_entry.update_attributes!(params.require(:bank_entry).permit(account_entries_attributes: [
-        :account_name, :ammount
+        :account_name, :ammount, :_destroy
       ]))
       render new_bank_entry
     end

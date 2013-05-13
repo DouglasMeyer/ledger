@@ -24,7 +24,8 @@ describe V2::BankEntriesController do
           description: 'test',
           account_entries_attributes: [
             { account_name: 'Doug Blow', ammount: '-8.00' },
-            { account_name: 'Grocery',   ammount:  '8.00' }
+            { account_name: 'Grocery',   ammount:  '6.00' },
+            { account_name: '',          ammount:  '2.00', '_destroy' => 'true' }
           ]
         }
 
