@@ -4,7 +4,7 @@ ruby '2.0.0'
 gem 'rails', '4.0.0.beta1'
 
 gem 'pg'
-gem 'haml', github: 'haml/haml'
+gem 'haml'
 gem 'simple_form'
 gem 'bourbon'
 gem 'capybara'
