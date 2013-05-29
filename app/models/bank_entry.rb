@@ -2,10 +2,11 @@ class BankEntry < ActiveRecord::Base
   attr_accessor :bank_balance_cents
 
   default_scope { order("bank_entries.date DESC, bank_entries.id DESC") }
-  has_many :account_entries
+  has_many :account_entries, dependent: :restrict
   accepts_nested_attributes_for :account_entries, allow_destroy: true
 
   validates :external_id, uniqueness: true, allow_nil: true
+  validates :date, :ammount_cents, :description, :presence => true
   validate :fields_from_bank_do_not_update
 
   after_create :ensures_ledger_sum
