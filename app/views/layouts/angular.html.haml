@@ -1,0 +1,16 @@
+!!! 5
+%html(ng-app="Ledger")
+  %head
+    %title Ledger
+    = stylesheet_link_tag    "normalize", "v2", :media => "all"
+    = javascript_include_tag "angular_app"
+    = csrf_meta_tags
+    %meta(name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1")
+    %meta(name="google" value="notranslate")
+
+  %body(class="#{controller_name} #{action_name}")
+    .navigation
+      = link_to "Accounts", "#", class: 'accounts'
+      = link_to "Entries", "#", class: 'entries'
+      .page-actions= yield :navigation
+    = yield

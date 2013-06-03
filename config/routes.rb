@@ -15,7 +15,11 @@ Ledger::Application.routes.draw do
     resources :bank_entries, only: [ :index, :create, :show, :update, :edit ]
     resources :strategies, only: [ :show, :new, :create ]
 
-    root :to => 'accounts#index'
+    root to: 'accounts#index'
+  end
+
+  version "angular" do
+    root to: 'pages#accounts'
   end
 
   post '/api' => 'api#bulk'
