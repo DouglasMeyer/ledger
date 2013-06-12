@@ -137,7 +137,7 @@ form .actions { clear: both; }
     border-left: 1px solid black;
     text-decoration: none;
   }
-  .accounts, .entries {
+  .accounts, .entries, .strategies {
     display: block;
     border-right: 1px solid black;
     width: 10em;
@@ -147,7 +147,8 @@ form .actions { clear: both; }
     }
   }
   body.accounts & .accounts,
-  body.bank_entries & .entries {
+  body.bank_entries & .entries,
+  body.strategies & .strategies {
     background-color: black;
   }
   .count {

@@ -72,3 +72,20 @@ form.strategy-form {
     text-shadow: 1px 1px 2px red, 2px 2px 4px red;
   }
 }
+
+body.strategies.index {
+  .accounts-table {
+    width: 50em;
+    margin: 0 auto;
+
+    li {
+      position: relative;
+      height: 1.2em;
+
+      .account, .spent, .allocated, .strategy { position: absolute; }
+      .account { left: 0; right: 12em; }
+      .spent { width: 6em; right: 6em; }
+      .strategy { width: 6em; right: 0; }
+    }
+  }
+}

@@ -3,3 +3,4 @@ require File.expand_path('../application', __FILE__)
 
 # Initialize the rails application.
 Ledger::Application.initialize!
+require 'date_ext'

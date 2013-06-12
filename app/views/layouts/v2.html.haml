@@ -16,5 +16,6 @@
         - needs_distribution_count = BankEntry.needs_distribution.count
         - if needs_distribution_count > 0
           %span.count= needs_distribution_count
+      = link_to "Strategies", v2_strategies_path, class: 'strategies'
       .page-actions= yield :navigation
     = yield

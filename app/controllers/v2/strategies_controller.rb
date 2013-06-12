@@ -1,21 +1,27 @@
 module V2
   class StrategiesController < BaseController
-    layout false
     before_filter :load_strategy
 
+    def index
+      @accounts = Account.not_deleted.order(:position)
+    end
+
     def show
+      layout false
       @bank_entry = BankEntry.find(params[:bank_entry_id])
       @account = Account.find(params[:account_id])
       @entry_ammount = params[:entry_ammount].to_f
     end
 
     def new
+      layout false
       @bank_entry_id = params[:bank_entry_id]
       @account_id = params[:account_id]
       @entry_ammount = params[:entry_ammount].to_f
     end
 
     def create
+      layout false
       if @strategy.save
         @account = Account.find(params[:account_id])
         @account.update_attribute(:strategy_id, @strategy.id)

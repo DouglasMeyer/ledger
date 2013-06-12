@@ -13,7 +13,7 @@ Ledger::Application.routes.draw do
       end
     end
     resources :bank_entries, only: [ :index, :create, :show, :update, :edit ]
-    resources :strategies, only: [ :show, :new, :create ]
+    resources :strategies, only: [ :index, :show, :new, :create ]
 
     root :to => 'accounts#index'
   end
