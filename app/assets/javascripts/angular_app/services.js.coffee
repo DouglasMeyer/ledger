@@ -3,7 +3,8 @@ angular.module('LedgerServices', [])
 
     timeout = undefined
     requests = []
-    successCallbacks = []
+    successCallbacks = {}
+    requestIndex = 0
 
     prepareToPost = ->
       clearTimeout(timeout) if timeout
@@ -14,22 +15,24 @@ angular.module('LedgerServices', [])
       requestsNow = requests
       requests = []
       successCallbacksNow = successCallbacks
-      successCallbacks = []
+      successCallbacks = {}
       jqxhr = $http
         .post('/api', body: JSON.stringify(requestsNow))
         .success (response) ->
-          for data, index in response
-            successCallbacksNow[index](data.data)
+          for data in response
+            successCallbacksNow[data.reference]?(data.data)
       jqxhr
 
-    this.read = (type, query: query, success: success) ->
+    this.read = (type, reference: reference, query: query, success: success) ->
+      reference ||= 'ledger_services_api_request_'+(requestIndex++)
       requests.push
+        reference: reference
         action: 'read'
         type: type
         query: query
-      successCallbacks.push success || ->
+      successCallbacks[reference] = success
       prepareToPost()
-      this
+      reference
 
     this.post = ->
       clearTimeout(timeout) if timeout
