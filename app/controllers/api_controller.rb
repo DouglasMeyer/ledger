@@ -9,7 +9,7 @@ class ApiController < ApplicationController
       JSON.parse(params[:body]).each do |command|
         case command['action']
         when 'read'
-          node = read(command['type'])
+          node = read(command['type'], command['query'])
           node['reference'] = command['reference'] if command.has_key?('reference')
           response_json << node
         when 'create'
@@ -24,14 +24,16 @@ class ApiController < ApplicationController
       raise ActiveRecord::Rollback if rollback && request_failed
     end
 
-    render json: response_json,
-           status: request_failed ? ( rollback ? :bad_request : :multi_status ) : :ok
+    status = request_failed ? ( rollback ? :bad_request : :multi_status ) : :ok
+    render json: response_json, status: status
   end
 
 private
 
-  def read(type)
-    { data: type_to_class(type).all }
+  def read(type, query=nil)
+    records = type_to_class(type).all
+    records = records.where(query) if query
+    { data: records }
   end
 
   def create(type, data)
@@ -46,6 +48,8 @@ private
       Account
     when 'bank_entry'
       BankEntry
+    when 'account_entry'
+      AccountEntry
     else
       #Raise something
     end

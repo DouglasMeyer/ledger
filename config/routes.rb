@@ -19,7 +19,8 @@ Ledger::Application.routes.draw do
   end
 
   version "angular" do
-    root to: 'pages#accounts'
+    get ':page' => 'pages#page'
+    root to: 'pages#index'
   end
 
   post '/api' => 'api#bulk'

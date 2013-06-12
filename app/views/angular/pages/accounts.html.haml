@@ -1,10 +1,10 @@
-.accounts-table(ng-controller="AccountsController")
+.accounts-table
   .assets-list
     %h2 Assets
     %ul
       %li(ng-repeat="account in accounts | filter:{asset:true} | orderBy:'position'")
         =#%h3 {{account.category}}
-        %a(href="#") {{account.name}}
+        %a(href="#/account/{{account.id}}") {{account.name}}
         %span.balance {{account.balance_cents | centsToDollars | currency}}
   .liabilities-list
     %h2 Liabilities

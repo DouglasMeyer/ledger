@@ -1,0 +1,11 @@
+%h2.account
+  {{account.name}}
+  %span.balance {{account.balance_cents | centsToDollars | currency}}
+
+%ul.bank-entries
+  %li(ng-repeat="account_entry in account.account_entries")
+    .date {{account_entry.bank_entry.date}}
+    .description {{account_entry.bank_entry.description}}
+    .account-entry
+      %span.ammount {{ account_entry.ammount_cents | centsToDollars | currency}}
+      %span.balance {{ account_entry.balance_cents | centsToDollars | currency}}

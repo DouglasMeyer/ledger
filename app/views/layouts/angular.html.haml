@@ -10,7 +10,7 @@
 
   %body(class="#{controller_name} #{action_name}")
     .navigation
-      = link_to "Accounts", "#", class: 'accounts'
-      = link_to "Entries", "#", class: 'entries'
+      = link_to "Accounts", "#/accounts", class: 'accounts'
+      = link_to "Entries", "#/entries", class: 'entries'
       .page-actions= yield :navigation
     = yield

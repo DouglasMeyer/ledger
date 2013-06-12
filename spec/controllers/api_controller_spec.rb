@@ -23,6 +23,21 @@ describe ApiController do
       response.body.should eq([{ 'data' => Account.all }].to_json)
     end
   end
+  describe "reading a collection with a query" do
+    before do
+      Account.make!
+      @account = Account.make!
+      Account.make!
+
+      post :bulk, body: [
+        { action: :read, type: :account, query: { id: [ @account.id ] } }
+      ].to_json
+    end
+
+    it "responds with the collection matching the query" do
+      response.body.should eq([{ 'data' => Account.where(id: @account.id) }].to_json)
+    end
+  end
 
   describe "creating a record" do
     before do
