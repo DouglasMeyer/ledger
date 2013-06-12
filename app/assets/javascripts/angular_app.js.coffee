@@ -3,7 +3,7 @@
 #= require_self
 #= require_tree ./angular_app
 
-window.Ledger = angular.module('Ledger', [])
+window.Ledger = angular.module('Ledger', ['LedgerServices'])
   .config(['$routeProvider', ($routeProvider) ->
     $routeProvider.when '/accounts', templateUrl: 'angular/accounts.html', controller: 'AccountsController'
     $routeProvider.when '/account/:id', templateUrl: 'angular/account.html', controller: 'AccountController'
