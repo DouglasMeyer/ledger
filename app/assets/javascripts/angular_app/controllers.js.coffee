@@ -31,3 +31,20 @@ window.Ledger.controller 'AccountController', ['$scope', '$routeParams', 'APIReq
       )
   )
 ]
+
+window.Ledger.controller 'EntriesController', ['$scope', 'APIRequest', ($scope, APIRequest) ->
+  $('body').attr 'class', 'bank_entries index'
+  APIRequest.read('bank_entry'
+    success: (data) ->
+      entries = $scope.entries = data
+
+      #for entry in entries
+      #  APIRequest.read('account_entry'
+      #    query: { bank_entry_id: entry.id }
+      #    success: (data) -> entry.account_entries = data
+      #  )
+  )
+
+  $scope.save = (entry) ->
+    console.log entry
+]
