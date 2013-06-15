@@ -1,7 +1,15 @@
-window.Ledger.controller 'AccountsController', ['$scope', 'APIRequest', ($scope, APIRequest) ->
+window.Ledger.controller 'AccountsController', ['$scope', '$filter', 'APIRequest', ($scope, $filter, APIRequest) ->
   $('body').attr 'class', 'accounts index'
   APIRequest.read('account'
-    success: (data) -> $scope.accounts = data
+    success: (data) ->
+      order = $filter('orderBy')
+
+      $scope.groups = { Assets: [], Liabilities: [] }
+      for account in order(data, 'position')
+        list = $scope.groups[if account.asset then 'Assets' else 'Liabilities']
+        if account.category != list[list.length-1]?.category
+          account.firstInCategory = true
+        list.push account
   )
 ]
 
