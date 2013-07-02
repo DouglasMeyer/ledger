@@ -7,7 +7,7 @@
         %input(type="text" ng-disabled="entry.isFromBank" ng-model="entry.description")
       .account-entry(ng-repeat="account_entry in entry.account_entries")
         .ammount
-          %input(class="currency" type="text" ng-model="account_entry.ammount_cents")
+          %input(type="text" l-currency ng-model="account_entry.ammount_cents")
         .account
           %input(type="text" ng-model="account_entry.account_name")
       .actions
