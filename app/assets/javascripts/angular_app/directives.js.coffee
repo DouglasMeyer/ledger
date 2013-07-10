@@ -29,7 +29,7 @@ angular.module('Ledger').directive 'lCurrency', [ '$filter', ($filter) ->
       value = formatter value*100 if value
       element.val value
 
-    if element.nodeName != 'INPUT'
+    if !$(element).is('input')
       ngModel.$render = ->
         value = ngModel.$viewValue
         if typeof value == 'number' || typeof value == 'string'

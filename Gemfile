@@ -33,6 +33,8 @@ group :development, :test do
   gem 'debugger'
   gem 'rspec-rails'
   gem 'test_rails_js', '~> 0.1.2'
+
+  gem "jasminerice", github: 'bradphelan/jasminerice'
 end
 
 group :development do
