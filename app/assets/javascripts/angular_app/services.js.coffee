@@ -1,5 +1,5 @@
 angular.module('LedgerServices', [])
-  .service 'APIRequest', [ '$http', ($http) ->
+  .service 'APIRequest', [ '$http', '$window', ($http, $window) ->
 
     timeout = undefined
     requests = []
@@ -7,8 +7,8 @@ angular.module('LedgerServices', [])
     requestIndex = 0
 
     prepareToPost = ->
-      clearTimeout(timeout) if timeout
-      timeout = setTimeout post, 100
+      $window.clearTimeout(timeout) if timeout
+      timeout = $window.setTimeout post, 100
 
     post = ->
       timeout = undefined
@@ -35,6 +35,6 @@ angular.module('LedgerServices', [])
       reference
 
     this.post = ->
-      clearTimeout(timeout) if timeout
+      $window.clearTimeout(timeout) if timeout
       post()
   ]
