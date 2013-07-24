@@ -1,5 +1,5 @@
 angular.module('LedgerServices', [])
-  .service 'APIRequest', [ '$http', '$window', ($http, $window) ->
+  .service 'APIRequest', ($http, $window) ->
 
     timeout = undefined
     requests = []
@@ -37,4 +37,3 @@ angular.module('LedgerServices', [])
     this.post = ->
       $window.clearTimeout(timeout) if timeout
       post()
-  ]

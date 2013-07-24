@@ -97,6 +97,8 @@ GEM
     multipart-post (1.2.0)
     net-netrc (0.2.2)
       Platform (>= 0.3.0)
+    ngmin-rails (0.4.0)
+      rails (>= 3.1)
     nokogiri (1.5.6)
     pg (0.14.1)
     polyglot (0.3.3)
@@ -191,6 +193,7 @@ DEPENDENCIES
   jquery-ui-rails
   machinist
   net-netrc
+  ngmin-rails
   pg
   rails (= 4.0.0.beta1)
   rspec-rails

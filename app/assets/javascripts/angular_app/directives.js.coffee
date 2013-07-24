@@ -1,4 +1,4 @@
-angular.module('Ledger').directive 'lCurrency', [ '$filter', ($filter) ->
+angular.module('Ledger').directive 'lCurrency', ($filter) ->
   numberFilter = $filter('number')
 
   require: '?ngModel'
@@ -36,4 +36,3 @@ angular.module('Ledger').directive 'lCurrency', [ '$filter', ($filter) ->
           element.text ngModel.$viewValue
         else
           element.text ''
-]

@@ -1,4 +1,4 @@
-window.Ledger.controller 'AccountsController', ['$scope', '$filter', 'APIRequest', ($scope, $filter, APIRequest) ->
+window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest) ->
   $('body').attr 'class', 'accounts index'
   APIRequest.read('account'
     success: (data) ->
@@ -11,9 +11,8 @@ window.Ledger.controller 'AccountsController', ['$scope', '$filter', 'APIRequest
           account.firstInCategory = true
         list.push account
   )
-]
 
-window.Ledger.controller 'AccountController', ['$scope', '$routeParams', 'APIRequest', ($scope, $routeParams, APIRequest) ->
+window.Ledger.controller 'AccountController', ($scope, $routeParams, APIRequest) ->
   $('body').attr 'class', 'accounts show'
   account_id = $routeParams.id
 
@@ -38,9 +37,8 @@ window.Ledger.controller 'AccountController', ['$scope', '$routeParams', 'APIReq
               account_entry.bank_entry = bank_entry
       )
   )
-]
 
-window.Ledger.controller 'EntriesController', ['$scope', 'APIRequest', ($scope, APIRequest) ->
+window.Ledger.controller 'EntriesController', ($scope, APIRequest) ->
   $('body').attr 'class', 'bank_entries index'
   APIRequest.read('bank_entry'
     success: (data) ->
@@ -55,4 +53,3 @@ window.Ledger.controller 'EntriesController', ['$scope', 'APIRequest', ($scope, 
 
   $scope.save = (entry) ->
     console.log entry
-]

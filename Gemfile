@@ -8,6 +8,7 @@ gem 'haml'
 gem 'simple_form'
 gem 'bourbon'
 gem 'capybara'
+gem 'ngmin-rails'
 
 
 # Gems used only for assets and not required
