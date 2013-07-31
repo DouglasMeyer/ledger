@@ -86,4 +86,34 @@ describe BankEntry do
       BankEntry.needs_distribution.count.should eq(1)
     end
   end
+
+  describe ".join_aggrigate_bank_entries" do
+    let :bank_entries do
+      [
+        BankEntry.make!(ammount_cents: 1, date: 1.day.ago),
+        BankEntry.make!(ammount_cents: 9, date: 2.days.ago),
+        BankEntry.make!(ammount_cents: 10, date: 3.days.ago)
+      ]
+    end
+
+    it "includes balance_cents" do
+      bes = bank_entries
+      BankEntry.join_aggrigate_bank_entries.pluck('bank_entries.id, aggrigate_bank_entries.balance_cents').should eq([
+        [ bes[0].id, bes[0].ammount_cents ],
+        [ bes[1].id, bes[0].ammount_cents + bes[1].ammount_cents ],
+        [ bes[2].id, bes[0].ammount_cents + bes[1].ammount_cents + bes[2].ammount_cents ]
+      ])
+    end
+
+    describe ".with_balance" do
+      it "includes the balance" do
+        bes = bank_entries
+        BankEntry.with_balance.map{|be| [be.id, be.balance_cents]}.should eq([
+          [ bes[0].id, bes[0].ammount_cents ],
+          [ bes[1].id, bes[0].ammount_cents + bes[1].ammount_cents ],
+          [ bes[2].id, bes[0].ammount_cents + bes[1].ammount_cents + bes[2].ammount_cents ]
+        ])
+      end
+    end
+  end
 end
