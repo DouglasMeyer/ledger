@@ -12,6 +12,21 @@ class BankEntry < ActiveRecord::Base
   after_create :ensures_ledger_sum
 
   scope :reverse_order, -> { order(:date, :id) }
+  scope :join_aggrigate_bank_entries, ->{ joins(<<-ENDSQL) }
+    LEFT OUTER JOIN (
+      SELECT SUM(bank_entries.ammount_cents) AS balance_cents,
+             other_bes.id
+      FROM bank_entries
+      LEFT JOIN bank_entries AS other_bes
+        ON other_bes.id >= bank_entries.id
+      GROUP BY
+        other_bes.id
+    ) AS aggrigate_bank_entries
+    ON aggrigate_bank_entries.id = bank_entries.id
+  ENDSQL
+  scope :with_balance, -> { join_aggrigate_bank_entries
+                          .select("bank_entries.*, aggrigate_bank_entries.balance_cents") }
+
   scope :join_aggrigate_account_entries, -> { joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
       SELECT SUM(ammount_cents) AS ammount_cents,

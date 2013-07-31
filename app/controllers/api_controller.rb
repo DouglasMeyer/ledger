@@ -47,7 +47,7 @@ private
     when 'account'
       Account
     when 'bank_entry'
-      BankEntry
+      BankEntry.with_balance
     when 'account_entry'
       AccountEntry
     else
