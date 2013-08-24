@@ -8,6 +8,7 @@ gem 'haml'
 gem 'simple_form'
 gem 'bourbon'
 gem 'capybara'
+gem 'selenium-webdriver'
 gem 'ngmin-rails'
 
 

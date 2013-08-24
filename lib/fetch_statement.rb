@@ -1,22 +1,25 @@
 module FetchStatement
   def self.run
-    require "selenium/webdriver"
+    require "selenium-webdriver"
     require "net/netrc"
 
     netrc = Net::Netrc.locate('harrisbank.com')
 
-    Capybara.register_driver :chrome do |app|
-      profile = Selenium::WebDriver::Chrome::Profile.new
-      profile["download.default_directory"] = Rails.root.join('tmp/downloads').to_s
-      Capybara::Selenium::Driver.new(app, :browser => :chrome, :profile => profile)
+    Capybara.register_driver :selenium do |app|
+      downloads = Rails.root.join('tmp/downloads').to_s
+
+      profile = Selenium::WebDriver::Firefox::Profile.new
+      profile["browser.download.folderList"] = 2
+      profile["browser.download.dir"] = downloads
+      profile['browser.helperApps.neverAsk.saveToDisk'] = "application/vnd.intu.qfx"
+
+      Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
     end
     Capybara.default_wait_time = 30
 
-    #Capybara.default_driver = Capybara.javascript_driver = :chrome
 
 
-
-    session = Capybara::Session.new(:chrome)
+    session = Capybara::Session.new(:selenium)
 
     session.visit('http://harrisbank.com')
     session.within('form[name="xyz"]') do
