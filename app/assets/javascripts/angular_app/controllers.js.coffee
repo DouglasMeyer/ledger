@@ -12,14 +12,11 @@ window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest) ->
         list.push account
   )
 
-window.Ledger.controller 'AccountController', ($scope, $routeParams, APIRequest) ->
+window.Ledger.controller 'AccountController', ($scope, $routeParams, APIRequest, Account) ->
   $('body').attr 'class', 'accounts show'
   account_id = $routeParams.id
 
-  APIRequest.read('account',
-    query: { id: account_id }
-    success: (data) -> $scope.account = data[0]
-  )
+  $scope.account = Account.find account_id
   APIRequest.read('account_entry',
     query: { account_id: account_id }
     success: (data) ->

@@ -37,3 +37,34 @@ angular.module('LedgerServices', [])
     this.post = ->
       $window.clearTimeout(timeout) if timeout
       post()
+
+  .factory 'Account', (APIRequest, $q) ->
+    cache = {}
+
+    class Account
+      constructor: ->
+
+    Account.find = (id) ->
+      return cache[id] if cache[id]
+
+      value = cache[id] = new Account
+
+      deferred = $q.defer()
+      markResolved = -> value.$resolved = true; undefined
+      value.$resolved = false
+      deferred.promise.then(markResolved, markResolved)
+
+      APIRequest.read 'account',
+        query: id: id
+        success: (data) ->
+          deferred.resolve data[0]
+
+      value.$then = deferred.promise.then( (data)->
+        angular.copy data, value
+
+        data
+      ).then
+
+      value
+
+    Account

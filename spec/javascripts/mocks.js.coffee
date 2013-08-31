@@ -24,5 +24,4 @@ window.mockAPIRequest =
     if index != -1
       @requests.splice index, 1
 
-    callback = successCallbacks[request.reference]
-    callback(response)
+    successCallbacks[request.reference](response)

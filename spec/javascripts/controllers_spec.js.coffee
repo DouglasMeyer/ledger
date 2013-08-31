@@ -4,7 +4,9 @@ describe 'AccountsController', ->
   scope = undefined
   controller = undefined
 
-  beforeEach module('Ledger')
+  beforeEach module 'Ledger', ($provide) ->
+    $provide.value 'APIRequest', mockAPIRequest
+    undefined
 
   beforeEach inject ($rootScope, $controller) ->
     mockAPIRequest.reset()
@@ -12,7 +14,6 @@ describe 'AccountsController', ->
     scope = $rootScope.$new()
     controller = $controller 'AccountsController',
       $scope: scope
-      APIRequest: mockAPIRequest
 
   it 'sets $scope.groups', ->
     thing2    = { position: 2, asset: true,  category: 'Thing', name: 'thing 2' }
@@ -33,7 +34,9 @@ describe 'AccountController', ->
   scope = undefined
   controller = undefined
 
-  beforeEach module('Ledger')
+  beforeEach module 'Ledger', ($provide) ->
+    $provide.value 'APIRequest', mockAPIRequest
+    undefined
 
   beforeEach inject ($rootScope, $controller) ->
     mockAPIRequest.reset()
@@ -41,17 +44,20 @@ describe 'AccountController', ->
     scope = $rootScope.$new()
     controller = $controller 'AccountController',
       $scope: scope
-      APIRequest: mockAPIRequest
       $routeParams: id: 'account id'
 
   it 'loads account from params', ->
+    expect(scope.account.$then).toExist
+
+    expect(mockAPIRequest.requests.length).toEqual 2
     accountRequest = mockAPIRequest.requests[0]
     expect(accountRequest.action).toEqual 'read'
     expect(accountRequest.type  ).toEqual 'account'
     expect(accountRequest.query ).toEqual id: 'account id'
 
     account = { name: 'the account' }
-    mockAPIRequest.satisfyRequest accountRequest, [ account ]
+    scope.$apply ->
+      mockAPIRequest.satisfyRequest accountRequest, [ account ]
     expect(scope.account).toEqual account
 
   it 'loads AccountEntries from params', ->

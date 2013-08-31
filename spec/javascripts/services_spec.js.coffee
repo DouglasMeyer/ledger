@@ -73,3 +73,37 @@ describe 'APIRequest', ->
 
       expect(oneData).toEqual 'data 1'
       expect(twoData).toEqual 'data 2'
+
+describe 'Account', ->
+  beforeEach module 'LedgerServices', ($provide) ->
+    $provide.value 'APIRequest', mockAPIRequest
+    mockAPIRequest.reset()
+    null
+
+  describe '.find', ->
+    it 'gives you a promise', inject (Account) ->
+      account = Account.find 1
+      expect(account.$then).toBeDefined()
+
+    it 'makes an APIRequest', inject (Account) ->
+      account = Account.find 1
+      request = mockAPIRequest.requests[0]
+      expect(request.action).toEqual 'read'
+      expect(request.type).toEqual 'account'
+      expect(request.query).toEqual id: 1
+
+    it 'resolves the promise with the server response', inject ($rootScope, Account) ->
+      account = Account.find 1
+      mockAPIRequest.satisfyRequest mockAPIRequest.requests[0], [ id: 1, name: 'account 1' ]
+      $rootScope.$apply()
+
+      expect(account.id).toEqual 1
+      expect(account.name).toEqual 'account 1'
+
+    it 'fetches from the cache', inject (Account) ->
+      account = Account.find 1
+      accountCopy = Account.find 1
+      otherAccount = Account.find 2
+
+      expect(accountCopy).toEqual account
+      expect(otherAccount).not.toEqual account
