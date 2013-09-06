@@ -8,14 +8,13 @@ body.bank_entries {
       position: relative;
       height: 1.2em;
 
-      .account, .ammount, .strategy, .balance {
+      .account, .ammount, .strategy {
         position: absolute;
         input { width: 100%; }
       }
       .account { width: 12em; }
       .ammount { left: 12em; right: 5em; }
       .strategy { width: 1em; right: 5em; display: none; }
-      .balance { width: 5em; right: 0; }
     }
     &.is-income li {
       .account { width: 11em; }
@@ -29,11 +28,6 @@ body.bank_entries {
       text-align: center;
       cursor: pointer;
     }
-  }
-
-  .bank-entry {
-    @include bank_entry;
-    margin-bottom: 1em;
   }
 
 }

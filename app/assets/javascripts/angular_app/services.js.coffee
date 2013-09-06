@@ -1,5 +1,5 @@
 angular.module('LedgerServices', [])
-  .service 'APIRequest', ($http, $window) ->
+  .service 'APIRequest', ($http, $window, $rootScope) ->
 
     timeout = undefined
     requests = []
@@ -16,12 +16,13 @@ angular.module('LedgerServices', [])
       requests = []
       successCallbacksNow = successCallbacks
       successCallbacks = {}
-      jqxhr = $http
+      $http
         .post('/api', body: JSON.stringify(requestsNow))
         .success (response) ->
           for data in response
             successCallbacksNow[data.reference]?(data.data)
-      jqxhr
+      $rootScope.$apply()
+      undefined
 
     this.read = (type, reference: reference, query: query, success: success) ->
       reference ||= 'ledger_services_api_request_'+(requestIndex++)

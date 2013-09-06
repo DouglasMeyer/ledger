@@ -1,15 +1,32 @@
 %ul.bank-entries
-  %li(ng-repeat="entry in entries")
-    %form(class="changed" ng-submit="save(entry)")
+  %li.bank-entry(ng-repeat="entry in entries")
+    %pre(style="display:none") {{entry | json}}
+    .preview(ng-hide="entry.isEditing")
+      .date {{entry.date}}
+      .description {{entry.description}}
+      .controls
+        %a(href="" ng-click="edit(entry)") Edit
+        %a(href="" ng-click="") Distribute
+      .ammount(l-currency ng-model="entry.ammount_cents")
+      .balance(l-currency ng-model="entry.balance_cents")
+      .account-entries
+        %span.account-entry(ng-repeat="account_entry in entry.account_entries")
+          {{account_entry.account_name}}
+          -
+          %span(l-currency ng-model="account_entry.ammount_cents")
+    %form(class="changed" ng-if="entry.isEditing" ng-submit="save(entry)" ng-controller="EntryEditController")
       .date
-        %input(type="text" ng-disabled="entry.isFromBank" ng-model="entry.date")
+        %input(type="text" disabled="{{entry.isFromBank}}" ng-model="entry.date")
       .description
-        %input(type="text" ng-disabled="entry.isFromBank" ng-model="entry.description")
+        %input(type="text" disabled="{{entry.isFromBank}}" ng-model="entry.description")
+      .ammount(l-currency ng-model="entry.ammount_cents")
+      .balance(l-currency ng-model="entry.balance_cents")
       .account-entry(ng-repeat="account_entry in entry.account_entries")
         .ammount
-          %input(type="text" l-currency ng-model="account_entry.ammount_cents")
+          %input(type="text" l-currency ng-model="account_entry.ammount_cents" ng-change="accountEntryChanged(account_entry)")
         .account
           %input(type="text" ng-model="account_entry.account_name")
       .actions
         %input(type="submit")
-        %a(href="#" class="cancel") cancel
+        %a(href="" ng-click="cancelEdit(entry)" class="cancel") cancel
+        {{balanceRemainingCents}}

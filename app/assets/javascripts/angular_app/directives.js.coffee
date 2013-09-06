@@ -18,6 +18,7 @@ angular.module('Ledger').directive 'lCurrency', ($filter) ->
     parser = (value, strict=false) ->
       if strict || value.match /^\$?-?\d[\d,.]*$/
         value = parseFloat(value.replace(/[^\d.-]/g, ''), 10) || null
+        value *= 100 if value
       updateClass value
       value
 
@@ -26,7 +27,7 @@ angular.module('Ledger').directive 'lCurrency', ($filter) ->
 
     $(element).blur ->
       value = parser element.val(), true
-      value = formatter value*100 if value
+      value = formatter value if value
       element.val value
 
     if !$(element).is('input')

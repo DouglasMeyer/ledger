@@ -39,14 +39,34 @@ window.Ledger.controller 'EntriesController', ($scope, APIRequest) ->
   $('body').attr 'class', 'bank_entries index'
   APIRequest.read('bank_entry'
     success: (data) ->
-      entries = $scope.entries = data
-
-      #for entry in entries
-      #  APIRequest.read('account_entry'
-      #    query: { bank_entry_id: entry.id }
-      #    success: (data) -> entry.account_entries = data
-      #  )
+      $scope.entries = data
+      for entry in $scope.entries
+        entry.isFromBank = entry.external_id != null
   )
 
-  $scope.save = (entry) ->
-    console.log entry
+  $scope.edit = (entry) -> entry.isEditing = true
+  $scope.cancelEdit = (entry) -> delete entry.isEditing
+
+  $scope.save = (entry) -> console.log entry
+
+window.Ledger.controller 'EntryEditController', ($scope) ->
+  $scope.newAccountEntry = null
+
+  $scope.accountEntryChanged = (chanegdAE) ->
+    if chanegdAE == $scope.newAccountEntry
+      $scope.newAccountEntry = null
+    remainingCents = $scope.entry.ammount_cents
+    for ae in $scope.entry.account_entries when ae != $scope.newAccountEntry
+      remainingCents -= parseInt(ae.ammount_cents, 10) || 0
+    if remainingCents == 0
+      if $scope.newAccountEntry
+        $scope.entry.account_entries.pop()
+        $scope.newAccountEntry = null
+    else
+      if $scope.newAccountEntry
+        $scope.newAccountEntry.ammount_cents = remainingCents
+      else
+        $scope.newAccountEntry = ammount_cents: remainingCents
+        $scope.entry.account_entries.push $scope.newAccountEntry
+
+  $scope.accountEntryChanged()

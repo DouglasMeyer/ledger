@@ -47,23 +47,37 @@ ul { margin: 0; padding: 0; }
   .liabilities-list { padding-left: 2em; }
 }
 
-@mixin bank_entry {
+.bank-entry {
   position: relative;
-  min-height: 1.2em;
+  min-height: 2.6em;
 
-  .date, .description, .distribute, .ammount, .account {
-    position: absolute; top: 0.1em;
+  .date, .description, .ammount, .account, .account-entries, .balance, .controls {
+    position: absolute;
   }
-  .date { width: 8em; }
+  .date, .description, .ammount, .account, .balance, .controls { top: 0.2em; }
+  .account-entries { top: 1.3em; }
+
+  .date { width: 8em; left: 0.2em; }
   .description {
     left: 9em;
-    right: 20em;
+    right: 28em;
     overflow: hidden;
     white-space: pre;
     text-overflow: ellipsis;
   }
-  .account { width: 10em; right: 0; }
+  .controls {
+    right: 20em;
+    width: 8em;
+    a { margin-right: 1ex; }
+  }
+  .account-entries {
+    left: 0.2em;
+    right: 0.2em;
+    background-color: #EEE;
+  }
   .ammount { width: 8em; right: 11em; }
+  .account { width: 10em; right: 0.2em; }
+  .balance { width: 5em; right: 0.2em; }
 }
 
 // This is more of a min-width
@@ -81,9 +95,7 @@ $bank-entry-width: 45em;
   form.changed .distribute { display: none; }
   .focus { background-color: #F0F0F0; }
 
-  li {
-    @include bank_entry;
-
+  .bank-entry {
     @media (max-width: $bank-entry-width) {
       padding-top: 1.2em;
       .description { right: 0; }
@@ -102,6 +114,7 @@ $bank-entry-width: 45em;
       right: 20em;
       @media (max-width: $bank-entry-width) { right: 0; }
     }
+    form { padding-top: 1.4em; }
     .account-entry {
       position: relative;
       height: 1.4em;
