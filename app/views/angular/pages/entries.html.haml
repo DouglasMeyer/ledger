@@ -21,11 +21,11 @@
         %input(type="text" disabled="{{entry.isFromBank}}" ng-model="entry.description")
       .ammount(l-currency ng-model="entry.ammount_cents")
       .balance(l-currency ng-model="entry.balance_cents")
-      .account-entry(ng-repeat="account_entry in entry.account_entries")
+      .account-entry(ng-repeat="account_entry in accountEntries")
         .ammount
           %input(type="text" l-currency ng-model="account_entry.ammount_cents" ng-change="accountEntryChanged(account_entry)")
         .account
-          %input(type="text" ng-model="account_entry.account_name")
+          %select(ng-model="account_entry.account_id" ng-options="account.id as account.name for account in accounts")
       .actions
         %input(type="submit")
         %a(href="" ng-click="cancelEdit(entry)" class="cancel") cancel

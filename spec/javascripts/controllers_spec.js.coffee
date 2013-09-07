@@ -107,6 +107,31 @@ describe 'AccountController', ->
     expect(scope.account.account_entries[4].bank_entry).toEqual bankEntries[0]
 
 
+describe 'EntriesController', ->
+  scope = controller = undefined
+
+  beforeEach module 'Ledger', ($provide) ->
+    $provide.value 'APIRequest', mockAPIRequest
+    undefined
+
+  beforeEach inject ($rootScope, $controller) ->
+    mockAPIRequest.reset()
+
+    scope = $rootScope.$new()
+    controller = $controller 'EntriesController', $scope: scope
+
+  it 'populates accounts', ->
+    expect(mockAPIRequest.requests.length).toEqual 2
+    accountsRequest = mockAPIRequest.requests[1]
+    expect(accountsRequest.action).toEqual 'read'
+    expect(accountsRequest.type  ).toEqual 'account'
+
+    accounts = [ 1, 2, 4, 3 ]
+    scope.$apply ->
+      mockAPIRequest.satisfyRequest accountsRequest, accounts
+    expect(scope.accounts).toEqual accounts
+
+
 describe 'EntryEditController', ->
   scope = undefined
   controller = undefined
@@ -130,45 +155,45 @@ describe 'EntryEditController', ->
 
   it 'creates newAccountEntry when there are extra cents', ->
     expect(scope.newAccountEntry).toBeNull()
-    expect(scope.entry.account_entries.length).toEqual 2
+    expect(scope.accountEntries.length).toEqual 2
 
-    scope.entry.account_entries[0].ammount_cents = 10
+    scope.accountEntries[0].ammount_cents = 10
     scope.accountEntryChanged()
     expect(scope.newAccountEntry.ammount_cents).toEqual 90
-    expect(scope.entry.account_entries.length).toEqual 3
-    expect(scope.entry.account_entries).toContain scope.newAccountEntry
+    expect(scope.accountEntries.length).toEqual 3
+    expect(scope.accountEntries).toContain scope.newAccountEntry
 
   it 'newAccountEntry accounts for "" in ammount_cents', ->
-    scope.entry.account_entries[0].ammount_cents = ''
+    scope.accountEntries[0].ammount_cents = ''
     scope.accountEntryChanged()
     expect(scope.newAccountEntry.ammount_cents).toEqual 100
-    expect(scope.entry.account_entries.length).toEqual 3
-    expect(scope.entry.account_entries).toContain scope.newAccountEntry
+    expect(scope.accountEntries.length).toEqual 3
+    expect(scope.accountEntries).toContain scope.newAccountEntry
 
   it 'updates newAccountEntry when ammount_cents changes', ->
-    scope.entry.account_entries[0].ammount_cents = 10
+    scope.accountEntries[0].ammount_cents = 10
     scope.accountEntryChanged()
     expect(scope.newAccountEntry.ammount_cents).toEqual 90
-    expect(scope.entry.account_entries.length).toEqual 3
-    expect(scope.entry.account_entries).toContain scope.newAccountEntry
+    expect(scope.accountEntries.length).toEqual 3
+    expect(scope.accountEntries).toContain scope.newAccountEntry
 
   it 'creates a new newAccountEntry when the old newAccountEntry gets udated', ->
-    scope.entry.account_entries[0].ammount_cents = 10
+    scope.accountEntries[0].ammount_cents = 10
     scope.accountEntryChanged()
     oldNewAccountEntry = scope.newAccountEntry
     oldNewAccountEntry.ammount_cents = 20
     scope.accountEntryChanged(oldNewAccountEntry)
     expect(oldNewAccountEntry.ammount_cents).toEqual 20
     expect(scope.newAccountEntry.ammount_cents).toEqual 70
-    expect(scope.entry.account_entries.length).toEqual 4
-    expect(scope.entry.account_entries).toContain oldNewAccountEntry
-    expect(scope.entry.account_entries).toContain scope.newAccountEntry
+    expect(scope.accountEntries.length).toEqual 4
+    expect(scope.accountEntries).toContain oldNewAccountEntry
+    expect(scope.accountEntries).toContain scope.newAccountEntry
 
   it 'removes newAccountEntry when there are no extra cents', ->
-    scope.entry.account_entries[0].ammount_cents = 10
+    scope.accountEntries[0].ammount_cents = 10
     scope.accountEntryChanged()
     expect(scope.newAccountEntry).toBeDefined()
-    scope.entry.account_entries[0].ammount_cents = 100
+    scope.accountEntries[0].ammount_cents = 100
     scope.accountEntryChanged()
     expect(scope.newAccountEntry).toBeNull()
-    expect(scope.entry.account_entries.length).toEqual 2
+    expect(scope.accountEntries.length).toEqual 2
