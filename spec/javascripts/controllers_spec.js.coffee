@@ -120,47 +120,55 @@ describe 'EntryEditController', ->
 
     scope = $rootScope.$new()
     scope.entry =
-      ammount_cents: 1000
+      ammount_cents: 300
       account_entries: [
-        { ammount_cents: 200 }
-        { ammount_cents: 600 }
+        { ammount_cents: 100 }
         { ammount_cents: 200 }
       ]
     controller = $controller 'EntryEditController',
       $scope: scope
 
-  it 'creates a new AccountEntry when there are extra cents', ->
+  it 'creates newAccountEntry when there are extra cents', ->
     expect(scope.newAccountEntry).toBeNull()
-    expect(scope.entry.account_entries.length).toEqual 3
+    expect(scope.entry.account_entries.length).toEqual 2
 
-    scope.entry.account_entries[0].ammount_cents = 50
+    scope.entry.account_entries[0].ammount_cents = 10
     scope.accountEntryChanged()
-    expect(scope.newAccountEntry.ammount_cents).toEqual 150
-    expect(scope.entry.account_entries.length).toEqual 4
+    expect(scope.newAccountEntry.ammount_cents).toEqual 90
+    expect(scope.entry.account_entries.length).toEqual 3
     expect(scope.entry.account_entries).toContain scope.newAccountEntry
 
+  it 'newAccountEntry accounts for "" in ammount_cents', ->
     scope.entry.account_entries[0].ammount_cents = ''
     scope.accountEntryChanged()
-    expect(scope.newAccountEntry.ammount_cents).toEqual 200
-    expect(scope.entry.account_entries.length).toEqual 4
+    expect(scope.newAccountEntry.ammount_cents).toEqual 100
+    expect(scope.entry.account_entries.length).toEqual 3
     expect(scope.entry.account_entries).toContain scope.newAccountEntry
 
-    scope.entry.account_entries[0].ammount_cents = 150
+  it 'updates newAccountEntry when ammount_cents changes', ->
+    scope.entry.account_entries[0].ammount_cents = 10
     scope.accountEntryChanged()
-    expect(scope.newAccountEntry.ammount_cents).toEqual 50
-    expect(scope.entry.account_entries.length).toEqual 4
+    expect(scope.newAccountEntry.ammount_cents).toEqual 90
+    expect(scope.entry.account_entries.length).toEqual 3
     expect(scope.entry.account_entries).toContain scope.newAccountEntry
 
+  it 'creates a new newAccountEntry when the old newAccountEntry gets udated', ->
+    scope.entry.account_entries[0].ammount_cents = 10
+    scope.accountEntryChanged()
     oldNewAccountEntry = scope.newAccountEntry
-    oldNewAccountEntry.ammount_cents = 25
+    oldNewAccountEntry.ammount_cents = 20
     scope.accountEntryChanged(oldNewAccountEntry)
-    expect(oldNewAccountEntry.ammount_cents).toEqual 25
-    expect(scope.newAccountEntry.ammount_cents).toEqual 25
-    expect(scope.entry.account_entries.length).toEqual 5
+    expect(oldNewAccountEntry.ammount_cents).toEqual 20
+    expect(scope.newAccountEntry.ammount_cents).toEqual 70
+    expect(scope.entry.account_entries.length).toEqual 4
     expect(scope.entry.account_entries).toContain oldNewAccountEntry
     expect(scope.entry.account_entries).toContain scope.newAccountEntry
 
-    scope.entry.account_entries[0].ammount_cents = 175
+  it 'removes newAccountEntry when there are no extra cents', ->
+    scope.entry.account_entries[0].ammount_cents = 10
+    scope.accountEntryChanged()
+    expect(scope.newAccountEntry).toBeDefined()
+    scope.entry.account_entries[0].ammount_cents = 100
     scope.accountEntryChanged()
     expect(scope.newAccountEntry).toBeNull()
-    expect(scope.entry.account_entries.length).toEqual 4
+    expect(scope.entry.account_entries.length).toEqual 2
