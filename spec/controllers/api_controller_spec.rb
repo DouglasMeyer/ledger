@@ -38,6 +38,22 @@ describe ApiController do
       response.body.should eq([{ 'data' => Account.where(id: @account.id) }].to_json)
     end
   end
+  describe "reading a collection with pagination" do
+    it "works" do
+      @account1 = Account.make!
+      @account2 = Account.make!
+
+      post :bulk, body: [
+        { action: :read, type: :account, limit: 1 },
+        { action: :read, type: :account, limit: 1, offset: 1 }
+      ].to_json
+
+      response.body.should eq([
+        { 'data' => [@account1] },
+        { 'data' => [@account2] }
+      ].to_json)
+    end
+  end
 
   describe "creating a record" do
     before do
