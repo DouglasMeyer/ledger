@@ -12,6 +12,16 @@ window.mockAPIRequest =
       query: query
     successCallbacks[reference] = success
     reference
+  update: (type, reference: reference, query: query, data: data, success: success) ->
+    reference ||= 'ledger_services_api_request_'+(requestIndex++)
+    this.requests.push
+      reference: reference
+      action: 'update'
+      type: type
+      query: query
+      data: data
+    successCallbacks[reference] = success
+    reference
   post: ->
 
   reset: ->

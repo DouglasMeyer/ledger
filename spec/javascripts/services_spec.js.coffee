@@ -74,6 +74,30 @@ describe 'APIRequest', ->
       expect(oneData).toEqual 'data 1'
       expect(twoData).toEqual 'data 2'
 
+  describe '.update', ->
+    it 'make requests', inject ($window, APIRequest) ->
+      successCalled = false
+      reference = APIRequest.update 'account',
+        reference: 'account update'
+        id: 'the id'
+        data: this: 'that'
+        success: -> successCalled = true
+      expect($window.timeouts.length).toEqual 1
+
+      httpBackend.expect('POST', '/api', body: JSON.stringify([
+        reference: 'account update'
+        action: 'update', type: 'account'
+        id: 'the id'
+        data: this: 'that'
+      ])).respond([
+        { reference: 'account update', data: { this: 'other' } }
+      ])
+      $window.flush()
+      httpBackend.flush()
+
+      expect(successCalled).toEqual true
+
+
 describe 'Account', ->
   beforeEach module 'LedgerServices', ($provide) ->
     $provide.value 'APIRequest', mockAPIRequest

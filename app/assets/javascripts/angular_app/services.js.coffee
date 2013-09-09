@@ -24,7 +24,7 @@ angular.module('LedgerServices', [])
       $rootScope.$apply()
       undefined
 
-    this.read = (type, reference: reference, query: query, success: success) ->
+    @read = (type, reference: reference, query: query, success: success) ->
       reference ||= 'ledger_services_api_request_'+(requestIndex++)
       requests.push
         reference: reference
@@ -35,7 +35,19 @@ angular.module('LedgerServices', [])
       prepareToPost()
       reference
 
-    this.post = ->
+    @update = (type, reference: reference, id: id, data: data, success: success) ->
+      reference ||= 'ledger_services_api_request_'+(requestIndex++)
+      requests.push
+        reference: reference
+        action: 'update'
+        type: type
+        id: id
+        data: data
+      successCallbacks[reference] = success
+      prepareToPost()
+      reference
+
+    @post = ->
       $window.clearTimeout(timeout) if timeout
       post()
 

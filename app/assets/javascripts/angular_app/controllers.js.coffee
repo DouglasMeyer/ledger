@@ -48,9 +48,7 @@ window.Ledger.controller 'EntriesController', ($scope, APIRequest) ->
   $scope.edit = (entry) -> entry.isEditing = true
   $scope.cancelEdit = (entry) -> delete entry.isEditing
 
-  $scope.save = (entry) -> console.log entry
-
-window.Ledger.controller 'EntryEditController', ($scope) ->
+window.Ledger.controller 'EntryEditController', ($scope, APIRequest) ->
   $scope.accountEntries = angular.copy($scope.entry.account_entries)
   $scope.newAccountEntry = null
 
@@ -72,3 +70,19 @@ window.Ledger.controller 'EntryEditController', ($scope) ->
         $scope.accountEntries.push $scope.newAccountEntry
 
   $scope.accountEntryChanged()
+
+  $scope.save = ->
+    savingEntry = {} #TODO: date and notes
+    savingEntry.account_entries_attributes = []
+    for accountEntry in $scope.accountEntries
+      savingEntry.account_entries_attributes.push
+        id:            accountEntry.id
+        ammount_cents: accountEntry.ammount_cents
+        account_id:    accountEntry.account_id
+        _destroy:      true unless accountEntry.ammount_cents
+
+    APIRequest.update 'bank_entry',
+      id: $scope.entry.id
+      data: savingEntry
+      success: (data) ->
+        angular.copy data, $scope.entry

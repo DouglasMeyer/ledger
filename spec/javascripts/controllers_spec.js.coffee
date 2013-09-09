@@ -147,8 +147,8 @@ describe 'EntryEditController', ->
     scope.entry =
       ammount_cents: 300
       account_entries: [
-        { ammount_cents: 100 }
-        { ammount_cents: 200 }
+        { id: 1, ammount_cents: 100, account_id: 1, account_name: 'First' }
+        { id: 2, ammount_cents: 200, account_id: 2, account_name: 'Second' }
       ]
     controller = $controller 'EntryEditController',
       $scope: scope
@@ -197,3 +197,16 @@ describe 'EntryEditController', ->
     scope.accountEntryChanged()
     expect(scope.newAccountEntry).toBeNull()
     expect(scope.accountEntries.length).toEqual 2
+
+  it 'saves', ->
+    expect(mockAPIRequest.requests.length).toBe 0
+    scope.save()
+    expect(mockAPIRequest.requests.length).toBe 1
+    updateRequest = mockAPIRequest.requests[0]
+    expect(updateRequest.action).toEqual 'update'
+    expect(updateRequest.type  ).toEqual 'bank_entry'
+    expect(updateRequest.data  ).toEqual
+      account_entries_attributes: [
+        { id: 1, ammount_cents: 100, account_id: 1 }
+        { id: 2, ammount_cents: 200, account_id: 2 }
+      ]

@@ -58,6 +58,37 @@ describe ApiController do
     end
   end
 
+  describe "updating a record" do
+    let(:account){ Account.make! asset: false }
+    before do
+      post :bulk, body: [
+        { action: :update, type: :account, id: account.id, reference: 'updating the record',
+          data: { name: 'New Account Name', asset: 'true' }
+        }
+      ].to_json
+    end
+
+    it "updates the record" do
+      account.reload.name.should eq('New Account Name')
+      account.reload.asset.should eq(true)
+    end
+    it "responds with the updated record and reference" do
+      JSON.parse(response.body).should eq([{
+        'reference' => 'updating the record', 'data' => JSON.parse(account.reload.to_json)
+      }])
+    end
+  end
+
+  describe "attempting to perform an impossible action" do
+    it "raises a ImpossibleAction exception" do
+      lambda {
+        post :bulk, body: [
+          { action: :something }
+        ].to_json
+      }.should raise_error(ApiController::ImpossibleAction, "something isn't an accepted action")
+    end
+  end
+
   describe "failing to create a record" do
     before do
       @account1_data = { 'asset' => true }
