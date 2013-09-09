@@ -11,7 +11,9 @@ class ApiController < ApplicationController
       JSON.parse(params[:body]).each do |command|
         case command['action']
         when 'read'
-          node = read(command['type'], command['query'])
+          command['limit'] ||= 25
+          command['offset'] ||= 0
+          node = read(command['type'], command['query'], command['limit'], command['offset'])
           node['reference'] = command['reference'] if command.has_key?('reference')
           response_json << node
         when 'create'
@@ -36,8 +38,8 @@ class ApiController < ApplicationController
 
 private
 
-  def read(type, query=nil)
-    records = type_to_class(type).all
+  def read(type, query, limit, offset)
+    records = type_to_class(type).limit(limit).offset(offset)
     records = records.where(query) if query
     { data: records }
   end

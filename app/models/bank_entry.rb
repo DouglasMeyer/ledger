@@ -22,8 +22,11 @@ class BankEntry < ActiveRecord::Base
     ) AS aggrigate_bank_entries
     ON aggrigate_bank_entries.id = bank_entries.id
   ENDSQL
-  scope :with_balance, -> { join_aggrigate_bank_entries
-                          .select("bank_entries.*, aggrigate_bank_entries.balance_cents") }
+  scope :with_balance, -> do
+    query = join_aggrigate_bank_entries
+    query.select_values = ["bank_entries.*", "aggrigate_bank_entries.balance_cents"]
+    query
+  end
 
   scope :join_aggrigate_account_entries, -> { joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
