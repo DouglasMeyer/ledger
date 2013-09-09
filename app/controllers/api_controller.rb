@@ -1,4 +1,6 @@
 class ApiController < ApplicationController
+  class ImpossibleAction < StandardError
+  end
 
   def bulk
     response_json = []
@@ -16,8 +18,12 @@ class ApiController < ApplicationController
           node = create(command['type'], command['data'])
           node['reference'] = command['reference'] if command.has_key?('reference')
           response_json << node
+        when 'update'
+          node = update(command['type'], command['id'], command['data'])
+          node['reference'] = command['reference'] if command.has_key?('reference')
+          response_json << node
         else
-          #Raise something
+          raise ImpossibleAction.new command['action'] + " isn't an accepted action"
         end
       end
       request_failed = response_json.any?{|node| node.has_key? :errors }
@@ -40,6 +46,12 @@ private
     { data: type_to_class(type).create!(data) }
   rescue ActiveRecord::RecordInvalid => e
     { errors: e.record.errors, data: e.record }
+  end
+
+  def update(type, id, data)
+    record = type_to_class(type).find(id)
+    record.update!(data)
+    { data: record }
   end
 
   def type_to_class(type)
