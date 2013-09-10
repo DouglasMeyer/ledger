@@ -118,7 +118,9 @@ describe 'EntriesController', ->
     mockAPIRequest.reset()
 
     scope = $rootScope.$new()
-    controller = $controller 'EntriesController', $scope: scope
+    controller = $controller 'EntriesController',
+      $scope: scope
+      $routeParams: page: 1
 
   it 'populates accounts', ->
     expect(mockAPIRequest.requests.length).toEqual 2
@@ -130,6 +132,12 @@ describe 'EntriesController', ->
     scope.$apply ->
       mockAPIRequest.satisfyRequest accountsRequest, accounts
     expect(scope.accounts).toEqual accounts
+
+  it 'loads page from params', ->
+    entriesRequest = mockAPIRequest.requests[0]
+    expect(entriesRequest.action).toEqual 'read'
+    expect(entriesRequest.type  ).toEqual 'bank_entry'
+    expect(entriesRequest.offset).toEqual 30
 
 
 describe 'EntryEditController', ->

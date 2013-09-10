@@ -24,12 +24,14 @@ angular.module('LedgerServices', [])
       $rootScope.$apply()
       undefined
 
-    @read = (type, reference: reference, query: query, success: success) ->
+    @read = (type, reference: reference, query: query, limit: limit, offset: offset, success: success) ->
       reference ||= 'ledger_services_api_request_'+(requestIndex++)
       requests.push
         reference: reference
         action: 'read'
         type: type
+        limit: limit
+        offset: offset
         query: query
       successCallbacks[reference] = success
       prepareToPost()

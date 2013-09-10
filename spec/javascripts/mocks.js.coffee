@@ -3,12 +3,14 @@ successCallbacks = {}
 
 window.mockAPIRequest =
   requests: []
-  read: (type, reference: reference, query: query, success: success) ->
+  read: (type, reference: reference, limit: limit, offset: offset, query: query, success: success) ->
     reference ||= 'ledger_services_api_request_'+(requestIndex++)
     this.requests.push
       reference: reference
       action: 'read'
       type: type
+      limit: limit
+      offset: offset
       query: query
     successCallbacks[reference] = success
     reference

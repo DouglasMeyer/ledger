@@ -30,3 +30,6 @@
         %input(type="submit")
         %a(href="" ng-click="cancelEdit(entry)" class="cancel") cancel
         {{balanceRemainingCents}}
+
+%a(href="" ng-click="gotoPreviousPage()" ng-show="hasPreviousPage") Previous Page
+%a(href="" ng-click="gotoNextPage()"     ng-show="hasNextPage"    ) Next Page

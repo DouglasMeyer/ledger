@@ -1,6 +1,7 @@
 window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest) ->
   $('body').attr 'class', 'accounts index'
   APIRequest.read('account'
+    limit: 100
     success: (data) ->
       order = $filter('orderBy')
 
@@ -35,15 +36,25 @@ window.Ledger.controller 'AccountController', ($scope, $routeParams, APIRequest,
       )
   )
 
-window.Ledger.controller 'EntriesController', ($scope, APIRequest) ->
+window.Ledger.controller 'EntriesController', ($scope, $routeParams, $location, APIRequest) ->
   $('body').attr 'class', 'bank_entries index'
+  limit = 30
+  page = parseInt($routeParams.page||0, 10)||0
+
   APIRequest.read('bank_entry'
+    limit: limit
+    offset: page * limit
     success: (data) ->
       $scope.entries = data
       for entry in $scope.entries
         entry.isFromBank = entry.external_id != null
+      $scope.hasPreviousPage = true if page > 0
+      $scope.hasNextPage     = true if $scope.entries.length == limit
   )
   APIRequest.read 'account', success: (data) -> $scope.accounts = data
+
+  $scope.gotoPreviousPage = -> $location.search(page: page - 1)
+  $scope.gotoNextPage     = -> $location.search(page: page + 1)
 
   $scope.edit = (entry) -> entry.isEditing = true
   $scope.cancelEdit = (entry) -> delete entry.isEditing
