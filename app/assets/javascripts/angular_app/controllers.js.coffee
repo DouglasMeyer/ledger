@@ -1,7 +1,7 @@
 window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest) ->
   $('body').attr 'class', 'accounts index'
   APIRequest.read('account'
-    limit: 100
+    limit: 1000
     success: (data) ->
       order = $filter('orderBy')
 

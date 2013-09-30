@@ -2,7 +2,6 @@
 
 describe 'AccountsController', ->
   scope = undefined
-  controller = undefined
 
   beforeEach module 'Ledger', ($provide) ->
     $provide.value 'APIRequest', mockAPIRequest
@@ -12,7 +11,7 @@ describe 'AccountsController', ->
     mockAPIRequest.reset()
 
     scope = $rootScope.$new()
-    controller = $controller 'AccountsController',
+    $controller 'AccountsController',
       $scope: scope
 
   it 'sets $scope.groups', ->
@@ -32,7 +31,6 @@ describe 'AccountsController', ->
 
 describe 'AccountController', ->
   scope = undefined
-  controller = undefined
 
   beforeEach module 'Ledger', ($provide) ->
     $provide.value 'APIRequest', mockAPIRequest
@@ -42,7 +40,7 @@ describe 'AccountController', ->
     mockAPIRequest.reset()
 
     scope = $rootScope.$new()
-    controller = $controller 'AccountController',
+    $controller 'AccountController',
       $scope: scope
       $routeParams: id: 'account id'
 
@@ -56,8 +54,8 @@ describe 'AccountController', ->
     expect(accountRequest.query ).toEqual id: 'account id'
 
     account = { name: 'the account' }
-    scope.$apply ->
-      mockAPIRequest.satisfyRequest accountRequest, [ account ]
+    mockAPIRequest.satisfyRequest accountRequest, [ account ]
+    scope.$digest()
     expect(scope.account).toEqual account
 
   it 'loads AccountEntries from params', ->
@@ -108,7 +106,7 @@ describe 'AccountController', ->
 
 
 describe 'EntriesController', ->
-  scope = controller = undefined
+  scope = undefined
 
   beforeEach module 'Ledger', ($provide) ->
     $provide.value 'APIRequest', mockAPIRequest
@@ -118,7 +116,7 @@ describe 'EntriesController', ->
     mockAPIRequest.reset()
 
     scope = $rootScope.$new()
-    controller = $controller 'EntriesController',
+    $controller 'EntriesController',
       $scope: scope
       $routeParams: page: 1
 
@@ -129,8 +127,8 @@ describe 'EntriesController', ->
     expect(accountsRequest.type  ).toEqual 'account'
 
     accounts = [ 1, 2, 4, 3 ]
-    scope.$apply ->
-      mockAPIRequest.satisfyRequest accountsRequest, accounts
+    mockAPIRequest.satisfyRequest accountsRequest, accounts
+    scope.$digest()
     expect(scope.accounts).toEqual accounts
 
   it 'loads page from params', ->
@@ -142,7 +140,6 @@ describe 'EntriesController', ->
 
 describe 'EntryEditController', ->
   scope = undefined
-  controller = undefined
 
   beforeEach module 'Ledger', ($provide) ->
     $provide.value 'APIRequest', mockAPIRequest
@@ -158,7 +155,7 @@ describe 'EntryEditController', ->
         { id: 1, ammount_cents: 100, account_id: 1, account_name: 'First' }
         { id: 2, ammount_cents: 200, account_id: 2, account_name: 'Second' }
       ]
-    controller = $controller 'EntryEditController',
+    $controller 'EntryEditController',
       $scope: scope
 
   it 'creates newAccountEntry when there are extra cents', ->

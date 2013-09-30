@@ -119,7 +119,7 @@ describe 'Account', ->
     it 'resolves the promise with the server response', inject ($rootScope, Account) ->
       account = Account.find 1
       mockAPIRequest.satisfyRequest mockAPIRequest.requests[0], [ id: 1, name: 'account 1' ]
-      $rootScope.$apply()
+      $rootScope.$digest()
 
       expect(account.id).toEqual 1
       expect(account.name).toEqual 'account 1'
