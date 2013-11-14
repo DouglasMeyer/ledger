@@ -3,11 +3,10 @@ angular.module('Ledger').directive 'lCurrency', ($filter) ->
 
   require: '?ngModel'
   link: (scope, element, attrs, ngModel) ->
-    element.addClass 'currency'
     return unless ngModel
 
     updateClass = (value) ->
-      element.toggleClass 'negative', (value < 0)
+      element.toggleClass 's-negative', (value < 0)
 
     formatter = (value) ->
       updateClass value

@@ -2,31 +2,31 @@
   %li.bank-entry(ng-repeat="entry in entries")
     %pre(style="display:none") {{entry | json}}
     .preview(ng-hide="entry.isEditing")
-      .date {{entry.date}}
-      .description {{entry.description}}
-      .controls
+      .bank-entry__date {{entry.date}}
+      .bank-entry__description {{entry.description}}
+      .bank-entry__controls
         %a(href="" ng-click="edit(entry)") Edit
         %a(href="" ng-click="") Distribute
-      .ammount(l-currency ng-model="entry.ammount_cents")
-      .balance(l-currency ng-model="entry.balance_cents")
-      .account-entries
+      .bank-entry__ammount(l-currency ng-model="entry.ammount_cents")
+      .bank-entry__balance(l-currency ng-model="entry.balance_cents")
+      .bank-entry__account-entries
         %span.account-entry(ng-repeat="account_entry in entry.account_entries")
           {{account_entry.account_name}}
           -
           %span(l-currency ng-model="account_entry.ammount_cents")
-    %form(class="changed" ng-if="entry.isEditing" ng-submit="save(entry)" ng-controller="EntryEditController")
-      .date
+    %form(ng-if="entry.isEditing" ng-submit="save(entry)" ng-controller="EntryEditController")
+      .bank-entry__date
         %input(type="text" disabled="{{entry.isFromBank}}" ng-model="entry.date")
-      .description
+      .bank-entry__description
         %input(type="text" disabled="{{entry.isFromBank}}" ng-model="entry.description")
-      .ammount(l-currency ng-model="entry.ammount_cents")
-      .balance(l-currency ng-model="entry.balance_cents")
-      .account-entry(ng-repeat="account_entry in accountEntries")
-        .ammount
+      .bank-entry__ammount(l-currency ng-model="entry.ammount_cents")
+      .bank-entry__balance(l-currency ng-model="entry.balance_cents")
+      .bank-entry__account-entry(ng-repeat="account_entry in accountEntries")
+        .bank-entry__ammount
           %input(type="text" l-currency ng-model="account_entry.ammount_cents" ng-change="accountEntryChanged(account_entry)")
-        .account
+        .bank-entry__account
           %select(ng-model="account_entry.account_id" ng-options="account.id as account.name for account in accounts")
-      .actions
+      .bank-entry__actions
         %input(type="submit")
         %a(href="" ng-click="cancelEdit(entry)" class="cancel") cancel
         {{balanceRemainingCents}}

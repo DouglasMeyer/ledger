@@ -1,0 +1,202 @@
+@import "bourbon";
+
+// Constants
+$text_color: #444;
+$header_color: darken($text_color, 10%);
+$input_border: lighten($text_color, 60%);
+
+// Reset
+* {
+  @include box-sizing(border-box);
+}
+html, body { height: 100%; width: 100%; }
+html { overflow: auto; }
+body {
+  position: relative;
+  font-size: medium;
+  line-height: 1.2;
+  color: $text_color;
+}
+h1, h2, h3 { color: $header_color; }
+input, select, textarea {
+  background-color: white;
+  border: 1px solid $input_border;
+}
+input { padding: 0 2px; }
+ul { margin: 0; padding: 0; }
+
+// Elements
+[l-currency] {
+  text-align: right;
+  &.s-negative { color: red; }
+}
+.accounts-table {
+  width: 50em;
+  @media (max-width: 50em) { width: auto; }
+  margin: 0 auto;
+
+  & > .assets-list, & > .liabilities-list {
+    float: left;
+    width: 50%;
+    @media (max-width: 35em) { width: 100%; }
+
+    padding: 1em 2em;
+    @media (max-width: 50em){ padding: 1em 1em 2em; }
+
+    & > h2 { text-align: center; }
+    & > ul {
+      list-style-type: none;
+      & > li {
+        border-bottom: 1px dotted #DDD;
+        & > h3 {
+          margin-bottom: 0;
+          font-size: 80%;
+          font-weight: normal;
+          text-transform: uppercase;
+          color: #888;
+        }
+        & > .balance { float: right; }
+      }
+    }
+  }
+  & > .assets-list { padding-right: 2em; }
+  & > .liabilities-list { padding-left: 2em; }
+}
+
+.bank-entry {
+  position: relative;
+  min-height: 2.6em;
+  &:before {
+    content: "";
+    display: block;
+    height: 1.4em;
+  }
+
+  .bank-entry__date, .bank-entry__description, .bank-entry__ammount, .bank-entry__account, .bank-entry__account-entries, .bank-entry__balance, .bank-entry__controls {
+    position: absolute;
+  }
+  .bank-entry__date, .bank-entry__description, .bank-entry__ammount, .bank-entry__account, .bank-entry__balance, .bank-entry__controls { top: 0.2em; }
+  .bank-entry__account-entries { top: 1.3em; }
+
+  .bank-entry__date { width: 8em; left: 0.2em; }
+  .bank-entry__description {
+    left: 9em;
+    right: 28em;
+    overflow: hidden;
+    white-space: pre;
+    text-overflow: ellipsis;
+  }
+  .bank-entry__controls {
+    right: 20em;
+    width: 8em;
+    a {
+      margin-right: 1ex;
+      color: $text_color;
+    }
+  }
+  .bank-entry__account-entries {
+    left: 0.2em;
+    right: 0.2em;
+    background-color: #EEE;
+  }
+  .bank-entry__ammount { width: 8em; right: 11em; }
+  .bank-entry__account { width: 10em; right: 0.2em; }
+  .bank-entry__balance { width: 5em; right: 0.2em; }
+}
+
+// This is more of a min-width
+$bank-entry-width: 45em;
+.bank-entries {
+  margin: 1em 8em;
+  @media (max-width: $bank-entry-width
+                  + 16em // margins
+                  ) { margin: 1em; }
+  list-style-type: none;
+
+  .bank-entry__actions > * { margin-right: 1em; }
+  //FIXME: remove?
+  .focus { background-color: #F0F0F0; }
+
+  .bank-entry {
+    @media (max-width: $bank-entry-width) {
+      padding-top: 1.2em;
+      .description { right: 0; }
+      margin-top: 1.2em;
+      padding-bottom: 1.2em;
+    }
+
+    border-bottom: 1px dashed #DDD;
+    &:last-child { border-bottom: none; }
+
+    .bank-entry__date, .bank-entry__description, .bank-entry__ammount, .bank-entry__account {
+      z-index: 100;
+      input, select { width: 100%; }
+    }
+    .bank-entry__account-entry {
+      position: relative;
+      height: 1.4em;
+    }
+  }
+}
+
+// Layout
+.navigation {
+  @include box;
+  font-size: 110%;
+  @include linear-gradient(tint(black, 25%), tint(black, 5%));
+  $standard_width: 10em   // width of the link
+                   * 2    // number of links
+                   * 1.1  // font-size
+                   + 1em; // scroll-bar
+  & > a {
+    display: inline-block;
+    height: 2em;
+    line-height: 2em;
+    text-align: center;
+    color: #CCC;
+  }
+  & > .page-actions {
+    @include box-flex(1);
+    text-align: right;
+    @media (max-width: $standard_width) { @include box-flex(0); }
+
+    & > a {
+      width: 2em;
+      border-left: 1px solid black;
+      text-decoration: none;
+    }
+  }
+  & > .accounts, & > .entries {
+    display: block;
+    border-right: 1px solid black;
+    width: 10em;
+    @media (max-width: $standard_width) {
+      @include box-flex(1);
+      width: auto;
+    }
+  }
+  body.accounts & > .accounts,
+  body.bank_entries & > .entries {
+    background-color: black;
+  }
+  //FIXME
+  .count {
+    position: absolute;
+    display: inline-block;
+    top: 1px;
+    height: 1.4em;
+    min-width: 1.4em;
+    line-height: 1;
+    font-size: 75%;
+    font-weight: bold;
+    background: #C00;
+    color: white;
+    border-radius: 1.3ex;
+    padding: 3px;
+  }
+}
+
+@import "./angular/accounts.css.scss";
+@import "./angular/bank_entries.css.scss";
+@import "./angular/strategies.css.scss";
+@import "./angular/icon-fonts.css.scss";
