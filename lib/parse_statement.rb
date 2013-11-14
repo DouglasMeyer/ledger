@@ -1,32 +1,4 @@
 module ParseStatement
-  module MoneyParser
-    def self.included(klass)
-      klass.module_eval do
-
-        def self.statement_attr(attr, key, &block)
-          define_method attr do
-            value = raw.scan(/<#{key}>(.*)/)[0][0].strip
-            value = block.call(value) if block_given?
-            value
-          end
-        end
-
-        def self.parse(file)
-          data = file.read
-          balance = file.read.scan(/<LEDGERBAL>.*?<.LEDGERBAL>/m)[0].scan(/<BALAMT>(.*)/)[0][0].strip.to_f
-          transactions = data.scan(/<STMTTRN>.*?<.STMTTRN>/m).map do |x|
-            StatementEntry.new(x)
-          end
-          transactions.sort_by{|t| t.id }.reverse.each do |transaction|
-            transaction.balance = balance
-            balance -= transaction.ammount
-          end
-        end
-
-      end
-    end
-  end
-
   class StatementEntry
     def self.statement_attr(attr, key, &block)
       define_method attr do

@@ -42,11 +42,10 @@ module FetchStatement
     #session.check 'oftenUsed'
     #session.click_button 'Continue'
 
-    session.within('ul[s1id="navigationList"]') do
-      session.click_link 'Accounts'
-    end
-    session.select 'Quicken (All Versions)', :from => 'format'
-    session.click_button 'Download'
+    session.click_link 'BMO Harris Everyday Checking'
+
+    session.find('li', text: 'Download Transactions').hover
+    session.click_link 'Quicken (All Versions)'
 
 
     session.check "checkbox"
