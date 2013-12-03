@@ -1,3 +1,7 @@
+window.Ledger.controller 'NavigationCtrl', ($scope, $rootScope, $location)->
+  $rootScope.$on '$locationChangeSuccess', ->
+    $scope.locationPath = $location.path()
+
 window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest) ->
   $('body').attr 'class', 'accounts index'
   APIRequest.read('account'

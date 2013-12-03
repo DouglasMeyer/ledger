@@ -1,4 +1,5 @@
 @import "bourbon";
+@import "./angular/grid";
 
 // Constants
 $text_color: #444;
@@ -31,17 +32,9 @@ ul { margin: 0; padding: 0; }
   &.s-negative { color: red; }
 }
 .accounts-table {
-  width: 50em;
-  @media (max-width: 50em) { width: auto; }
-  margin: 0 auto;
-
   & > .assets-list, & > .liabilities-list {
-    float: left;
-    width: 50%;
-    @media (max-width: 35em) { width: 100%; }
-
-    padding: 1em 2em;
-    @media (max-width: 50em){ padding: 1em 1em 2em; }
+    @include column(3/8);
+    @media (max-width: 60em){ @include column(4/8); }
 
     & > h2 { text-align: center; }
     & > ul {
@@ -59,8 +52,10 @@ ul { margin: 0; padding: 0; }
       }
     }
   }
-  & > .assets-list { padding-right: 2em; }
-  & > .liabilities-list { padding-left: 2em; }
+  & > .liabilities-list {
+    margin-left: (100% * 1/8);
+    @media (max-width: 60em){ margin-left: 0; }
+  }
 }
 
 .bank-entry {
@@ -141,59 +136,41 @@ $bank-entry-width: 45em;
 
 // Layout
 .navigation {
-  @include box;
-  font-size: 110%;
-  @include linear-gradient(tint(black, 25%), tint(black, 5%));
-  $standard_width: 10em   // width of the link
-                   * 2    // number of links
-                   * 1.1  // font-size
-                   + 1em; // scroll-bar
+  @include column(1/9);
+  text-align: right;
   & > a {
-    display: inline-block;
-    height: 2em;
-    line-height: 2em;
-    text-align: center;
-    color: #CCC;
-  }
-  & > .page-actions {
-    @include box-flex(1);
-    text-align: right;
-    @media (max-width: $standard_width) { @include box-flex(0); }
-
-    & > a {
-      width: 2em;
-      border-left: 1px solid black;
-      text-decoration: none;
-    }
-  }
-  & > .accounts, & > .entries {
     display: block;
-    border-right: 1px solid black;
-    width: 10em;
-    @media (max-width: $standard_width) {
-      @include box-flex(1);
-      width: auto;
+    font-size: 110%;
+    color: inherit;
+
+    &.s-current { font-weight: bold; }
+  }
+
+  @media (max-width: 35em) {
+    width: 100%;
+    overflow-y: hidden;
+    height: 1.3rem;
+    z-index: 10;
+
+    text-align: left;
+    background-color: black;
+    color: #EEE;
+
+    & > a { display: none; }
+    & > a.s-current { display: block; }
+
+    &:hover {
+      height: auto;
+
+      & > a { display: block; }
     }
   }
-  body.accounts & > .accounts,
-  body.bank_entries & > .entries {
-    background-color: black;
-  }
-  //FIXME
-  .count {
-    position: absolute;
-    display: inline-block;
-    top: 1px;
-    height: 1.4em;
-    min-width: 1.4em;
-    line-height: 1;
-    font-size: 75%;
-    font-weight: bold;
-    background: #C00;
-    color: white;
-    border-radius: 1.3ex;
-    padding: 3px;
-  }
+}
+.body {
+  @include column(8/9);
+  padding-right: 0;
+
+  @media (max-width: 35em) { width: 100%; }
 }
 
 @import "./angular/accounts.css.scss";

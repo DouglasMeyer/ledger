@@ -1,0 +1,9 @@
+$gutter_width: 2.5rem;
+
+@mixin column($frac) {
+  padding-right: $gutter_width;
+
+  display: inline-block;
+  vertical-align: top;
+  width: 100% * $frac;
+}

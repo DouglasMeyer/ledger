@@ -9,8 +9,10 @@
     %meta(name="google" value="notranslate")
 
   %body(class="#{controller_name} #{action_name}")
-    .navigation
-      = link_to "Accounts", "#/accounts", class: 'accounts'
-      = link_to "Entries", "#/entries", class: 'entries'
-      .page-actions= yield :navigation
-    = yield
+    .navigation(ng-controller="NavigationCtrl")
+      %a(href="#/accounts" ng-class="{'s-current': locationPath == '/accounts'}") Accounts
+      %a(href="#/entries"  ng-class="{'s-current': locationPath == '/entries'}") Entries
+
+      %p last update #{Time.now.strftime "%-m/%-d %-I%P"}
+
+    .body= yield
