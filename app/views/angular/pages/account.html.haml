@@ -3,9 +3,9 @@
   %span.balance(l-currency ng-model="account.balance_cents")
 
 %ul.bank-entries
-  %li(ng-repeat="account_entry in account.account_entries")
-    .date {{account_entry.bank_entry.date}}
-    .description {{account_entry.bank_entry.description}}
-    .account-entry
-      %span.ammount(l-currency ng-model="account_entry.ammount_cents")
-      %span.balance(l-currency ng-model="account_entry.balance_cents")
+  %li.bank-entry(ng-repeat="account_entry in account.account_entries")
+    .bank-entry__date {{account_entry.bank_entry.date}}
+    .bank-entry__description {{account_entry.bank_entry.description}}
+    .bank-entry__account-entry
+      .bank-entry__ammount(l-currency ng-model="account_entry.ammount_cents")
+      .bank-entry__balance(l-currency ng-model="account_entry.balance_cents")

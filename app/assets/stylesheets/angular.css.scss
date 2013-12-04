@@ -73,39 +73,36 @@ ul { margin: 0; padding: 0; }
   .bank-entry__date, .bank-entry__description, .bank-entry__ammount, .bank-entry__account, .bank-entry__balance, .bank-entry__controls { top: 0.2em; }
   .bank-entry__account-entries { top: 1.3em; }
 
-  .bank-entry__date { width: 8em; left: 0.2em; }
+  $column_width: 100% * 1/8;
+
+  .bank-entry__date { width: $column_width; }
   .bank-entry__description {
-    left: 9em;
-    right: 28em;
+    left: $column_width;
+    right: $column_width * 3;
     overflow: hidden;
     white-space: pre;
     text-overflow: ellipsis;
   }
   .bank-entry__controls {
-    right: 20em;
-    width: 8em;
+    right: $column_width * 2;
+    padding-right: $gutter_width;
     a {
-      margin-right: 1ex;
+      margin-left: 1ex;
       color: $text_color;
     }
   }
   .bank-entry__account-entries {
-    left: 0.2em;
-    right: 0.2em;
+    left: 0; right: 0;
     background-color: #EEE;
   }
-  .bank-entry__ammount { width: 8em; right: 11em; }
-  .bank-entry__account { width: 10em; right: 0.2em; }
-  .bank-entry__balance { width: 5em; right: 0.2em; }
+  .bank-entry__ammount { width: $column_width; right: $column_width; padding-right: $gutter_width; }
+  .bank-entry__account { width: $column_width; right: 0; }
+  .bank-entry__balance { width: $column_width; right: 0; }
 }
 
 // This is more of a min-width
 $bank-entry-width: 45em;
 .bank-entries {
-  margin: 1em 8em;
-  @media (max-width: $bank-entry-width
-                  + 16em // margins
-                  ) { margin: 1em; }
   list-style-type: none;
 
   .bank-entry__actions > * { margin-right: 1em; }
@@ -113,12 +110,6 @@ $bank-entry-width: 45em;
   .focus { background-color: #F0F0F0; }
 
   .bank-entry {
-    @media (max-width: $bank-entry-width) {
-      padding-top: 1.2em;
-      .description { right: 0; }
-      margin-top: 1.2em;
-      padding-bottom: 1.2em;
-    }
 
     border-bottom: 1px dashed #DDD;
     &:last-child { border-bottom: none; }

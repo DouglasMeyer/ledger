@@ -1,7 +1,7 @@
 %ul.bank-entries
   %li.bank-entry(ng-repeat="entry in entries")
     %pre(style="display:none") {{entry | json}}
-    .preview(ng-hide="entry.isEditing")
+    %div(ng-hide="entry.isEditing")
       .bank-entry__date {{entry.date}}
       .bank-entry__description {{entry.description}}
       .bank-entry__controls
@@ -9,11 +9,10 @@
         %a(href="" ng-click="") Distribute
       .bank-entry__ammount(l-currency ng-model="entry.ammount_cents")
       .bank-entry__balance(l-currency ng-model="entry.balance_cents")
-      .bank-entry__account-entries
-        %span.account-entry(ng-repeat="account_entry in entry.account_entries")
+      .bank-entry__account-entry(ng-repeat="account_entry in entry.account_entries")
+        .bank-entry__ammount(l-currency ng-model="account_entry.ammount_cents")
+        .bank-entry__account
           {{account_entry.account_name}}
-          -
-          %span(l-currency ng-model="account_entry.ammount_cents")
     %form(ng-if="entry.isEditing" ng-submit="save(entry)" ng-controller="EntryEditController")
       .bank-entry__date
         %input(type="text" disabled="{{entry.isFromBank}}" ng-model="entry.date")
