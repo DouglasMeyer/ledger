@@ -25,7 +25,8 @@ window.Ledger.controller 'AccountController', ($scope, $routeParams, APIRequest,
   APIRequest.read('account_entry',
     query: { account_id: account_id }
     success: (data) ->
-      account_entries = $scope.account.account_entries = data
+      account_entries = data
+      $scope.account.$then -> $scope.account.account_entries = account_entries
 
       bank_entry_ids = []
       for ae in account_entries

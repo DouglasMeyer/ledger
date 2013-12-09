@@ -53,6 +53,8 @@ angular.module('LedgerServices', [])
       $window.clearTimeout(timeout) if timeout
       post()
 
+    this
+
   .factory 'Account', (APIRequest, $q) ->
     cache = {}
 
