@@ -35,6 +35,7 @@ ul { margin: 0; padding: 0; }
   & > .assets-list, & > .liabilities-list {
     @include column(3/8);
     @media (max-width: 60em){ @include column(4/8); }
+    @media (max-width: 35em){ @include column(9/9); }
 
     & > h2 { text-align: center; }
     & > ul {
@@ -53,7 +54,8 @@ ul { margin: 0; padding: 0; }
     }
   }
   & > .liabilities-list {
-    margin-left: (100% * 1/8);
+    margin-left: column-width(1/8, true);
+    margin-right: 0;
     @media (max-width: 60em){ margin-left: 0; }
   }
 }
@@ -73,19 +75,19 @@ ul { margin: 0; padding: 0; }
   .bank-entry__date, .bank-entry__description, .bank-entry__ammount, .bank-entry__account, .bank-entry__balance, .bank-entry__controls { top: 0.2em; }
   .bank-entry__account-entries { top: 1.3em; }
 
-  $column_width: 100% * 1/8;
+  $column_width: column-width(1/8);
 
   .bank-entry__date { width: $column_width; }
   .bank-entry__description {
     left: $column_width;
-    right: $column_width * 3;
+    right: column-width(3/8);
     overflow: hidden;
     white-space: pre;
     text-overflow: ellipsis;
   }
   .bank-entry__controls {
-    right: $column_width * 2;
-    padding-right: $gutter_width;
+    right: column-width(2/8);
+    margin-right: $gutter_width;
     a {
       margin-left: 1ex;
       color: $text_color;
@@ -95,7 +97,7 @@ ul { margin: 0; padding: 0; }
     left: 0; right: 0;
     background-color: #EEE;
   }
-  .bank-entry__ammount { width: $column_width; right: $column_width; padding-right: $gutter_width; }
+  .bank-entry__ammount { width: $column_width; right: column-width(1/8, true); }
   .bank-entry__account { width: $column_width; right: 0; }
   .bank-entry__balance { width: $column_width; right: 0; }
 }
@@ -159,7 +161,7 @@ $bank-entry-width: 45em;
 }
 .body {
   @include column(8/9);
-  padding-right: 0;
+  margin-right: 0;
 
   @media (max-width: 35em) { width: 100%; }
 }

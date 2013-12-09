@@ -1,9 +1,17 @@
 $gutter_width: 2.5rem;
 
-@mixin column($frac) {
-  padding-right: $gutter_width;
+// $frac = 1 of 9 columns
+@function column-width($frac: 1/9, $include_gutter: false) {
+  @return calc(
+    (100% + #{$gutter_width}) * #{$frac}
+    - #{if($include_gutter, 0px, $gutter_width)}
+  );
+}
+
+@mixin column($frac: 1/9) {
+  margin-right: $gutter_width;
 
   display: inline-block;
   vertical-align: top;
-  width: 100% * $frac;
+  width: column-width($frac);
 }
