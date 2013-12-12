@@ -1,39 +1,23 @@
-requestIndex = 0
-successCallbacks = {}
+(window.LedgerServices ||= {}).mock = {}
 
-window.mockAPIRequest =
-  requests: []
-  read: (type, reference: reference, limit: limit, offset: offset, query: query, success: success) ->
-    reference ||= 'ledger_services_api_request_'+(requestIndex++)
-    this.requests.push
-      reference: reference
-      action: 'read'
-      type: type
-      limit: limit
-      offset: offset
-      query: query
-    successCallbacks[reference] = success
-    reference
-  update: (type, reference: reference, query: query, data: data, success: success) ->
-    reference ||= 'ledger_services_api_request_'+(requestIndex++)
-    this.requests.push
-      reference: reference
-      action: 'update'
-      type: type
-      query: query
-      data: data
-    successCallbacks[reference] = success
-    reference
-  post: ->
+LedgerServices.mock.APIRequestProvider = ->
 
-  reset: ->
-    requestIndex = 0
-    successCallbacks = {}
-    @requests = []
+  @$get = ($q)->
+    apiCall = (action, type, options)->
+      request = angular.copy options
+      request.action = action
+      request.type = type
+      request.deferred = $q.defer()
 
-  satisfyRequest: (request, response) ->
-    index = @requests.indexOf(request)
-    if index != -1
-      @requests.splice index, 1
+      APIRequest.requests.push request
+      request.deferred.promise
 
-    successCallbacks[request.reference](response)
+    APIRequest =
+      requests: []
+      read: (type, options={})-> apiCall('read', type, options)
+      update: (type, options={})-> apiCall('update', type, options)
+    APIRequest
+  undefined
+
+angular.module('LedgerServicesMock', ['ng']).provider
+  APIRequest: LedgerServices.mock.APIRequestProvider

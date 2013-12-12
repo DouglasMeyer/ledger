@@ -2,11 +2,12 @@ window.Ledger.controller 'NavigationCtrl', ($scope, $rootScope, $location)->
   $rootScope.$on '$locationChangeSuccess', ->
     $scope.locationPath = $location.path()
 
-window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest) ->
+window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest)->
   $('body').attr 'class', 'accounts index'
-  APIRequest.read('account'
-    limit: 1000
-    success: (data) ->
+
+  APIRequest
+    .read('account', limit: 1000)
+    .then (data)->
       order = $filter('orderBy')
 
       $scope.groups = { Assets: [], Liabilities: [] }
@@ -15,48 +16,47 @@ window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest) ->
         if account.category != list[list.length-1]?.category
           account.firstInCategory = true
         list.push account
-  )
 
 window.Ledger.controller 'AccountController', ($scope, $routeParams, APIRequest, Account) ->
   $('body').attr 'class', 'accounts show'
   account_id = $routeParams.id
 
   $scope.account = Account.find account_id
-  APIRequest.read('account_entry',
-    query: { account_id: account_id }
-    success: (data) ->
+  APIRequest
+    .read('account_entry', query: { account_id: account_id })
+    .then (data)->
       account_entries = data
-      $scope.account.$then -> $scope.account.account_entries = account_entries
+      $scope.account.then -> $scope.account.account_entries = account_entries
 
       bank_entry_ids = []
       for ae in account_entries
         bank_entry_ids.push ae.bank_entry_id
 
-      APIRequest.read('bank_entry',
-        query: { id: bank_entry_ids }
-        success: (data) ->
+      APIRequest
+        .read('bank_entry', query: { id: bank_entry_ids })
+        .then (data)->
           for bank_entry in data
             for account_entry in account_entries when account_entry.bank_entry_id == bank_entry.id
               account_entry.bank_entry = bank_entry
-      )
-  )
 
 window.Ledger.controller 'EntriesController', ($scope, $routeParams, $location, APIRequest) ->
   $('body').attr 'class', 'bank_entries index'
   limit = 30
   page = parseInt($routeParams.page||0, 10)||0
 
-  APIRequest.read('bank_entry'
-    limit: limit
-    offset: page * limit
-    success: (data) ->
+  APIRequest
+    .read('bank_entry',
+      limit: limit
+      offset: page * limit
+    )
+    .then (data)->
       $scope.entries = data
       for entry in $scope.entries
         entry.isFromBank = entry.external_id != null
       $scope.hasPreviousPage = true if page > 0
       $scope.hasNextPage     = true if $scope.entries.length == limit
-  )
-  APIRequest.read 'account', success: (data) -> $scope.accounts = data
+
+  APIRequest.read('account', {}).then (data)-> $scope.accounts = data
 
   $scope.gotoPreviousPage = -> $location.search(page: page - 1)
   $scope.gotoNextPage     = -> $location.search(page: page + 1)
@@ -97,8 +97,6 @@ window.Ledger.controller 'EntryEditController', ($scope, APIRequest) ->
         account_id:    accountEntry.account_id
         _destroy:      true unless accountEntry.ammount_cents
 
-    APIRequest.update 'bank_entry',
-      id: $scope.entry.id
-      data: savingEntry
-      success: (data) ->
-        angular.copy data, $scope.entry
+    APIRequest
+      .update('bank_entry', id: $scope.entry.id, data: savingEntry)
+      .then (data)-> angular.copy data, $scope.entry

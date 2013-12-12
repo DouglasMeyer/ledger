@@ -1,30 +1,31 @@
 angular.module('LedgerServices', [])
-  .service 'APIRequest', ($http, $window, $rootScope) ->
+  .service 'APIRequest', ($http, $timeout, $q, $rootScope) ->
 
     timeout = undefined
     requests = []
-    successCallbacks = {}
+    deferredRequests = {}
     requestIndex = 0
 
     prepareToPost = ->
-      $window.clearTimeout(timeout) if timeout
-      timeout = $window.setTimeout post, 100
+      $timeout.cancel timeout if timeout
+      timeout = $timeout post, 100
 
     post = ->
       timeout = undefined
       requestsNow = requests
       requests = []
-      successCallbacksNow = successCallbacks
-      successCallbacks = {}
+      deferredRequestsNow = deferredRequests
+      deferredRequests = {}
       $http
         .post('/api', body: JSON.stringify(requestsNow))
         .success (response) ->
           for data in response
-            successCallbacksNow[data.reference]?(data.data)
+            deferredRequestsNow[data.reference]?.resolve(data.data)
       $rootScope.$apply()
       undefined
 
-    @read = (type, reference: reference, query: query, limit: limit, offset: offset, success: success) ->
+    @read = (type, reference: reference, query: query, limit: limit, offset: offset) ->
+      deferred = $q.defer()
       reference ||= 'ledger_services_api_request_'+(requestIndex++)
       requests.push
         reference: reference
@@ -33,11 +34,12 @@ angular.module('LedgerServices', [])
         limit: limit
         offset: offset
         query: query
-      successCallbacks[reference] = success
+      deferredRequests[reference] = deferred
       prepareToPost()
-      reference
+      deferred.promise
 
-    @update = (type, reference: reference, id: id, data: data, success: success) ->
+    @update = (type, reference: reference, id: id, data: data) ->
+      deferred = $q.defer()
       reference ||= 'ledger_services_api_request_'+(requestIndex++)
       requests.push
         reference: reference
@@ -45,12 +47,12 @@ angular.module('LedgerServices', [])
         type: type
         id: id
         data: data
-      successCallbacks[reference] = success
+      deferredRequests[reference] = deferred
       prepareToPost()
-      reference
+      deferred.promise
 
     @post = ->
-      $window.clearTimeout(timeout) if timeout
+      $timeout.cancel timeout if timeout
       post()
 
     this
@@ -71,12 +73,11 @@ angular.module('LedgerServices', [])
       value.$resolved = false
       deferred.promise.then(markResolved, markResolved)
 
-      APIRequest.read 'account',
-        query: id: id
-        success: (data) ->
-          deferred.resolve data[0]
+      APIRequest
+        .read('account', query: id: id)
+        .then (data)-> deferred.resolve data[0]
 
-      value.$then = deferred.promise.then( (data)->
+      value.then = deferred.promise.then( (data)->
         angular.copy data, value
 
         data

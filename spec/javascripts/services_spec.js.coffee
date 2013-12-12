@@ -1,90 +1,74 @@
 #= require angular_app/services
 
 describe 'APIRequest', ->
-  httpBackend = undefined
-  mockWindow = {
-    navigator: window.navigator
-    timeouts: []
-    setTimeout: (fn, time) ->
-      timeout = fn: fn, time: time
-      @timeouts.push timeout
-      timeout
-    clearTimeout: (timeout) ->
-      index = @timeouts.indexOf timeout
-      @timeouts.splice index, 1 if index != -1
-    flush: ->
-      angular.forEach @timeouts, (timeout) ->
-        timeout.fn()
-      @timeouts = []
-  }
+  $httpBackend = $timeout = undefined
 
-  beforeEach module 'LedgerServices', ($provide) ->
-    $provide.value '$window', mockWindow
-    null
+  beforeEach module 'LedgerServices'
   beforeEach inject ($injector) ->
-    httpBackend = $injector.get '$httpBackend'
+    $httpBackend = $injector.get '$httpBackend'
+    $timeout = $injector.get '$timeout'
 
   afterEach ->
-    httpBackend.verifyNoOutstandingExpectation()
-    httpBackend.verifyNoOutstandingRequest()
+    $httpBackend.verifyNoOutstandingExpectation()
+    $httpBackend.verifyNoOutstandingRequest()
+    #$timeout.verifyNoPendingTasks()
 
   describe '.read', ->
-    it 'makes requests', inject ($window, APIRequest) ->
-      successCalled = false
-      reference = APIRequest.read 'account',
+    it 'makes requests', inject (APIRequest, $rootScope) ->
+      promise = APIRequest.read 'account',
         reference: 'account request'
         query: id: 'the id'
-        success: -> successCalled = true
-      expect($window.timeouts.length).toEqual 1
 
-      httpBackend.expect('POST', '/api', body: JSON.stringify([
+      promiseResolved = false
+      promise.then (data)->
+        promiseResolved = true
+        expect(data).toEqual 'the data'
+
+      $httpBackend.expect('POST', '/api', body: JSON.stringify([
         reference: 'account request'
         action: 'read', type: 'account'
         query: id: 'the id'
       ])).respond([
         { reference: 'account request', data: 'the data' }
       ])
-      $window.flush()
-      httpBackend.flush()
+      $timeout.flush()
+      $httpBackend.flush()
+      $rootScope.$digest()
 
-      expect(successCalled).toEqual true
+      expect(promiseResolved).toBe true
 
-    it 'chains requests', inject ($window, APIRequest) ->
+    it 'chains requests', inject (APIRequest) ->
       oneData = twoData = undefined
-      APIRequest.read 'account',
-        reference: 'one'
-        success: (data) -> oneData = data
-      expect($window.timeouts.length).toEqual 1
-      APIRequest.read 'account',
-        reference: 'two'
-        query: id: 'the id'
-        success: (data) -> twoData = data
-      expect($window.timeouts.length).toEqual 1
+      APIRequest.read('account', reference: 'one')
+        .then (data)-> oneData = data
+      APIRequest.read('account', reference: 'two', query: id: 'the id')
+        .then (data)-> twoData = data
 
-      httpBackend.expect('POST', '/api', body: JSON.stringify([
+      $httpBackend.expect('POST', '/api', body: JSON.stringify([
         { reference: 'one', action: 'read', type: 'account' }
         { reference: 'two', action: 'read', type: 'account', query: id: 'the id' }
       ])).respond([
         { reference: 'two', data: 'data 2' }
         { reference: 'one', data: 'data 1' }
       ])
-      $window.flush()
-      httpBackend.flush()
+      $timeout.flush()
+      $httpBackend.flush()
 
       expect(oneData).toEqual 'data 1'
       expect(twoData).toEqual 'data 2'
 
   describe '.update', ->
-    it 'make requests', inject ($window, APIRequest) ->
-      successCalled = false
-      reference = APIRequest.update 'account',
+    it 'make requests', inject (APIRequest) ->
+      promiseCalled = false
+      APIRequest.update('account',
         reference: 'account update'
         id: 'the id'
-        data: this: 'that'
-        success: -> successCalled = true
-      expect($window.timeouts.length).toEqual 1
+        data: this: 'that')
+          .then (data)->
+            promiseCalled = true
+            expect(data).toEqual this: 'other'
 
-      httpBackend.expect('POST', '/api', body: JSON.stringify([
+      $httpBackend.expect('POST', '/api', body: JSON.stringify([
         reference: 'account update'
         action: 'update', type: 'account'
         id: 'the id'
@@ -92,33 +76,34 @@ describe 'APIRequest', ->
       ])).respond([
         { reference: 'account update', data: { this: 'other' } }
       ])
-      $window.flush()
-      httpBackend.flush()
+      $timeout.flush()
+      $httpBackend.flush()
 
-      expect(successCalled).toEqual true
+      expect(promiseCalled).toEqual true
 
 
 describe 'Account', ->
-  beforeEach module 'LedgerServices', ($provide) ->
-    $provide.value 'APIRequest', mockAPIRequest
-    mockAPIRequest.reset()
-    null
+  APIRequest = undefined
+
+  beforeEach module 'LedgerServices', 'LedgerServicesMock'
+  beforeEach inject (_APIRequest_)->
+    APIRequest = _APIRequest_
 
   describe '.find', ->
     it 'gives you a promise', inject (Account) ->
       account = Account.find 1
-      expect(account.$then).toBeDefined()
+      expect(account.then).toBeDefined()
 
     it 'makes an APIRequest', inject (Account) ->
       account = Account.find 1
-      request = mockAPIRequest.requests[0]
-      expect(request.action).toEqual 'read'
-      expect(request.type).toEqual 'account'
-      expect(request.query).toEqual id: 1
+      request = APIRequest.requests[0]
+      expect(request.action).toBe 'read'
+      expect(request.type  ).toBe 'account'
+      expect(request.query ).toEqual id: 1
 
     it 'resolves the promise with the server response', inject ($rootScope, Account) ->
       account = Account.find 1
-      mockAPIRequest.satisfyRequest mockAPIRequest.requests[0], [ id: 1, name: 'account 1' ]
+      APIRequest.requests[0].deferred.resolve [ id: 1, name: 'account 1' ]
       $rootScope.$digest()
 
       expect(account.id).toEqual 1
