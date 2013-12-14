@@ -1,17 +1,45 @@
 $gutter_width: 2.5rem;
 
-// $frac = 1 of 9 columns
-@function column-width($frac: 1/9, $include_gutter: false) {
+
+// column-width($fraction, $include-gutter) function returns the calculated
+// length value for columns.
+// `$fraction` is typically represented as `2/10` for 2 of 10 columns.
+// `$include-gutter` will include the gutter width in the return value.
+@function column-width($fraction: 1/9, $include-gutter: false) {
   @return calc(
-    (100% + #{$gutter_width}) * #{$frac}
-    - #{if($include_gutter, 0px, $gutter_width)}
+    (100% + #{$gutter_width}) * #{$fraction}
+    - #{if($include-gutter, 0px, $gutter_width)}
   );
 }
 
-@mixin column($frac: 1/9) {
+// column($fraction) mixin will apply column widths and gutter to a selector.
+// `$fraction` is typically represented as `2/10` for 2 of 10 columns.
+@mixin column($fraction: 1/9) {
+  //TODO: `last` option to not apply gutter.
   margin-right: $gutter_width;
 
   display: inline-block;
   vertical-align: top;
-  width: column-width($frac);
+  width: column-width($fraction);
+}
+
+
+
+// Development grid overlay. Bookmarklet:
+// javascript:void((function(d){if(window.grid){grid.remove();delete window.grid; return};grid=d.createElement('div');var i,c;d.body.appendChild(grid);grid.id="grid";for(i=0;i<10;i++){grid.appendChild(d.createElement('div'))}})(document))
+#grid {
+  position: fixed;
+  top: 0;
+  height: 100%; width: 100%;
+  z-index: 99999;
+  pointer-events: none;
+  white-space: nowrap;
+
+  & > * {
+    @include column;
+    height: 100%;
+    border-style: dashed;
+    border-color: rgba(255, 0, 0, 0.4);
+    border-width: 0 1px;
+  }
 }
