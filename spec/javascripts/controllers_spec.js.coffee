@@ -1,34 +1,18 @@
 #= require angular_app/controllers
 
 describe 'AccountsController', ->
-  $scope = APIRequest = undefined
+  $scope = undefined
 
   beforeEach module 'Ledger', 'LedgerServicesMock'
 
-  beforeEach inject ($rootScope, $controller, _APIRequest_) ->
-    APIRequest = _APIRequest_
+  beforeEach inject ($rootScope, $controller) ->
     $scope = $rootScope.$new()
     $controller 'AccountsController',
       $scope: $scope
 
-  it 'sets $scope.groups', ->
-    thing2    = { position: 2, asset: true,  category: 'Thing', name: 'thing 2' }
-    thing     = { position: 1, asset: false, category: 'Thing', name: 'thing' }
-    thing1    = { position: 1, asset: true,  category: 'Thing', name: 'thing 1' }
-    something = { position: 2, asset: false, category: 'Other Thing', name: 'something' }
-    request = APIRequest.requests[0]
-    expect(request.action).toBe 'read'
-    expect(request.type).toBe 'account'
-    expect(request.limit).toBe 1000
-
-    request.deferred.resolve [ thing2, thing, thing1, something ]
+  it 'sets $scope.groups to allAccounts', inject (allAccounts)->
     $scope.$digest()
-
-    expect($scope.groups).toEqual {
-      Assets: [ thing1, thing2 ]
-      Liabilities: [ thing, something ]
-    }
-
+    expect($scope.groups).toBe allAccounts
 
 
 describe 'AccountController', ->
@@ -229,3 +213,32 @@ describe 'EntryEditController', ->
     updateRequest.deferred.resolve account_entries: accountEntriesResponse
     $scope.$digest()
     expect($scope.entry.account_entries).toEqual accountEntriesResponse
+
+
+describe 'EntryController', ->
+  $scope = APIRequest = undefined
+
+  beforeEach module 'Ledger', 'LedgerServicesMock'
+
+  beforeEach inject ($rootScope, $controller, _APIRequest_) ->
+    APIRequest = _APIRequest_
+    $scope = $rootScope.$new()
+    $controller 'EntryController',
+      $scope: $scope
+      $routeParams: id: 'entry id'
+
+  it 'loads entry from params', ->
+    expect(APIRequest.requests.length).toEqual 1
+    entryRequest = APIRequest.requests[0]
+    expect(entryRequest.action).toBe 'read'
+    expect(entryRequest.type  ).toBe 'bank_entry'
+    expect(entryRequest.query ).toEqual id: 'entry id'
+
+    entry = { name: 'the entry' }
+    entryRequest.deferred.resolve entry
+    $scope.$digest()
+    expect($scope.entry).toEqual entry
+
+  it 'sets $scope.groups to allAccounts', inject (allAccounts)->
+    $scope.$digest()
+    expect($scope.groups).toBe allAccounts

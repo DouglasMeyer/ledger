@@ -2,20 +2,9 @@ window.Ledger.controller 'NavigationCtrl', ($scope, $rootScope, $location)->
   $rootScope.$on '$locationChangeSuccess', ->
     $scope.locationPath = $location.path()
 
-window.Ledger.controller 'AccountsController', ($scope, $filter, APIRequest)->
+window.Ledger.controller 'AccountsController', ($scope, $filter, allAccounts)->
   $('body').attr 'class', 'accounts index'
-
-  APIRequest
-    .read('account', limit: 1000)
-    .then (data)->
-      order = $filter('orderBy')
-
-      $scope.groups = { Assets: [], Liabilities: [] }
-      for account in order(data, 'position')
-        list = $scope.groups[if account.asset then 'Assets' else 'Liabilities']
-        if account.category != list[list.length-1]?.category
-          account.firstInCategory = true
-        list.push account
+  $scope.groups = allAccounts
 
 window.Ledger.controller 'AccountController', ($scope, $routeParams, APIRequest, Account) ->
   $('body').attr 'class', 'accounts show'
@@ -100,3 +89,7 @@ window.Ledger.controller 'EntryEditController', ($scope, APIRequest) ->
     APIRequest
       .update('bank_entry', id: $scope.entry.id, data: savingEntry)
       .then (data)-> angular.copy data, $scope.entry
+
+window.Ledger.controller 'EntryController', ($scope, $routeParams, APIRequest, allAccounts) ->
+  APIRequest.read('bank_entry', query: id: $routeParams.id).then (data)-> $scope.entry = data
+  $scope.groups = allAccounts

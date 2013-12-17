@@ -86,3 +86,19 @@ angular.module('LedgerServices', [])
       value
 
     Account
+
+  .factory 'allAccounts', (APIRequest, $filter)->
+    groups = { Assets: [], Liabilities: [] }
+    promise = APIRequest.read('account', limit: 1000).then (data)->
+      order = $filter('orderBy')
+
+      for account in order(data, 'position')
+        list = groups[if account.asset then 'Assets' else 'Liabilities']
+        if account.category != list[list.length-1]?.category
+          account.firstInCategory = true
+        list.push account
+
+      groups
+
+    groups.promise = promise
+    groups

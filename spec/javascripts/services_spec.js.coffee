@@ -116,3 +116,33 @@ describe 'Account', ->
 
       expect(accountCopy).toEqual account
       expect(otherAccount).not.toEqual account
+
+
+describe 'allAccounts', ->
+  beforeEach module 'LedgerServices', ($provide)->
+    $provide.factory 'APIRequest', ($q)->
+      deffered = $q.defer()
+      flush: (data)-> deffered.resolve(data)
+      read: -> deffered.promise
+    undefined
+
+  it 'gets accounts and puts them into groups', inject ($rootScope, APIRequest, allAccounts)->
+    thing2    = position: 2, asset: true,  category: 'Thing',       name: 'thing 2'
+    thing     = position: 1, asset: false, category: 'Thing',       name: 'thing'
+    thing1    = position: 1, asset: true,  category: 'Thing',       name: 'thing 1'
+    something = position: 2, asset: false, category: 'Other Thing', name: 'something'
+    assets      = [ thing1, thing2 ]
+    liabilities = [ thing, something ]
+
+    promiseResolved = false
+    allAccounts.promise.then (groups)->
+      promiseResolved = true
+      expect(groups.Assets).toEqual assets
+      expect(groups.Liabilities).toEqual liabilities
+
+    APIRequest.flush [ thing2, thing, thing1, something ]
+    $rootScope.$digest()
+
+    expect(promiseResolved).toBe true
+    expect(allAccounts.Assets).toEqual assets
+    expect(allAccounts.Liabilities).toEqual liabilities
