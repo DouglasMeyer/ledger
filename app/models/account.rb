@@ -21,7 +21,7 @@ class Account < ActiveRecord::Base
   def average_spent(average_over=1)
     dates = bank_entries.order(:date).pluck(:date)
     return nil unless dates.any?
-    months = (dates.last.months - dates.first.months)
+    months = (dates.first.months - dates.last.months)
     return nil if months.zero?
     spent = entries.joins(:bank_entry)
                    .where("bank_entries.external_id IS NOT NULL")

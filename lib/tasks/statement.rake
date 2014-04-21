@@ -66,5 +66,5 @@ namespace :statement do
 
 end
 
-desc 'Fetch, Send, and Import statement'
+desc 'Fetch, Import, and Send statement'
 task :statement => [ 'statement:fetch', 'statement:import', 'statement:send' ]

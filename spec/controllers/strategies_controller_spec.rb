@@ -11,7 +11,7 @@ describe V2::StrategiesController do
     end
 
     it "assigns @accounts" do
-      expect(assigns(:accounts)).to eq([ account1, account2 ])
+      expect(assigns(:accounts)).to eq([ @account1, @account2 ])
     end
   end
 
