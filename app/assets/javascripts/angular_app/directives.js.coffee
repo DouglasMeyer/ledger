@@ -36,3 +36,25 @@ angular.module('Ledger').directive 'lCurrency', ($filter) ->
           element.text ngModel.$viewValue
         else
           element.text ''
+
+
+angular.module('Ledger').directive 'accountsTable', ->
+  restrict: 'E'
+  transclude: true
+  scope:
+    rawGroups: '=groups'
+  controller: ($q, $scope)->
+    $q.when($scope.rawGroups).then (groups)->
+      $scope.groups =
+        Assets: groups.Assets
+        Liabilities: groups.Liabilities
+  template: """
+    <div ng-repeat="(category, accounts) in groups" class="{{category | lowercase}}-list">
+      <h2>{{category}}</h2>
+      <ul>
+        <li ng-repeat="account in accounts">
+          <div ng-transclude></div>
+        </li>
+      </ul>
+    </div>
+  """

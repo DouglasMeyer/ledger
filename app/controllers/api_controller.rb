@@ -54,6 +54,8 @@ private
     record = type_to_class(type).find(id)
     record.update!(data)
     { data: record }
+  #rescue ActiveRecord::RecordInvalid => e
+  #  { errors: e.record.errors, data: e.record }
   end
 
   def type_to_class(type)

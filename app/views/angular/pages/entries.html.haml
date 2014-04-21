@@ -6,7 +6,7 @@
       .bank-entry__description {{entry.description}}
       .bank-entry__controls
         %a(href="" ng-click="edit(entry)") Edit
-        %a(href="" ng-click="") Distribute
+        %a(href="#/entries/{{entry.id}}") Distribute
       .bank-entry__ammount(l-currency ng-model="entry.ammount_cents")
       .bank-entry__balance(l-currency ng-model="entry.balance_cents")
       .bank-entry__account-entry(ng-repeat="account_entry in entry.account_entries")

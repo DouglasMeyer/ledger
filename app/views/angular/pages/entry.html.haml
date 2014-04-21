@@ -1,0 +1,13 @@
+%pre {{entry | json}}
+%h2
+  %span.balance(l-currency ng-model="entry.ammount_remaining")
+  &nbsp;left to distribute from:
+
+.accounts-table
+  %div(ng-repeat="(category, accounts) in groups" class="{{category | lowercase}}-list")
+    %h2 {{category}}
+    %ul
+      %li(ng-repeat="account in accounts")
+        %h3(ng-show="account.firstInCategory") {{account.category}}
+        %a(href="#/account/{{account.id}}") {{account.name}}
+        %span.balance(l-currency ng-model="account.balance_cents")

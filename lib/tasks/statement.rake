@@ -24,10 +24,22 @@ namespace :statement do
     File.open(json_file, 'w'){ |f| f.write(bank_entries.to_json) }
   end
 
+  desc 'Import statements from tmp/downloads directory'
+  task :import => :environment do
+    JSON.parse(File.read(json_file)).each do |attributes|
+      unless BankEntry.where(external_id: attributes['external_id']).any?
+        BankEntry.create!(attributes)
+      end
+    end
+  end
+
   desc 'Send statement data to production'
   task :send => :environment do
     require 'httparty'
     require "net/netrc"
+    require 'fileutils'
+
+    FileUtils.cp json_file, Rails.root + 'tmp' + "sent_bank_entries #{Time.now}.json"
 
     netrc = Net::Netrc.locate('harrisbank.com')
     request = []
@@ -53,15 +65,6 @@ namespace :statement do
       end
     end.compact
     File.open(json_file, 'w'){ |f| f.write(bank_entries.to_json) }
-  end
-
-  desc 'Import statements from tmp/downloads directory'
-  task :import => :environment do
-    JSON.parse(File.read(json_file)).each do |attributes|
-      unless BankEntry.where(external_id: attributes['external_id']).any?
-        BankEntry.create!(attributes)
-      end
-    end
   end
 
 end

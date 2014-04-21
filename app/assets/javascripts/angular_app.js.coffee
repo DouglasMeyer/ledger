@@ -10,4 +10,5 @@ window.Ledger = angular.module('Ledger', ['LedgerServices', 'ngRoute', 'ngAnimat
     $routeProvider.when '/accounts', templateUrl: 'angular/accounts.html', controller: 'AccountsController'
     $routeProvider.when '/account/:id', templateUrl: 'angular/account.html', controller: 'AccountController'
     $routeProvider.when '/entries', templateUrl: 'angular/entries.html', controller: 'EntriesController'
+    $routeProvider.when '/entries/:id', templateUrl: 'angular/entry.html', controller: 'EntryController'
     $routeProvider.otherwise redirectTo: '/accounts'
