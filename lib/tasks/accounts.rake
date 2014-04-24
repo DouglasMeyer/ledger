@@ -41,7 +41,7 @@ namespace :accounts do
                                 bank_entry_id: bank_entry.id
       end
     end
-    bank_entry.update_attribute :ammount_cents,  bank_entry.account_entries.sum(&:ammount_cents)
+    bank_entry.update_attribute :ammount_cents,  bank_entry.account_entries.sum(:ammount_cents)
   end
 
 end
