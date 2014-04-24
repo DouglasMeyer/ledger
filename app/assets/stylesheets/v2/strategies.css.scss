@@ -85,7 +85,10 @@ body.strategies.index {
       .account, .spent, .allocated, .strategy { position: absolute; }
       .account { left: 0; right: 12em; }
       .spent { width: 6em; right: 6em; }
-      .strategy { width: 6em; right: 0; }
+      .strategy { width: 6em; right: 0;
+        height: 1em; // Because it could be blank
+        cursor: pointer;
+      }
     }
   }
 }

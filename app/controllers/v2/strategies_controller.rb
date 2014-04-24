@@ -7,7 +7,7 @@ module V2
     end
 
     def show
-      @bank_entry = BankEntry.find(params[:bank_entry_id])
+      @bank_entry = BankEntry.find_by_id(params[:bank_entry_id])
       @account = Account.find(params[:account_id])
       @entry_ammount = params[:entry_ammount].to_f
       render layout: false
@@ -24,7 +24,7 @@ module V2
       if @strategy.save
         @account = Account.find(params[:account_id])
         @account.update_attribute(:strategy_id, @strategy.id)
-        @bank_entry = BankEntry.find(params[:bank_entry_id])
+        @bank_entry = BankEntry.find_by_id(params[:bank_entry_id])
         @entry_ammount = params[:entry_ammount].to_f
         render layout: false, action: :show
       else

@@ -8,7 +8,7 @@
           - category = account.category
           %li
             %h3= category
-        %li
+        %li{ data: { 'strategy-id' => account.strategy.try(:id), 'account-id' => account.id } }
           .account= link_to account.name, [ :v2, account ]
           = currency account.average_spent(0.5), 'spent'
           = currency account.strategy.try(:value), 'strategy'
@@ -22,7 +22,7 @@
           - category = account.category
           %li
             %h3= category
-        %li
+        %li{ data: { 'strategy-id' => account.strategy.try(:id), 'account-id' => account.id } }
           .account= link_to account.name, [ :v2, account ]
           = currency account.average_spent(0.5), 'spent'
           = currency account.strategy.try(:value), 'strategy'
