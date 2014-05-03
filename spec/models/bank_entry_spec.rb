@@ -86,20 +86,4 @@ describe BankEntry do
       BankEntry.needs_distribution.count.should eq(1)
     end
   end
-
-  describe "after_create :ensures_ledger_sum" do
-    it "creates a new bank_entry to account for the difference" do
-      BankEntry.make!(ammount_cents: 10_00, bank_balance_cents: 100_00)
-
-      BankEntry.count.should eq(2)
-      BankEntry.first.ammount_cents.should eq(90_00)
-    end
-
-    it "doesn't create a bank_entry if there is no difference" do
-      BankEntry.make!
-      BankEntry.make!(ammount_cents: 12_34, bank_balance_cents: BankEntry.sum(:ammount_cents) + 12_34)
-
-      BankEntry.count.should eq(2)
-    end
-  end
 end
