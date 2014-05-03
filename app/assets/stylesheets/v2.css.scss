@@ -141,40 +141,60 @@ form .actions { clear: both; }
 
 // Layout
 .navigation {
-  @include box;
-  font-size: 110%;
+  $base_width: 1em + // left-padding
+              10em * 3 + // 3 .navigation__page's
+              20em; // .bank_import and .page-actions
+
+  font-size: 1.1rem;
+  height: 2em;
+  line-height: 2em;
   @include linear-gradient(tint(black, 25%), tint(black, 5%));
-  $standard_width: 10em   // width of the link
-                   * 2    // number of links
-                   * 1.1  // font-size
-                   + 1em; // scroll-bar
-  &, a {
-    line-height: 2em;
-    color: #CCC;
-  }
-  a {
-    display: inline-block;
-    height: 2em;
+
+  @media (max-width: $base_width) {
+    height: auto;
     text-align: center;
   }
+
+  &, a {
+    color: #CCC;
+  }
+  .navigation__page {
+    display: inline-block;
+    width: 10em;
+    position: relative;
+    text-align: center;
+    border-right: 1px solid black;
+
+    &:first-child {
+      margin-left: 1em;
+      border-left: 1px solid black;
+    }
+
+    @media (max-width: $base_width) {
+      display: block;
+      width: auto;
+      border-right: none;
+
+      &:first-child {
+        margin-left: 0;
+        border-left: none;
+      }
+    }
+  }
   .page-actions {
-    @include box-flex(1);
-    text-align: right;
-    @media (max-width: $standard_width) { @include box-flex(0); }
+    float: right;
+
+    @media (max-width: $base_width) {
+      border-top: 1px solid black;
+    }
   }
   .page-actions a {
+    display: inline-block;
     width: 2em;
+    height: 2em;
+    text-align: center;
     border-left: 1px solid black;
     text-decoration: none;
-  }
-  .accounts, .entries, .strategies {
-    display: block;
-    border-right: 1px solid black;
-    width: 10em;
-    @media (max-width: $standard_width) {
-      @include box-flex(1);
-      width: auto;
-    }
   }
   body.accounts & .accounts,
   body.bank_entries & .entries,
@@ -199,13 +219,37 @@ form .actions { clear: both; }
     margin-left: 1rem;
 
     + .dropdown {
-      margin-left: 1rem;
+      display: inline-block;
+      margin-top: 2.1em;
+      margin-left: -20em;
       color: #111;
       opacity: 0;
       visibility: hidden;
       transition: all linear 0.25s 0.5s;
+
+      &:before, &:after {
+        left: auto;
+        right: 0.5rem;
+      }
+
+      @media (max-width: $base_width) {
+        font-size: 0.8em;
+        margin-top: 0;
+        margin-left: 0;
+        color: inherit;
+        background-color: transparent;
+        padding: 0;
+        border: none;
+        opacity: 1;
+        visibility: visible;
+        position: relative;
+        &:before, &:after { display: none; }
+
+        input { display: none; }
+      }
     }
   }
+  small:focus + .dropdown,
   small:hover + .dropdown,
   .dropdown:hover {
     visibility: visible;

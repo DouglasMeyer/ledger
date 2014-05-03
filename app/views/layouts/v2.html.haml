@@ -10,17 +10,17 @@
 
   %body(class="#{controller_name} #{action_name}")
     .navigation
-      = link_to "Accounts", v2_root_path, class: 'accounts'
-      = link_to v2_bank_entries_path, class: 'entries' do
+      = link_to "Accounts", v2_root_path, class: 'accounts navigation__page'
+      = link_to v2_bank_entries_path, class: 'entries navigation__page' do
         Entries
         - needs_distribution_count = BankEntry.needs_distribution.count
         - if needs_distribution_count > 0
           %span.count= needs_distribution_count
-      = link_to "Strategies", v2_strategies_path, class: 'strategies'
+      = link_to "Strategies", v2_strategies_path, class: 'strategies navigation__page'
 
       - bank_import = BankImport.last
       - ledger_sum = BankEntry.sum(:ammount_cents)
-      %small.bank_import
+      %small.bank_import(tabindex="0")
         = currency ledger_sum / 100.0, '', 'span'
         - if bank_import && ledger_sum != bank_import.balance_cents
           &nbsp;bank has
