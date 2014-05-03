@@ -19,6 +19,7 @@ input, select, textarea {
   font-size: 0.8em;
 }
 input { padding: 0 1ex; }
+input[type="file"] { padding: 0; }
 ul { margin: 0; padding: 0; }
 
 // Elements
@@ -45,6 +46,33 @@ ul { margin: 0; padding: 0; }
   }
   .assets-list { padding-right: 2em; }
   .liabilities-list { padding-left: 2em; }
+}
+
+.dropdown {
+  position: absolute;
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #888;
+  border-radius: 0.5rem;
+  z-index: 1000;
+
+  $arrow_size: 0.5rem;
+  &:before, &:after {
+    position: absolute;
+    display: inline-block;
+    content: "";
+    border: $arrow_size solid transparent;
+  }
+  &:before {
+    top: unquote("calc(-2 * "+$arrow_size+" - 1px)");
+    left: $arrow_size;
+    border-bottom-color: #888;
+  }
+  &:after {
+    top: -2 * $arrow_size;
+    left: $arrow_size;
+    border-bottom-color: white;
+  }
 }
 
 @mixin bank_entry {
@@ -120,12 +148,14 @@ form .actions { clear: both; }
                    * 2    // number of links
                    * 1.1  // font-size
                    + 1em; // scroll-bar
+  &, a {
+    line-height: 2em;
+    color: #CCC;
+  }
   a {
     display: inline-block;
     height: 2em;
-    line-height: 2em;
     text-align: center;
-    color: #CCC;
   }
   .page-actions {
     @include box-flex(1);
@@ -164,6 +194,22 @@ form .actions { clear: both; }
     color: white;
     border-radius: 1.3ex;
     padding: 3px;
+  }
+  small {
+    margin-left: 1rem;
+
+    + .dropdown {
+      margin-left: 1rem;
+      color: #111;
+      opacity: 0;
+      visibility: hidden;
+      transition: all linear 0.25s 0.5s;
+    }
+  }
+  small:hover + .dropdown,
+  .dropdown:hover {
+    visibility: visible;
+    opacity: 1;
   }
 }
 

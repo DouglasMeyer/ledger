@@ -17,5 +17,20 @@
         - if needs_distribution_count > 0
           %span.count= needs_distribution_count
       = link_to "Strategies", v2_strategies_path, class: 'strategies'
+
+      - bank_import = BankImport.last
+      - ledger_sum = BankEntry.sum(:ammount_cents)
+      %small.bank_import
+        = currency ledger_sum / 100.0, '', 'span'
+        - if bank_import && ledger_sum != bank_import.balance_cents
+          &nbsp;bank has
+          = currency (ledger_sum - bank_import.balance_cents) / 100.0, '', 'span'
+      .dropdown
+        - if bank_import
+          Last updated:
+          = bank_import.created_at.to_s :long
+        = form_tag v2_bank_imports_path, multipart: true do
+          = file_field_tag :upload
+
       .page-actions= yield :navigation
     = yield

@@ -58,3 +58,5 @@ Function::delay = (time, keyFunc) ->
 jQuery ($) ->
 
   $('form input:visible, form select:visible').first().focus().select()
+
+  $('.bank_import + .dropdown input[type="file"]').change -> this.form.submit()

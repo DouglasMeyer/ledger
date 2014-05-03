@@ -9,8 +9,6 @@ class BankEntry < ActiveRecord::Base
   validates :date, :ammount_cents, :description, :presence => true
   validate :fields_from_bank_do_not_update
 
-  after_create :ensures_ledger_sum
-
   scope :reverse_order, -> { order(:date, :id) }
   scope :join_aggrigate_account_entries, -> { joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
@@ -85,16 +83,6 @@ private
     errors.add(:date, :immutable) if date_changed?
     errors.add(:description, :immutable) if description_changed?
     errors.add(:ammount_cents, :immutable) if ammount_cents_changed?
-  end
-
-  def ensures_ledger_sum
-    if bank_balance_cents
-      ammount_cents = bank_balance_cents - BankEntry.sum(:ammount_cents)
-      unless ammount_cents.zero?
-        BankEntry.create!(ammount_cents: ammount_cents, date: date,
-                          description: "Updating balance to match bank's balance.")
-      end
-    end
   end
 
 end
