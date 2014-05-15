@@ -45,7 +45,6 @@ form.strategy-form {
   .currency { float: right; }
   a { display: block; }
   .notes {
-    @extend pre;
     font-family: inherit;
     font-size: 100%;
     box-shadow: 1px 1px 4px #222 inset;
