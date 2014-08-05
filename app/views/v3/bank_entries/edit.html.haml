@@ -1,0 +1,39 @@
+- classes = "accounts-table#{' is-income' if @distribute_as_income}"
+= form_for [ :v3, @bank_entry ], html: { class: classes, data: { ammount: @bank_entry.ammount } } do |f|
+  %h2
+    %span#distribute-ammount.currency= @bank_entry.ammount_remaining
+    &nbsp;left to distribute from:
+
+  .bank-entry
+    .date= @bank_entry.date
+    .description= @bank_entry.description
+    = currency @bank_entry.ammount, :ammount
+
+  %div
+    = check_box_tag 'distribute_as_income', nil, @distribute_as_income
+    = label_tag 'distribute_as_income'
+
+  .assets-list
+    %h2 Assets
+    %ul
+      - category = nil
+      - @accounts.assets.each do |account|
+        - if category != account.category
+          - category = account.category
+          %li
+            %h3= category
+        = account_entry_fields f, account
+
+  .liabilities-list
+    %h2 Liabilities
+    %ul
+      - category = nil
+      - @accounts.liabilities.each do |account|
+        - if category != account.category
+          - category = account.category
+          %li
+            %h3= category
+        = account_entry_fields f, account
+  .actions
+    = f.submit 'Save'
+    = link_to 'cancel', v3_bank_entries_path

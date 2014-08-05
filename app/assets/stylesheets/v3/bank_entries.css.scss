@@ -1,0 +1,39 @@
+body.bank_entries {
+
+  form.accounts-table {
+    width: 50em;
+    margin: 1em auto;
+
+    li {
+      position: relative;
+      height: 1.2em;
+
+      .account, .ammount, .strategy, .balance {
+        position: absolute;
+        input { width: 100%; }
+      }
+      .account { width: 12em; }
+      .ammount { left: 12em; right: 5em; }
+      .strategy { width: 1em; right: 5em; display: none; }
+      .balance { width: 5em; right: 0; }
+    }
+    &.is-income li {
+      .account { width: 11em; }
+      .ammount { left: 11em; right: 6em; }
+      .strategy { display: initial; }
+    }
+
+    .actions { padding-top: 1.2em; }
+    .actions > * { margin-right: 1em; }
+    .strategy {
+      text-align: center;
+      cursor: pointer;
+    }
+  }
+
+  .bank-entry {
+    @include bank_entry;
+    margin-bottom: 1em;
+  }
+
+}

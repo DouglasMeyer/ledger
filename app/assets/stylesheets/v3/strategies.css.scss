@@ -1,0 +1,93 @@
+$primary-color: #644;
+
+ul.combo-button {
+  list-style-type: none;
+  input[type="radio"] { display: none; }
+  label {
+    display: block;
+    padding: 2px 1ex;
+    @include background-image(linear-gradient(lighten($primary-color, 5%) 0, darken($primary-color, 5%) 100%));
+    color: white;
+    border: 1px solid darken($primary-color, 20%);
+    border-top-width: 0;
+    text-shadow: 1px 1px 1px black;
+  }
+  input[type="radio"]:checked + label {
+    @include background-image(linear-gradient(darken($primary-color, 15%) 0, darken($primary-color, 5%) 15%));
+  }
+  li:first-child label {
+    @include border-top-radius(1ex);
+    border-top-width: 1px;
+  }
+  li:last-child label {
+    @include border-bottom-radius(1ex);
+  }
+}
+form.strategy-form {
+  input[type="radio"]:checked + label + div {
+    display: initial !important;
+  }
+}
+
+.strategy-view {
+  width: 27ex;
+  background-color: white;
+  border: 1px solid #333;
+  padding: 1ex;
+
+  h3 {
+    margin: -1ex -1ex 1ex;
+    padding: 0.2em 1em;
+    background-color: $primary-color;
+    color: white;
+  }
+  input[type="text"], textarea { width: 100%; }
+  .currency { float: right; }
+  a { display: block; }
+  .notes {
+    font-family: inherit;
+    font-size: 100%;
+    box-shadow: 1px 1px 4px #222 inset;
+    padding: 1ex 0.5ex;
+    margin: 0.5ex -0.5ex;
+    border-radius: 0.5ex;
+    color: #222;
+    background-color: #F3F3F3;
+  }
+}
+
+.strategy-dot {
+  display: inline-block;
+  font-size: 150%;
+  width: 1ex;
+  height: 1ex;
+  line-height: 1ex;
+  &.using {
+    color: blue;
+    text-shadow: 1px 1px 2px blue, 2px 2px 4px blue;
+  }
+  &.not-using {
+    color: red;
+    text-shadow: 1px 1px 2px red, 2px 2px 4px red;
+  }
+}
+
+body.strategies.index {
+  .accounts-table {
+    width: 50em;
+    margin: 0 auto;
+
+    li {
+      position: relative;
+      height: 1.2em;
+
+      .account, .spent, .allocated, .strategy { position: absolute; }
+      .account { left: 0; right: 12em; }
+      .spent { width: 6em; right: 6em; }
+      .strategy { width: 6em; right: 0;
+        height: 1em; // Because it could be blank
+        cursor: pointer;
+      }
+    }
+  }
+}

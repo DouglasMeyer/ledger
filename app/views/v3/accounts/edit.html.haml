@@ -1,0 +1,23 @@
+= form_for @edit_accounts, method: :put, as: :accounts, url: v3_accounts_path, html: { class: 'accounts-table' } do |f|
+
+  = f.fields_for :accounts, f.object.assets.build{|a| a.mark_for_destruction } do |account_f|
+    .template(style="display: none;")= render partial: 'edit_account', locals: { f: account_f }
+
+  .assets-list
+    %h2
+      Assets
+      .icon-plus
+    %ul
+      = f.fields_for :accounts, f.object.assets.all do |account_f|
+        %li= render partial: 'edit_account', locals: { f: account_f }
+
+  .liabilities-list
+    %h2
+      Liabilities
+      .icon-plus
+    %ul
+      = f.fields_for :accounts, f.object.liabilities.all do |account_f|
+        %li= render partial: 'edit_account', locals: { f: account_f }
+
+  .actions
+    = f.submit 'Update'

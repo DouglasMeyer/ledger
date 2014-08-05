@@ -5,7 +5,21 @@ Ledger::Application.routes.draw do
   end
 
 
-  version "v2", true do
+  version "v2" do
+    resources :accounts, only: [ :index, :show ] do
+      collection do
+        get :edit
+        put :update
+      end
+    end
+    resources :bank_entries, only: [ :index, :create, :show, :update, :edit ]
+    resources :strategies, only: [ :index, :show, :new, :create ]
+    resources :bank_imports, only: [ :create ]
+
+    root :to => 'accounts#index'
+  end
+
+  version "v3", true do
     resources :accounts, only: [ :index, :show ] do
       collection do
         get :edit

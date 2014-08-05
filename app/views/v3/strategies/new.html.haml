@@ -1,0 +1,42 @@
+= form_for @strategy,
+    url: v3_strategies_path(bank_entry_id: @bank_entry_id, account_id: @account_id, entry_ammount: @entry_ammount),
+    html: { class: 'strategy-form' } do |f|
+
+  = f.label :strategy_type, 'Type of Strategy'
+  %ul.combo-button
+    %li
+      = f.radio_button :strategy_type, :fixed
+      = f.label :strategy_type, "Fixed ammount", value: :fixed
+    %li
+      = f.radio_button :strategy_type, :percent_of_income
+      = f.label :strategy_type, "Percent of income", value: :percent_of_income
+    %li
+      = f.radio_button :strategy_type, :ammount_per_month
+      = f.label :strategy_type, "Ammount per month", value: :ammount_per_month
+
+  .field
+    -# fixed, ammount_per_month
+    = f.label :variable, 'Ammount'
+
+    -# percent_of_income
+    = f.label :variable, 'Percentage', style: "display: none;"
+
+    = f.text_field :variable
+
+  = f.label :notes
+  = f.text_area :notes, rows: 10
+
+  = f.submit
+  :javascript
+    jQuery(function(){
+      var form = jQuery('.strategy-form');
+      form.on('change', 'input[name="strategy[strategy_type]"]', function(){
+        if ($(this).val() == 'percent_of_income') {
+          form.find('label[for="strategy_variable"]:contains("Ammount")').hide();
+          form.find('label[for="strategy_variable"]:contains("Percentage")').show();
+        } else {
+          form.find('label[for="strategy_variable"]:contains("Ammount")').show();
+          form.find('label[for="strategy_variable"]:contains("Percentage")').hide();
+        }
+      });
+    });

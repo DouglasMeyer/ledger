@@ -1,0 +1,71 @@
+body.accounts {
+
+  &.show {
+    h2.account {
+      width: 15em;
+      margin-left: auto;
+      margin-right: auto;
+      .balance { float: right; }
+    }
+
+    .bank-entries li {
+      .balance {
+        position: absolute; top: 0.1em;
+        width: 8em; right: 0;
+      }
+      .ammount { width: 8em; right: 8em; }
+      .account { width: 8em; right: 16em; }
+    }
+  }
+
+  .accounts-table {
+    width: 50em;
+    @media (max-width: 50em) { width: auto; }
+    margin: 0 auto;
+
+    .assets-list, .liabilities-list {
+      padding: 1em 2em;
+      @media (max-width: 50em){ padding: 1em 1em 2em; }
+
+      .balance { float: right; }
+    }
+  }
+
+  form.accounts-table {
+    h2 .icon-plus {
+      display: inline-block;
+      margin-left: 1em;
+      font-size: 0.5em;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+
+    li {
+      position: relative; height: 0.3em + 1.2em + 1.2em + 0.3em;
+
+      &:first-of-type .up { display: none; }
+      &:last-of-type .down { display: none; }
+
+      &.deleted { opacity: 0.3; }
+    }
+    .up, .down {
+      cursor: pointer;
+      &:before { font-size: 75%; }
+    }
+    .up, .down, .category, .name, .balance { position: absolute; }
+
+    .up, .category { bottom: 1.5em; }
+    .down, .name { top: 1.5em; }
+    .balance { top: 1em; }
+
+    .up, .down { left: 0; width: 1em; }
+    .category, .name { left: 1em; right: 6em; }
+    .balance { right: 0; width: 6em; }
+
+    input[name$="[_destroy]"] { position: absolute; bottom: 0; right: 0; }
+
+    input[type="text"] { width: 100%; }
+    .category input { border-width: 0 0 1px; }
+  }
+
+}

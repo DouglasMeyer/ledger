@@ -1,0 +1,13 @@
+- content_for :navigation do
+  = link_to '', '#', title: 'Add Entry', class: 'icon-plus'
+
+#new-bank-entry(style="display:none;")= render @new_bank_entry
+
+%ul.bank-entries
+  - @bank_entries.each do |bank_entry|
+    %li= render bank_entry
+
+- if params[:page].to_i > 0
+  = link_to "Previous Page", bank_entries_path(params.merge(page: params[:page].to_i - 1))
+- if @bank_entry_pages > params[:page].to_i
+  = link_to "Next Page", bank_entries_path(params.merge(page: params[:page].to_i + 1))

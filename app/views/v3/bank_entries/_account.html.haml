@@ -1,0 +1,13 @@
+- account_entry = f.object
+- account = account_entry.account
+- strategy = account.strategy
+
+= f.hidden_field :_destroy
+.account
+  = f.hidden_field :account_id
+  = account.name
+.ammount= f.text_field :ammount, class: "currency#{' negative' if account_entry.ammount_cents < 0}"
+.strategy{ data: { id: strategy.try(:id), value: strategy.try(:value, @bank_entry) } }
+  = f.hidden_field :strategy_id
+  = strategy_dot strategy, @bank_entry
+= currency (account_balance * 100 + account_entry.ammount_cents) / 100.0, 'balance'
