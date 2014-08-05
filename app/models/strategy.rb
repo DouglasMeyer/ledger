@@ -22,4 +22,12 @@ class Strategy < ActiveRecord::Base
     end
   end
 
+  def as_json(options={})
+    (options[:methods] ||= []).push(:class_name)
+    super(options)
+  end
+  def class_name
+    self.class.name
+  end
+
 end

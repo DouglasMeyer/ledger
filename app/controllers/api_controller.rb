@@ -9,6 +9,12 @@ class ApiController < ApplicationController
 
     ActiveRecord::Base.transaction do
       JSON.parse(params[:body]).each do |command|
+        constant = self.class.const_get(command['type']) rescue nil
+        if !constant.nil? && constant.respond_to?(command['action'])
+          response_json << constant.send(command['action'], command)
+          next
+        end
+
         case command['action']
         when 'read'
           command['limit'] ||= 25
@@ -59,14 +65,48 @@ private
   def type_to_class(type)
     case type
     when 'account'
-      Account
+      ::Account
     when 'bank_entry'
-      BankEntry.with_balance
+      ::BankEntry.with_balance
     when 'account_entry'
-      AccountEntry
+      ::AccountEntry
     else
+      raise ImpossibleAction.new type + " isn't an accepted type"
       #Raise something
     end
   end
 
+  module Service
+  private
+
+    def camelize obj
+      obj.inject({}) do |acc, (key, val)|
+        newKey = key.gsub(/_\w/){|w| w[1].upcase }
+        if val.is_a? Array
+          acc[newKey] = val.map{|v| camelize v }
+        elsif val.is_a? Hash
+          acc[newKey] = camelize val
+        else
+          acc[newKey] = val
+        end
+        acc
+      end
+    end
+  end
+
+  module BankEntry
+    extend Service
+
+    def self.read(command)
+      records = ::BankEntry
+        .with_balance
+        .limit(command['limit'] || 25)
+        .offset(command['offset'] || 0)
+      records = records.where(command['query']) if command['query']
+      account_entries = ::AccountEntry.where(bank_entry_id: records.pluck(:id))
+      node = { data: records, associated: account_entries }
+      node['reference'] = command['reference'] if command.has_key?('reference')
+      node
+    end
+  end
 end

@@ -3,7 +3,7 @@ require File.expand_path '../../spec_helper', __FILE__
 describe ApiController do
   before do
     @blank_account = {
-      'id' => nil, 'created_at' => nil, 'updated_at' => nil, 'deleted_at' => nil,
+      'class_name' => 'Account', 'id' => nil, 'created_at' => nil, 'updated_at' => nil, 'deleted_at' => nil,
       'name' => nil, 'position' => nil, 'category' => nil, 'strategy_id' => nil, 'balance_cents' => 0
     }
   end

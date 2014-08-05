@@ -31,8 +31,11 @@ class Account < ActiveRecord::Base
   end
 
   def as_json(options)
-    (options[:methods] ||= []).push(:balance_cents)
+    (options[:methods] ||= []).push(:balance_cents, :class_name)
     super(options)
+  end
+  def class_name
+    self.class.name
   end
 
 private

@@ -46,7 +46,10 @@ class AccountEntry < ActiveRecord::Base
   end
 
   def as_json(options={})
-    (options[:methods] ||= []).push(:account_name)
+    (options[:methods] ||= []).push(:account_name, :class_name)
     super(options)
+  end
+  def class_name
+    self.class.name
   end
 end
