@@ -1,13 +1,36 @@
 - content_for :navigation do
   = link_to '', '#', title: 'Add Entry', class: 'icon-plus'
 
-#new-bank-entry(style="display:none;")= render @new_bank_entry
-
-%ul.bank-entries
-  - @bank_entries.each do |bank_entry|
-    %li= render bank_entry
-
-- if params[:page].to_i > 0
-  = link_to "Previous Page", bank_entries_path(params.merge(page: params[:page].to_i - 1))
-- if @bank_entry_pages > params[:page].to_i
-  = link_to "Next Page", bank_entries_path(params.merge(page: params[:page].to_i + 1))
+.table.l-margin-v1.l-margin-h8(ng-app="ledger" ng-controller="EntriesCtrl")
+  %form.EntryItem( ng-repeat="entry in entries"
+    ng-click="open()"
+    ng-class="{ 'table__rows is-selected': isOpen }"
+  )
+    .table__row( ng-class="{ 'is-clickable': !isOpen }" )
+      .table__cell--date
+        %span(ng-hide="isDateEditable") {{ entry.date }}
+        %input(ng-show="isDateEditable" type="text" ng-model="entry.date")
+      .table__cell--summary.l-text-overflow
+        {{type}}&nbsp;
+        %em(ng-model="ammountCents" l-currency)
+        %span(ng-hide="isOpen")
+          %span(ng-if="from")
+            &nbsp;from&nbsp;
+            %em {{ from | join }}
+          %span(ng-if="to")
+            &nbsp;to&nbsp;
+            %em {{ to | join }}
+        %span(ng-show="isOpen")
+          \:&nbsp;
+          .table__cell--description
+            %pre(ng-if="entry.externalId") {{entry.description}}
+            %input(ng-if="!entry.externalId" type="text" ng-model="entry.description")
+      .table__cell--controls.l-text-r
+        %a(ng-show="isOpen && !hasChanges" ng-click="close($event)") close
+        %a(ng-show="hasChanges" ng-click="save($event)") save
+        %a(ng-show="hasChanges" ng-click="close($event)") cancel
+    .table__row( ng-show="isOpen"
+      ng-repeat="accountEntry in entry.accountEntries"
+    )
+      %input.table__cell--ammount.l-text-r(ng-model="accountEntry.ammountCents" l-currency)
+      %select.table__cell--account(ng-model="accountEntry.accountName" ng-options="a.name as a.name for a in accounts | orderBy:'name' ")

@@ -3,15 +3,13 @@ module V3
     before_filter :load_account_names
 
     def index
-      @bank_entries = BankEntry.includes(account_entries: :account)
       respond_to do |format|
         format.html do
-          @bank_entry_pages = @bank_entries.count / 25
-          @bank_entries = @bank_entries.offset(params[:page].to_i * 25) if params[:page]
-          @bank_entries = @bank_entries.limit(25)
-          new_bank_entry.account_entries.build
         end
-        format.csv { render content_type: 'text', text: @bank_entries.reverse_order.to_csv }
+        format.csv {
+          @bank_entries = BankEntry.includes(account_entries: :account)
+          render content_type: 'text', text: @bank_entries.reverse_order.to_csv
+        }
       end
     end
 

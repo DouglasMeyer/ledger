@@ -1,0 +1,31 @@
+.table {
+}
+
+.table__rows.is-selected {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  box-shadow: 0 0 2px 1px rgba(100, 100, 100, 0.2);
+}
+
+.table__row {
+  $item_height: 1.4em;
+  height: $item_height;
+  line-height: $item_height;
+  position: relative;
+}
+.table__row.is-clickable:hover {
+  box-shadow: 0 0 1px 1px rgba(100, 100, 100, 0.1);
+}
+
+.table__cell, [class^="table__cell--"] {
+  position: absolute;
+  top: 0; bottom: 0;
+
+  & > input, & > select { width: 100%; }
+}
+.table__cell--date { width: 8em; }
+.table__cell--summary { left: 9em; right: 0; }
+.table__cell--description { left: 10em; right: 0; }
+.table__cell--controls { width: 4em; right: 0; }
+.table__cell--ammount { width: 8em; right: 11em; }
+.table__cell--account { width: 10em; right: 0; }

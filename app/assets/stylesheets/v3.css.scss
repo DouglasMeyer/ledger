@@ -5,7 +5,7 @@
   @include box-sizing(border-box);
 }
 html, body { height: 100%; width: 100%; }
-html { overflow: auto; }
+html { overflow-x: auto; overflow-y: scroll; }
 body {
   position: relative;
   font-size: medium;
@@ -14,15 +14,33 @@ body {
 }
 h1, h2, h3 { color: #222; }
 input, select, textarea {
-  background-color: white;
+  background-color: transparent;
+  color: inherit;
   border: 1px solid #888;
-  font-size: 0.8em;
+  border-width: 0 0 1px;
 }
-input { padding: 0 1ex; }
-input[type="file"] { padding: 0; }
+input[type="file"] { border-bottom-width: 0; }
 ul { margin: 0; padding: 0; }
+em {
+  font-style: normal;
+  color: black;
+  text-shadow: 0 1px 5px rgba(100, 100, 100, 0.3);
+}
+pre { display: inline; }
 
 // Elements
+.is-clickable { cursor: pointer; }
+
+.l-margin-v1 { margin-top: 1em; margin-bottom: 1em; }
+.l-margin-h8 { margin-left: 8em; margin-right: 8em; }
+
+.l-text-r { text-align: right; }
+.l-text-overflow {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .currency {
   text-align: right;
   &.negative { color: red; }
@@ -260,4 +278,6 @@ form .actions { clear: both; }
 @import "./v3/accounts.css.scss";
 @import "./v3/bank_entries.css.scss";
 @import "./v3/strategies.css.scss";
+
 @import "./v3/icon-fonts.css.scss";
+@import "./v3/table.css.scss";
