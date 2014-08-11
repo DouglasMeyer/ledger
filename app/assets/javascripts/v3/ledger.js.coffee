@@ -50,15 +50,11 @@ angular.module('ledger', ['ng', 'ngAnimate'])
   .directive 'EntryItem', ($timeout, Model)->
     restrict: 'C'
     link: (scope, element, attrs) ->
-      entryWatcher = undefined
 
       reset = ->
         scope.isOpen = false
         delete scope.stashedEntry
-        delete scope.hasChanges
         delete scope.isDateEditable
-        entryWatcher() if entryWatcher
-        entryWatcher = undefined
 
         scope.ammountCents = scope.entry.ammountCents
         scope.type = if scope.ammountCents == 0
@@ -80,10 +76,6 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         scope.isOpen = true
         scope.stashedEntry = angular.copy(scope.entry)
         scope.entry.accountEntries.push([]) if scope.entry.accountEntries?.length == 0
-        entryWatcher = scope.$watch('entry', ->
-            unless angular.equals(scope.entry, scope.stashedEntry)
-              scope.hasChanges = true
-          , true)
         scope.isDateEditable = !scope.entry.externalId
         $timeout ->
           element[0].querySelector('.table__row + .table__row').querySelector('input, select').select()

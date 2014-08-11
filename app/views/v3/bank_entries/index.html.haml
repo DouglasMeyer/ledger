@@ -2,7 +2,8 @@
   = link_to '', '#', title: 'Add Entry', class: 'icon-plus'
 
 .table.l-margin-v1.l-margin-h8(ng-app="ledger" ng-controller="EntriesCtrl")
-  %form.EntryItem( ng-repeat="entry in entries"
+  %form.EntryItem( name="form"
+    ng-repeat="entry in entries"
     ng-click="open()"
     ng-class="{ 'table__rows is-selected': isOpen }"
   )
@@ -26,9 +27,9 @@
             %pre(ng-if="entry.externalId") {{entry.description}}
             %input(ng-if="!entry.externalId" type="text" ng-model="entry.description")
       .table__cell--controls.l-text-r
-        %a(ng-show="isOpen && !hasChanges" ng-click="close($event)") close
-        %a(ng-show="hasChanges" ng-click="save($event)") save
-        %a(ng-show="hasChanges" ng-click="close($event)") cancel
+        %a(ng-show="isOpen && form.$pristine" ng-click="close($event)") close
+        %a(ng-show="form.$dirty" ng-click="save($event)") save
+        %a(ng-show="form.$dirty" ng-click="close($event)") cancel
     .table__row( ng-show="isOpen"
       ng-repeat="accountEntry in entry.accountEntries"
     )
