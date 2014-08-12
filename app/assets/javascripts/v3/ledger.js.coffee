@@ -6,6 +6,10 @@ angular.module('ledger', ['ng', 'ngAnimate'])
   .filter 'join', ->
     (input)-> input?.join(', ')
 
+  .filter 'sum', ->
+    (input, prop)->
+      input?.map((e)-> parseInt(e[prop]) || 0).reduce (a, b)-> a+b
+
   .directive 'lCurrency', ($filter)->
     numberFilter = $filter('number')
 
@@ -50,14 +54,18 @@ angular.module('ledger', ['ng', 'ngAnimate'])
   .directive 'EntryItem', ($timeout, Model)->
     restrict: 'C'
     link: (scope, element, attrs) ->
+      watchAEs = undefined
 
       reset = ->
         scope.isOpen = false
         delete scope.stashedEntry
-        delete scope.isDateEditable
+        delete scope.ammountRemainingCents
+        scope.form.$setPristine()
 
         scope.ammountCents = scope.entry.ammountCents
-        scope.type = if scope.ammountCents == 0
+        scope.type = if !scope.entry.id
+          'New'
+        else if scope.ammountCents == 0
           'Transfered'
         else if scope.ammountCents > 0
           #FIXME: I'm not sure I like how this sounds: Recieved $5.00 to Doug Blow
@@ -71,19 +79,36 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           scope.ammountCents += ae.ammountCents
           ae.accountName
 
+        scope.open() unless scope.entry.id
+
+      selectAE = (accountEntry)->
+        $timeout ->
+          index = scope.entry.accountEntries.indexOf(accountEntry)
+          element[0].querySelector(".table__row:nth-child(#{index+2})").querySelector('input, select').select()
+
       scope.open = ->
         return if scope.isOpen
         scope.isOpen = true
         scope.stashedEntry = angular.copy(scope.entry)
-        scope.entry.accountEntries.push([]) if scope.entry.accountEntries?.length == 0
-        scope.isDateEditable = !scope.entry.externalId
-        $timeout ->
-          element[0].querySelector('.table__row + .table__row').querySelector('input, select').select()
+        scope.entry.accountEntries.push({}) unless scope.entry.accountEntries.length
+        watchAEs = scope.$watch 'entry.accountEntries | sum:"ammountCents"', (sum)->
+          scope.ammountRemainingCents = (scope.entry.ammountCents || 0) - sum
+        selectAE(scope.entry.accountEntries[0])
 
       scope.close = (e)->
         e.stopPropagation()
-        scope.entry = scope.stashedEntry
-        reset()
+        watchAEs()
+        if scope.entry.id
+          scope.entry = scope.stashedEntry
+          reset()
+        else
+          index = scope.entries.indexOf(scope.entry)
+          scope.entries.splice(index, 1)
+
+      scope.addAccountEntry = ->
+        newAE = ammountCents: scope.ammountRemainingCents
+        scope.entry.accountEntries.push( newAE )
+        selectAE(newAE)
 
       scope.save = (e)->
         e.stopPropagation()
@@ -158,6 +183,10 @@ angular.module('ledger', ['ng', 'ngAnimate'])
   .controller 'EntriesCtrl', ($scope, Model)->
     Model.bankEntry.read().then (entries)-> $scope.entries = entries
     Model.account.read(limit: 100).then (accounts)-> $scope.accounts = accounts
+
+    $scope.$on 'addEntry', ->
+      today = (new Date).toJSON().slice(0,10)
+      $scope.entries.unshift({ date: today, accountEntries: [] })
 
         #    lCurrency = $filter('lCurrency')
         #

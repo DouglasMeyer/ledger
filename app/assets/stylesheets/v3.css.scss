@@ -13,13 +13,29 @@ body {
   color: #444;
 }
 h1, h2, h3 { color: #222; }
-input, select, textarea {
+input, select, textarea, button, .button, [class^="button--"] {
+  display: inline-block;
   background-color: transparent;
   color: inherit;
   border: 1px solid #888;
   border-width: 0 0 1px;
 }
 input[type="file"] { border-bottom-width: 0; }
+button, .button, [class^="button--"] {
+  margin-left: 0.3em;
+  margin-right: 0.3em;
+  cursor: pointer;
+  border-color: initial;
+  &:hover { color: black; }
+}
+.button--remove {
+  color: #F44;
+  &:hover { color: #F00; }
+}
+.button--primary {
+  color: #44F;
+  &:hover { color: #00F; }
+}
 ul { margin: 0; padding: 0; }
 em {
   font-style: normal;
@@ -206,7 +222,7 @@ form .actions { clear: both; }
       border-top: 1px solid black;
     }
   }
-  .page-actions a {
+  .page-actions > * {
     display: inline-block;
     width: 2em;
     height: 2em;

@@ -1,5 +1,5 @@
 - content_for :navigation do
-  = link_to '', '#', title: 'Add Entry', class: 'icon-plus'
+  .icon-plus.is-clickable(ng-click="$broadcast('addEntry')" title="Add Entry")
 
 .table.l-margin-v1.l-margin-h8(ng-app="ledger" ng-controller="EntriesCtrl")
   %form.EntryItem( name="form"
@@ -9,8 +9,8 @@
   )
     .table__row( ng-class="{ 'is-clickable': !isOpen }" )
       .table__cell--date
-        %span(ng-hide="isDateEditable") {{ entry.date }}
-        %input(ng-show="isDateEditable" type="text" ng-model="entry.date")
+        %span(ng-show="!isOpen || entry.externalId") {{ entry.date }}
+        %input(ng-hide="!isOpen || entry.externalId" type="text" ng-model="entry.date")
       .table__cell--summary.l-text-overflow
         {{type}}&nbsp;
         %em(ng-model="ammountCents" l-currency)
@@ -26,12 +26,16 @@
           .table__cell--description
             %pre(ng-if="entry.externalId") {{entry.description}}
             %input(ng-if="!entry.externalId" type="text" ng-model="entry.description")
-      .table__cell--controls.l-text-r
-        %a(ng-show="isOpen && form.$pristine" ng-click="close($event)") close
-        %a(ng-show="form.$dirty" ng-click="save($event)") save
-        %a(ng-show="form.$dirty" ng-click="close($event)") cancel
     .table__row( ng-show="isOpen"
       ng-repeat="accountEntry in entry.accountEntries"
     )
       %input.table__cell--ammount.l-text-r(ng-model="accountEntry.ammountCents" l-currency)
       %select.table__cell--account(ng-model="accountEntry.accountName" ng-options="a.name as a.name for a in accounts | orderBy:'name' ")
+    .table__row( ng-show="isOpen" )
+      .table__cell.l-text-r
+        Amount to distribute&nbsp;
+        %span(ng-model="ammountRemainingCents" l-currency)
+        %a.button(ng-show="isOpen" ng-click="addAccountEntry()") add entry
+        %a.button(ng-show="isOpen && form.$pristine" ng-click="close($event)") close
+        %a.button--primary(ng-show="form.$dirty" ng-click="save($event)") save
+        %a.button(ng-show="form.$dirty" ng-click="close($event)") cancel

@@ -19,7 +19,7 @@
 
 .table__cell, [class^="table__cell--"] {
   position: absolute;
-  top: 0; bottom: 0;
+  top: 0; bottom: 0; left: 0; right: 0;
 
   & > input, & > select { width: 100%; }
 }
@@ -27,5 +27,5 @@
 .table__cell--summary { left: 9em; right: 0; }
 .table__cell--description { left: 10em; right: 0; }
 .table__cell--controls { width: 4em; right: 0; }
-.table__cell--ammount { width: 8em; right: 11em; }
-.table__cell--account { width: 10em; right: 0; }
+.table__cell--ammount { width: 8em; right: 11em; left: auto; }
+.table__cell--account { width: 10em; right: 0; left: auto; }
