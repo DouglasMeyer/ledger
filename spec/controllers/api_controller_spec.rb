@@ -169,4 +169,83 @@ describe ApiController do
       })
     end
   end
+
+  describe "BankEntry_v1.read" do
+    it "responds with collection" do
+      BankEntry.make!
+      AccountEntry.make!
+      AccountEntry.make!
+
+      post :bulk, body: [
+        { type: 'BankEntry_v1', action: :read }
+      ].to_json
+      response.body.should eq([{
+        data: BankEntry.with_balance.all,
+        associated: AccountEntry.all
+      }].to_json)
+    end
+
+    it "paginates the response" do
+      AccountEntry.make!
+      BankEntry.make!
+      AccountEntry.make!
+
+      post :bulk, body: [
+        { type: 'BankEntry_v1', action: :read, limit: 2 }
+      ].to_json
+      response.body.should eq([{
+        'data' => BankEntry.with_balance.limit(2).all,
+        'associated' => [ AccountEntry.last ]
+      }].to_json)
+
+      post :bulk, body: [
+        { type: 'BankEntry_v1', action: :read, limit: 2, offset: 2 }
+      ].to_json
+      response.body.should eq([{
+        data: [ BankEntry.with_balance.last ],
+        associated: [ AccountEntry.first ]
+      }].to_json)
+    end
+  end
+
+  describe "BankEntry_v1.update" do
+    it "updated bank_entry and associated account_entries" do
+      bank_entry = AccountEntry.make!.bank_entry
+      data = bank_entry.as_json
+      data.delete('class_name')
+      data.delete('account_entries')
+      data['account_entries_attributes'] = bank_entry.account_entries.map(&:as_json)
+      data['account_entries_attributes'][0].delete('class_name')
+
+      data['notes'] = 'New Note'
+
+      post :bulk, body: [
+        { type: 'BankEntry_v1', action: 'update', reference: 'update bank entry',
+          id: bank_entry.id, data: data }
+      ].to_json
+
+      bank_entry.reload
+      bank_entry.notes.should eq('New Note')
+      response.body.should eq([{
+        data: bank_entry,
+        reference: 'update bank entry'
+      }].to_json)
+    end
+
+    it "removes account_entries with _destroy attribute" do
+      bank_entry = AccountEntry.make!.bank_entry
+      data = bank_entry.as_json
+      data.delete('class_name')
+      data.delete('account_entries')
+
+      data['account_entries_attributes'] = [ { _destroy: true, id: bank_entry.account_entries.first.id } ]
+
+      post :bulk, body: [
+        { type: 'BankEntry_v1', action: 'update', id: bank_entry.id, data: data }
+      ].to_json
+
+      bank_entry.reload
+      bank_entry.account_entries.should eq([])
+    end
+  end
 end

@@ -94,7 +94,7 @@ private
     end
   end
 
-  module BankEntry
+  module BankEntry_v1
     extend Service
 
     def self.read(command)
@@ -102,11 +102,19 @@ private
         .with_balance
         .limit(command['limit'] || 25)
         .offset(command['offset'] || 0)
-      records = records.where(command['query']) if command['query']
       account_entries = ::AccountEntry.where(bank_entry_id: records.pluck(:id))
       node = { data: records, associated: account_entries }
       node['reference'] = command['reference'] if command.has_key?('reference')
       node
     end
+
+    def self.update(command)
+      record = ::BankEntry.find(command['id'])
+      record.update!(command['data'])
+      node = { data: record }
+      node['reference'] = command['reference'] if command.has_key?('reference')
+      node
+    end
+
   end
 end

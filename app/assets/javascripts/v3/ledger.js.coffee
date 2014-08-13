@@ -112,6 +112,8 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
       scope.save = (e)->
         e.stopPropagation()
+        scope.entry.accountEntries.forEach (ae)->
+          ae._destroy = true unless ae.ammountCents
         Model.bankEntry.save(scope.entry).then (bankEntry)->
           scope.entry = bankEntry
         reset()
@@ -124,9 +126,8 @@ angular.module('ledger', ['ng', 'ngAnimate'])
       return cObj unless angular.isObject(cObj)
 
       uObj = {}
-      for name, val of cObj when name.charAt(0) != '$'
+      for name, val of cObj when name.charAt(0) != '$' && name != 'className'
         newName = name.replace /[A-Z]/g, (l)-> '_'+l.toLowerCase()
-        console.log name, newName, val
         if angular.isArray(val)
           uObj[newName] = ( underscore(v) for v in val )
         else if angular.isObject(val)
@@ -162,7 +163,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
     bankEntry:
       read: (opts={})->
         opts.action = 'read'
-        opts.type = 'BankEntry'
+        opts.type = 'BankEntry_v1'
 
         $http.post('/api', {
           body: JSON.stringify([ opts ])
@@ -174,11 +175,13 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         opts.type = 'bank_entry'
         opts.id = attrs.id
         opts.data = underscore(attrs)
+        opts.data.account_entries_attributes = opts.data.account_entries
+        delete opts.data.account_entries
 
         $http.post('/api', {
           body: JSON.stringify([ opts ])
         }).then (response)->
-          camelize(model) for model in response.data[0].data
+          camelize(response.data[0].data)
 
   .controller 'EntriesCtrl', ($scope, Model)->
     Model.bankEntry.read().then (entries)-> $scope.entries = entries
