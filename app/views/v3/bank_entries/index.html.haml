@@ -11,7 +11,7 @@
       .table__cell--date
         %span(ng-show="!isOpen || entry.externalId") {{ entry.date }}
         %input(ng-hide="!isOpen || entry.externalId" type="text" ng-model="entry.date")
-      .table__cell--summary.l-text-overflow
+      .table__cell--summary(ng-class="{ 'l-text-overflow': !isOpen }")
         {{type}}&nbsp;
         %em(ng-model="ammountCents" l-currency)
         %span(ng-hide="isOpen")
@@ -35,7 +35,12 @@
       .table__cell.l-text-r
         Amount to distribute&nbsp;
         %span(ng-model="ammountRemainingCents" l-currency)
-        %a.button(ng-show="isOpen" ng-click="addAccountEntry()") add entry
-        %a.button(ng-show="isOpen && form.$pristine" ng-click="close($event)") close
-        %a.button--primary(ng-show="form.$dirty" ng-click="save($event)") save
-        %a.button(ng-show="form.$dirty" ng-click="close($event)") cancel
+        %button(ng-show="isOpen" ng-click="addAccountEntry()") add entry
+        %button.button--remove(ng-show="isOpen && form.$pristine && !entry.externalId") delete
+        %button(ng-show="isOpen && form.$pristine" ng-click="close($event)") close
+        %button.button--primary(ng-show="form.$dirty" ng-click="save($event)") save
+        %button(ng-show="form.$dirty" ng-click="close($event)") cancel
+  .table__row
+    .table__cell.l-text-c(ng-show="isLoadingEntries") Loading ...
+    .table__cell.l-text-r
+      %button(ng-click="loadMore()" ng-hide="isLoadingEntries") More

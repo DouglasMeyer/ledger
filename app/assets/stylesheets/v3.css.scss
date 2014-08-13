@@ -17,24 +17,31 @@ input, select, textarea, button, .button, [class^="button--"] {
   display: inline-block;
   background-color: transparent;
   color: inherit;
-  border: 1px solid #888;
-  border-width: 0 0 1px;
+  border: none;
+  box-shadow: 0 1px 3px #BBB;
+  &:focus {
+    outline: none;
+    box-shadow: 0 1px 3px #66F;
+  }
 }
 input[type="file"] { border-bottom-width: 0; }
 button, .button, [class^="button--"] {
   margin-left: 0.3em;
   margin-right: 0.3em;
   cursor: pointer;
-  border-color: initial;
-  &:hover { color: black; }
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+  box-shadow: none;
+  &:hover, &:focus { color: black; }
 }
 .button--remove {
   color: #F44;
-  &:hover { color: #F00; }
+  &:hover, &:focus { color: #F00; }
+  &:focus { box-shadow: 0 1px 3px #F66; }
 }
 .button--primary {
   color: #44F;
-  &:hover { color: #00F; }
+  &:hover, &:focus { color: #00F; }
 }
 ul { margin: 0; padding: 0; }
 em {
@@ -50,6 +57,7 @@ pre { display: inline; }
 .l-margin-v1 { margin-top: 1em; margin-bottom: 1em; }
 .l-margin-h8 { margin-left: 8em; margin-right: 8em; }
 
+.l-text-c { text-align: center; }
 .l-text-r { text-align: right; }
 .l-text-overflow {
   white-space: nowrap;

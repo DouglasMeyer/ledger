@@ -8,7 +8,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
   .filter 'sum', ->
     (input, prop)->
-      input?.map((e)-> parseInt(e[prop]) || 0).reduce (a, b)-> a+b
+      input?.map((e)-> parseInt(e[prop]) || 0).reduce ((a, b)-> a+b), 0
 
   .directive 'lCurrency', ($filter)->
     numberFilter = $filter('number')
@@ -51,15 +51,15 @@ angular.module('ledger', ['ng', 'ngAnimate'])
             element.text ''
 
 
-  .directive 'EntryItem', ($timeout, Model)->
+  .directive 'EntryItem', ($timeout, Model, $parse)->
     restrict: 'C'
     link: (scope, element, attrs) ->
       watchAEs = undefined
+      ammountRemainingCentsExpression = 'entry.ammountCents - (entry.accountEntries | sum:"ammountCents")'
 
       reset = ->
         scope.isOpen = false
         delete scope.stashedEntry
-        delete scope.ammountRemainingCents
         scope.form.$setPristine()
 
         scope.ammountCents = scope.entry.ammountCents
@@ -90,9 +90,9 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         return if scope.isOpen
         scope.isOpen = true
         scope.stashedEntry = angular.copy(scope.entry)
-        scope.entry.accountEntries.push({}) unless scope.entry.accountEntries.length
-        watchAEs = scope.$watch 'entry.accountEntries | sum:"ammountCents"', (sum)->
-          scope.ammountRemainingCents = (scope.entry.ammountCents || 0) - sum
+        scope.addAccountEntry() unless scope.entry.accountEntries.length
+        watchAEs = scope.$watch ammountRemainingCentsExpression, (ammountRemainingCents)->
+          scope.ammountRemainingCents = ammountRemainingCents
         selectAE(scope.entry.accountEntries[0])
 
       scope.close = (e)->
@@ -119,6 +119,8 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         reset()
 
       reset()
+      scope.ammountRemainingCents = $parse(ammountRemainingCentsExpression)(scope)
+      scope.open() if scope.ammountRemainingCents
 
 
   .factory 'Model', ($http)->
@@ -184,7 +186,17 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           camelize(response.data[0].data)
 
   .controller 'EntriesCtrl', ($scope, Model)->
-    Model.bankEntry.read().then (entries)-> $scope.entries = entries
+    bankEntryOffset = 0
+
+    $scope.loadMore = ->
+      $scope.isLoadingEntries = true
+      Model.bankEntry.read(limit: 30, offset: bankEntryOffset).then (entries)->
+        $scope.entries.splice($scope.entries.length, 0, entries...)
+        delete $scope.isLoadingEntries
+      bankEntryOffset += 30
+
+    $scope.loadMore()
+    $scope.entries = []
     Model.account.read(limit: 100).then (accounts)-> $scope.accounts = accounts
 
     $scope.$on 'addEntry', ->
