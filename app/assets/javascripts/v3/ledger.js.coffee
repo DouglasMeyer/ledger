@@ -28,7 +28,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         value
 
       parser = (value, strict=false) ->
-        if strict || value.match /^\$?-?\d[\d,.]*$/
+        if strict || value.match /^\$?-?[\d,]*(.\d*)?$/
           value = parseFloat(value.replace(/[^\d.-]/g, ''), 10) || null
           value *= 100 if value
         updateClass value
