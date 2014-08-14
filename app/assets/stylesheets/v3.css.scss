@@ -32,6 +32,7 @@ button, .button, [class^="button--"] {
   border-bottom-width: 1px;
   border-bottom-style: solid;
   box-shadow: none;
+  text-decoration: none;
   &:hover, &:focus { color: black; }
 }
 .button--remove {

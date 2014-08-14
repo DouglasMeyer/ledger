@@ -36,9 +36,10 @@
         ng-options="a.name as a.name for a in accounts | orderBy:'name'")
     .table__row( ng-show="isOpen" )
       .table__cell.l-text-r
-        %button(ng-show="isOpen && form.$pristine" ng-click="close($event)") close
-        %button.button--primary(ng-show="form.$dirty" ng-click="save($event)") save
-        %button(ng-show="form.$dirty" ng-click="close($event)") cancel
+        %a.button(              ng-show="form.$pristine" href="/v3/bank_entries/{{entry.id}}/edit") distribute
+        %button(                ng-show="form.$pristine" ng-click="close($event)") close
+        %button.button--primary(ng-show="form.$dirty"    ng-click="save($event)") save
+        %button(                ng-show="form.$dirty"    ng-click="close($event)") cancel
   .table__row
     .table__cell.l-text-c(ng-show="isLoadingEntries") Loading ...
     .table__cell.l-text-r
