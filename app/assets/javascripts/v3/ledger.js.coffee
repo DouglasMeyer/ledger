@@ -115,6 +115,8 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         e.stopPropagation()
         scope.entry.accountEntries.forEach (ae)->
           ae._destroy = true unless ae.amountCents
+        scope.entry.accountEntries = scope.entry.accountEntries.filter (ae)->
+          ae.id || (ae.amountCents && ae.accountName)
         Model.bankEntry.save(scope.entry).then (bankEntry)->
           scope.entry = bankEntry
         reset()
