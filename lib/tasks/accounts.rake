@@ -16,7 +16,7 @@ namespace :accounts do
       if row[0].present? && row[2].present? && bank_entry.nil?
         bank_entry = BankEntry.create! do |be|
           be.date = Date.today
-          be.ammount_cents = from_money(row[1])
+          be.amount_cents = from_money(row[1])
           be.description = 'Import from CSV'
         end
       end
@@ -31,17 +31,17 @@ namespace :accounts do
 
       if asset_account.present?
         account = Account.create! asset: true, name: asset_account
-        account.entries.create! ammount_cents: from_money(asset_balance),
+        account.entries.create! amount_cents: from_money(asset_balance),
                                 bank_entry_id: bank_entry.id
       end
 
       if liability_account.present?
         account = Account.create! asset: false, name: liability_account
-        account.entries.create! ammount_cents: from_money(liability_balance),
+        account.entries.create! amount_cents: from_money(liability_balance),
                                 bank_entry_id: bank_entry.id
       end
     end
-    bank_entry.update_attribute :ammount_cents,  bank_entry.account_entries.sum(:ammount_cents)
+    bank_entry.update_attribute :amount_cents,  bank_entry.account_entries.sum(:amount_cents)
   end
 
 end

@@ -10,7 +10,7 @@ describe "show" do
     get "/v2/strategies/0",
       bank_entry_id: bank_entry.id,
       account_id: account.id,
-      entry_ammount: '0.00'
+      entry_amount: '0.00'
 
     assert_select 'h3', account.name
     assert_select 'h3 + div', /No Strategy/ do
@@ -28,7 +28,7 @@ describe "show" do
     get "/v2/strategies/#{strategy.id}",
       bank_entry_id: bank_entry.id,
       account_id: account.id,
-      entry_ammount: '12.30'
+      entry_amount: '12.30'
 
     assert_select 'h3', account.name
     assert_select 'h3 + div', /Using Strategy/ do
@@ -48,7 +48,7 @@ describe "show" do
     get "/v2/strategies/#{strategy.id}",
       bank_entry_id: bank_entry.id,
       account_id: account.id,
-      entry_ammount: '8.00'
+      entry_amount: '8.00'
 
     assert_select 'h3', account.name
     assert_select 'h3 + div', /Not using Strategy/ do
@@ -58,7 +58,7 @@ describe "show" do
     assert_select 'h3 + div + div', /Fixed \$12.3/
     assert_select '.notes', count: 0
     assert_select 'a.use-strategy', /Use Strategy/ do
-      assert_select '.ammount', '$12.30'
+      assert_select '.amount', '$12.30'
     end
     assert_select 'a', 'Set Strategy'
   end

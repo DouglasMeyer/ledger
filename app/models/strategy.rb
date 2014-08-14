@@ -1,12 +1,12 @@
 class Strategy < ActiveRecord::Base
-  attr_accessor :ammount
+  attr_accessor :amount
 
   has_one :account
 
   def self.types
     { fixed: 'Fixed',
       percent_of_income: '% of income',
-      ammount_per_month: '$ per month'
+      amount_per_month: '$ per month'
     }
   end
 
@@ -15,8 +15,8 @@ class Strategy < ActiveRecord::Base
     when 'fixed'
       variable.to_f
     when 'percent_of_income'
-      (bank_entry.ammount_cents * (variable.to_f / 100)).round / 100.0
-    when 'ammount_per_month'
+      (bank_entry.amount_cents * (variable.to_f / 100)).round / 100.0
+    when 'amount_per_month'
       #FIXME: I'm assuming income is twice a month
       variable.to_f / 2
     end

@@ -14,8 +14,8 @@ accountEntryHtml = (accountEntry)->
         <option#{if accountEntry.accountName == 'Groceries' then ' selected="selected"' else ''} value="Groceries">Groceries</option>
       </select>
     </div>
-    <div class="ammount">
-      <input type="text" name="bank_entry[account_entries_attributes][#{time}][ammount]" />
+    <div class="amount">
+      <input type="text" name="bank_entry[account_entries_attributes][#{time}][amount]" />
     </div>
   </div>
   """
@@ -23,7 +23,7 @@ accountEntryHtml = (accountEntry)->
 bankEntryHtml = (bankEntry)->
   """
   <li>
-    <form action="#" data-ammount="#{bankEntry.ammount}">
+    <form action="#" data-amount="#{bankEntry.amount}">
       <div class="date">#{bankEntry.date}</div>
       <div class="description">#{bankEntry.description}</div>
       <div class="distribute"><a href="#">Distrubute</a></div>
@@ -48,7 +48,7 @@ TestIt 'BankEntriesView',
     view = $ "<ul />",
       class: 'bank-entries'
     .append(bankEntryHtml
-      ammount: -12.34
+      amount: -12.34
       date: '2013-02-04'
       description: 'WAL MART SUPER WOODSTOCK'
       accountEntries: [
@@ -61,30 +61,30 @@ TestIt 'BankEntriesView',
   'after each': ->
     view.remove()
 
-  'changing the ammount when there is more to distribute':
+  'changing the amount when there is more to distribute':
     'should create a new account entry': ->
       view.find('.account-entry:eq(0)')
         .find('[name$="[account_name]"]').val('Groceries').end()
-        .find('[name$="[ammount]"]').val(10).trigger('change')
+        .find('[name$="[amount]"]').val(10).trigger('change')
       @assertEqual '', view.find('.account-entry:eq(1) [name$="[account_name]"]').val()
-      @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
-      view.find('.account-entry:eq(0) [name$="[ammount]"]').val(-10).trigger('change')
-      @assertEqual '-2.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+      @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[amount]"]').val()
+      view.find('.account-entry:eq(0) [name$="[amount]"]').val(-10).trigger('change')
+      @assertEqual '-2.34', view.find('.account-entry:eq(1) [name$="[amount]"]').val()
 
     'should update the last blank account entry': ->
       view.find('.account-entry:eq(0)')
         .find('[name$="[account_name]"]').val('Groceries').end()
-        .find('[name$="[ammount]"]').val(10).trigger('change')
-      @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+        .find('[name$="[amount]"]').val(10).trigger('change')
+      @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[amount]"]').val()
       view.find('.account-entry:eq(0)')
-        .find('[name$="[ammount]"]').val(15).trigger('change')
-      @assertEqual '-27.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+        .find('[name$="[amount]"]').val(15).trigger('change')
+      @assertEqual '-27.34', view.find('.account-entry:eq(1) [name$="[amount]"]').val()
 
     'should not update the last blank account entry if it is what was changed': ->
       view.find('.account-entry:eq(0)')
         .find('[name$="[account_name]"]').val('Groceries').end()
-        .find('[name$="[ammount]"]').val(10).trigger('change')
-      @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+        .find('[name$="[amount]"]').val(10).trigger('change')
+      @assertEqual '-22.34', view.find('.account-entry:eq(1) [name$="[amount]"]').val()
       view.find('.account-entry:eq(1)')
-        .find('[name$="[ammount]"]').val(5).trigger('change')
-      @assertEqual '5.00', view.find('.account-entry:eq(1) [name$="[ammount]"]').val()
+        .find('[name$="[amount]"]').val(5).trigger('change')
+      @assertEqual '5.00', view.find('.account-entry:eq(1) [name$="[amount]"]').val()

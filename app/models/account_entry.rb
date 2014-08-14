@@ -9,7 +9,7 @@ class AccountEntry < ActiveRecord::Base
 
   scope :join_aggrigate_account_entries, ->{ joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
-      SELECT SUM(account_entries.ammount_cents) AS balance_cents,
+      SELECT SUM(account_entries.amount_cents) AS balance_cents,
              other_aes.id
       FROM account_entries
       LEFT JOIN bank_entries
@@ -37,12 +37,12 @@ class AccountEntry < ActiveRecord::Base
     self.account = Account.where(:name => name).first
   end
 
-  def ammount
-    (ammount_cents || 0) / 100.0
+  def amount
+    (amount_cents || 0) / 100.0
   end
-  def ammount= val
+  def amount= val
     val = val.gsub(/,/, '').to_f if val.is_a? String
-    self.ammount_cents = (val * 100).round
+    self.amount_cents = (val * 100).round
   end
 
   def as_json(options={})

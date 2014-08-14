@@ -1,16 +1,16 @@
 require File.expand_path '../../spec_helper', __FILE__
 
 describe Account do
-  def add_ae(ammount, month, day, from_bank=true)
+  def add_ae(amount, month, day, from_bank=true)
     AccountEntry.make! account: @account,
-                 ammount_cents: ammount * 100,
-                    bank_entry: BankEntry.make!(ammount_cents: ammount * 100,
+                 amount_cents: amount * 100,
+                    bank_entry: BankEntry.make!(amount_cents: amount * 100,
                                                          date: Date.new(2013, month, day),
                                                   external_id: from_bank ? BankEntry.count : nil)
   end
 
   it "can't be deleted with a balance" do
-    account = AccountEntry.make!(ammount_cents: 20_00).account
+    account = AccountEntry.make!(amount_cents: 20_00).account
     expect{ account.update_attributes!(deleted_at: Time.now) }.to raise_error
   end
 
@@ -39,7 +39,7 @@ describe Account do
       expect(@account.average_spent).to be_nil
     end
 
-    it "returns the ammount as dollars per x" do
+    it "returns the amount as dollars per x" do
       @account = Account.make!
       add_ae -100, 1,  1
       add_ae  -50, 1, 10

@@ -1,13 +1,13 @@
 - classes = "accounts-table#{' is-income' if @distribute_as_income}"
-= form_for [ :v3, @bank_entry ], html: { class: classes, data: { ammount: @bank_entry.ammount } } do |f|
+= form_for [ :v3, @bank_entry ], html: { class: classes, data: { amount: @bank_entry.amount } } do |f|
   %h2
-    %span#distribute-ammount.currency= @bank_entry.ammount_remaining
+    %span#distribute-amount.currency= @bank_entry.amount_remaining
     &nbsp;left to distribute from:
 
   .bank-entry
     .date= @bank_entry.date
     .description= @bank_entry.description
-    = currency @bank_entry.ammount, :ammount
+    = currency @bank_entry.amount, :amount
 
   %div
     = check_box_tag 'distribute_as_income', nil, @distribute_as_income

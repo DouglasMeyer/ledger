@@ -23,19 +23,19 @@ module ParseStatement
     statement_attr :name,    'NAME'
     statement_attr :memo,    'MEMO'
     statement_attr(:date,    'DTPOSTED'){ |string| DateTime.parse(string) }
-    statement_attr(:ammount, 'TRNAMT'  ){ |string| BigDecimal.new(string) }
+    statement_attr(:amount, 'TRNAMT'  ){ |string| BigDecimal.new(string) }
 
     def initialize(raw)
       @raw = raw
     end
 
-    def ammount_cents
-      ammount.to_f * 100
+    def amount_cents
+      amount.to_f * 100
     end
 
     def inspect
       attrs = %w(type id name memo).inject({}){|a,e| a[e.to_sym] = send(e); a}
-      attrs[:ammount] = ammount.to_f
+      attrs[:amount] = amount.to_f
       attrs[:date] = date.strftime("%D")
       "#<StatementEntry: #{attrs.inspect}>"
     end
@@ -55,7 +55,7 @@ module ParseStatement
       {
           external_id: t.id,
                  date: t.date,
-        ammount_cents: t.ammount_cents,
+        amount_cents: t.amount_cents,
                 notes: "#{t.type}: #{t.memo}",
           description: t.name
       }

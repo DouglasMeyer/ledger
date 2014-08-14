@@ -2,15 +2,15 @@
 = hidden_field_tag :value, @strategy.value(@bank_entry)
 %h3= @account.name
 -if @bank_entry
-  %div= strategy_dot(@strategy, @bank_entry, ammount: @entry_ammount, text: true)
+  %div= strategy_dot(@strategy, @bank_entry, amount: @entry_amount, text: true)
 
 - unless @strategy.new_record?
   %div= strategy_title(@strategy)
   - if @strategy.notes.present?
     .notes= @strategy.notes
-  - unless @bank_entry.nil? || @entry_ammount == @strategy.value(@bank_entry)
+  - unless @bank_entry.nil? || @entry_amount == @strategy.value(@bank_entry)
     = link_to "#", class: 'use-strategy' do
       Use Strategy
-      = currency @strategy.value(@bank_entry), 'ammount', 'span'
+      = currency @strategy.value(@bank_entry), 'amount', 'span'
 
-= link_to "Set Strategy", new_v3_strategy_path(bank_entry_id: @bank_entry.try(:id), account_id: @account.id, entry_ammount: @entry_ammount)
+= link_to "Set Strategy", new_v3_strategy_path(bank_entry_id: @bank_entry.try(:id), account_id: @account.id, entry_amount: @entry_amount)

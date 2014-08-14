@@ -29,7 +29,7 @@ module V3
                                                     :id,
                                                     :account_name,
                                                     :account_id,
-                                                    :ammount,
+                                                    :amount,
                                                     :_destroy ]
                                                  )
       if request.xhr?
@@ -44,7 +44,7 @@ module V3
       new_bank_entry.save!
 
       new_bank_entry.update_attributes!(params.require(:bank_entry).permit(account_entries_attributes: [
-        :account_name, :ammount, :_destroy
+        :account_name, :amount, :_destroy
       ]))
       render new_bank_entry
     end
@@ -56,7 +56,7 @@ module V3
 
     def new_bank_entry
       @new_bank_entry ||= BankEntry.new do |be|
-        be.ammount_cents = 0
+        be.amount_cents = 0
         be.date = Date.today
       end
     end

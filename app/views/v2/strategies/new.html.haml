@@ -1,22 +1,22 @@
 = form_for @strategy,
-    url: v2_strategies_path(bank_entry_id: @bank_entry_id, account_id: @account_id, entry_ammount: @entry_ammount),
+    url: v2_strategies_path(bank_entry_id: @bank_entry_id, account_id: @account_id, entry_amount: @entry_amount),
     html: { class: 'strategy-form' } do |f|
 
   = f.label :strategy_type, 'Type of Strategy'
   %ul.combo-button
     %li
       = f.radio_button :strategy_type, :fixed
-      = f.label :strategy_type, "Fixed ammount", value: :fixed
+      = f.label :strategy_type, "Fixed amount", value: :fixed
     %li
       = f.radio_button :strategy_type, :percent_of_income
       = f.label :strategy_type, "Percent of income", value: :percent_of_income
     %li
-      = f.radio_button :strategy_type, :ammount_per_month
-      = f.label :strategy_type, "Ammount per month", value: :ammount_per_month
+      = f.radio_button :strategy_type, :amount_per_month
+      = f.label :strategy_type, "Amount per month", value: :amount_per_month
 
   .field
-    -# fixed, ammount_per_month
-    = f.label :variable, 'Ammount'
+    -# fixed, amount_per_month
+    = f.label :variable, 'Amount'
 
     -# percent_of_income
     = f.label :variable, 'Percentage', style: "display: none;"
@@ -32,10 +32,10 @@
       var form = jQuery('.strategy-form');
       form.on('change', 'input[name="strategy[strategy_type]"]', function(){
         if ($(this).val() == 'percent_of_income') {
-          form.find('label[for="strategy_variable"]:contains("Ammount")').hide();
+          form.find('label[for="strategy_variable"]:contains("Amount")').hide();
           form.find('label[for="strategy_variable"]:contains("Percentage")').show();
         } else {
-          form.find('label[for="strategy_variable"]:contains("Ammount")').show();
+          form.find('label[for="strategy_variable"]:contains("Amount")').show();
           form.find('label[for="strategy_variable"]:contains("Percentage")').hide();
         }
       });

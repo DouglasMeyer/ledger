@@ -8,18 +8,18 @@ body.bank_entries {
       position: relative;
       height: 1.2em;
 
-      .account, .ammount, .strategy, .balance {
+      .account, .amount, .strategy, .balance {
         position: absolute;
         input { width: 100%; }
       }
       .account { width: 12em; }
-      .ammount { left: 12em; right: 5em; }
+      .amount { left: 12em; right: 5em; }
       .strategy { width: 1em; right: 5em; display: none; }
       .balance { width: 5em; right: 0; }
     }
     &.is-income li {
       .account { width: 11em; }
-      .ammount { left: 11em; right: 6em; }
+      .amount { left: 11em; right: 6em; }
       .strategy { display: initial; }
     }
 

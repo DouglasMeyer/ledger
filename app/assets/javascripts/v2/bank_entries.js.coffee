@@ -2,7 +2,7 @@ destroyBlank = (accountEntries) ->
   accountEntries.filter(->
     accountEntry = $(this)
     return accountEntry.find('select:named(account_name)').val() == '' ||
-           Math.round(accountEntry.find('input:named(ammount)').val() * 100) == 0
+           Math.round(accountEntry.find('input:named(amount)').val() * 100) == 0
   ).each(->
     $('input:named(_destroy)', this).val('true')
   )
@@ -27,27 +27,27 @@ class window.BankEntriesView
       input = $(this)
       updatedAccountEntry = $(this).closest('.account-entry')
       form = updatedAccountEntry.closest('form')
-      ammountRemaining = form.data('ammount') * 100
+      amountRemaining = form.data('amount') * 100
       # Mark the BankEntry as changed
       form.addClass('changed')
-      # Update ammount remaining
-      form.find('input:named(ammount)').each ->
-        ammount = $(this)
-        value = ammount.currency()
-        ammount.currency(value)
-        ammountRemaining = Math.round(ammountRemaining - value * 100)
+      # Update amount remaining
+      form.find('input:named(amount)').each ->
+        amount = $(this)
+        value = amount.currency()
+        amount.currency(value)
+        amountRemaining = Math.round(amountRemaining - value * 100)
       blankAccountEntry = form.find('.account-entry').filter(->
         $('select:named(account_name)', this).val() == '' && this != updatedAccountEntry[0]
       ).last()
-      if ammountRemaining != 0
+      if amountRemaining != 0
         if blankAccountEntry.length == 0
           lastAccountEntry = form.find('.account-entry:last')
           html = lastAccountEntry.get(0).outerHTML
             .replace(/([\[_])\d+([\]_])/g, '$1'+(new Date).getTime()+'$2')
           blankAccountEntry = lastAccountEntry.after(html).next()
         else
-          ammountRemaining = Math.round(ammountRemaining + blankAccountEntry.find('input:named(ammount)').currency() * 100)
-        blankAccountEntry.find('input:named(ammount)').currency(ammountRemaining / 100)
+          amountRemaining = Math.round(amountRemaining + blankAccountEntry.find('input:named(amount)').currency() * 100)
+        blankAccountEntry.find('input:named(amount)').currency(amountRemaining / 100)
         blankAccountEntry.find('select:named(account_name)').val(null)
 
     # Handle cancel
@@ -72,10 +72,10 @@ class window.BankEntriesView
   setup: (el)->
     view = this
 
-    # Format the ammounts
-    $(el).find('input:named(ammount)').each ->
-      ammount = $(this)
-      ammount.currency(ammount.currency())
+    # Format the amounts
+    $(el).find('input:named(amount)').each ->
+      amount = $(this)
+      amount.currency(amount.currency())
 
     # Handle form submissions
     $('form', el).submit -> view.submitBankEntry(this)
@@ -104,48 +104,48 @@ class window.DistributeBankEntryView
 
     @el.submit -> destroyBlank($('li', this))
     @el.on 'change', 'input[name="distribute_as_income"]', -> view.markAsIncome()
-    @el.on 'change', 'li input:named(ammount)', -> view.updateAccountEntry(this)
+    @el.on 'change', 'li input:named(amount)', -> view.updateAccountEntry(this)
     @el.on 'click', 'li .strategy', (e)-> view.showStrategy(this, e)
 
-    @el.find('li input:named(ammount)').trigger('change')
+    @el.find('li input:named(amount)').trigger('change')
   markAsIncome: ->
     isIncome = @el.find('input[name="distribute_as_income"]').is(':checked')
     view = this
     @el.toggleClass('is-income', isIncome)
     @el.find('li[data-account-balance]').each (_, ae) => @useStrategy($(ae), isIncome)
   useStrategy: (accountEntry, use)->
-    ammount = accountEntry.find('input:named(ammount)')
+    amount = accountEntry.find('input:named(amount)')
     strategy = accountEntry.find('.strategy')
     use = true if use == undefined
 
     if use
       accountEntry.find('.strategy input').val(strategy.data('id'))
-      ammount.currency(strategy.data('value'))
-      ammount.trigger('change')
+      amount.currency(strategy.data('value'))
+      amount.trigger('change')
     else
       accountEntry.find('.strategy input').val(null)
   updateAccountEntry: ((input)->
     accountEntry = $(input).closest('li')
-    ammountInput = accountEntry.find('input:named(ammount)')
-    ammount = ammountInput.currency()
-    strategyAmmount = accountEntry.find('.strategy').data('value')
-    usingStrategy = (ammount == parseFloat(strategyAmmount))
+    amountInput = accountEntry.find('input:named(amount)')
+    amount = amountInput.currency()
+    strategyAmount = accountEntry.find('.strategy').data('value')
+    usingStrategy = (amount == parseFloat(strategyAmount))
 
-    ammountInput.currency(ammount)
+    amountInput.currency(amount)
     accountEntry.find('.balance').currency(
-      parseFloat(accountEntry.data('account-balance')) + ammount
+      parseFloat(accountEntry.data('account-balance')) + amount
     )
-    @updateDistributeAmmount()
+    @updateDistributeAmount()
     if accountEntry.find('.strategy input').val()
       accountEntry.find('.strategy-dot')
         .toggleClass('using', usingStrategy)
         .toggleClass('not-using', !usingStrategy)
   ).delay()
-  updateDistributeAmmount: ->
-    ammountRemaining = this.el.data('ammount') * 100
-    this.el.find('li input:named(ammount)').each ->
-      ammountRemaining = Math.round(ammountRemaining - this.value.replace(/,/g, '') * 100)
-    this.el.find('#distribute-ammount').currency(ammountRemaining / 100)
+  updateDistributeAmount: ->
+    amountRemaining = this.el.data('amount') * 100
+    this.el.find('li input:named(amount)').each ->
+      amountRemaining = Math.round(amountRemaining - this.value.replace(/,/g, '') * 100)
+    this.el.find('#distribute-amount').currency(amountRemaining / 100)
   showStrategy: (control, event)->
     view = this
     accountEntry = $(control).closest('li')
@@ -158,7 +158,7 @@ class window.DistributeBankEntryView
       .load('/v2/strategies/'+strategyId+'?'+jQuery.param({
         bank_entry_id: this.el.attr('id').match(/\d+/)[0],
         account_id: accountEntry.find('.account input').val(),
-        entry_ammount: accountEntry.find('.ammount input').val()
+        entry_amount: accountEntry.find('.amount input').val()
       }))
     el.on 'mousedown', (e)-> e.stopPropagation()
     $('body').on 'mousedown', -> el.remove()
@@ -183,7 +183,7 @@ class window.DistributeBankEntryView
             .data('id',         el.find('input[name="id"]'   ).val() )
             .data('value',      el.find('input[name="value"]').val() )
             .find('input').val( el.find('input[name="id"]'   ))
-          accountEntry.find('input:named(ammount)').trigger('change')
+          accountEntry.find('input:named(amount)').trigger('change')
         complete: (xhr, status)->
           el.html(xhr.responseText)
 

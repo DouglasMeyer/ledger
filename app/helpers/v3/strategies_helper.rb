@@ -7,7 +7,7 @@ module V3
         "Fixed $#{strategy.variable}"
       when 'percent_of_income'
         "#{strategy.variable}% of Income"
-      when 'ammount_per_month'
+      when 'amount_per_month'
         "$#{strategy.variable} per Month"
       end
     end
@@ -17,7 +17,7 @@ module V3
       text = ''
       using = true
       if strategy && !strategy.new_record?
-        using = (options[:ammount].to_f == strategy.value(bank_entry))
+        using = (options[:amount].to_f == strategy.value(bank_entry))
         className += " #{'not-' unless using}using"
       end
       if options[:text]

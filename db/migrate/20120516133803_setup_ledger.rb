@@ -2,7 +2,7 @@ class SetupLedger < ActiveRecord::Migration
   def change
     create_table :bank_entries do |t|
       t.date    :date,          :null => false
-      t.integer :ammount_cents, :null => false
+      t.integer :amount_cents, :null => false
       t.text    :notes
 
       t.string  :description,   :null => false
@@ -25,7 +25,7 @@ class SetupLedger < ActiveRecord::Migration
     create_table :account_entries do |t|
       t.references  :account,       :null => false
       t.references  :bank_entry,    :null => false
-      t.integer     :ammount_cents, :null => false
+      t.integer     :amount_cents, :null => false
       t.text        :notes
 
       t.timestamps

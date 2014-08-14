@@ -122,7 +122,7 @@ pre { display: inline; }
   position: relative;
   min-height: 1.2em;
 
-  .date, .description, .distribute, .ammount, .account {
+  .date, .description, .distribute, .amount, .account {
     position: absolute; top: 0.1em;
   }
   .date { width: 8em; }
@@ -134,7 +134,7 @@ pre { display: inline; }
     text-overflow: ellipsis;
   }
   .account { width: 10em; right: 0; }
-  .ammount { width: 8em; right: 11em; }
+  .amount { width: 8em; right: 11em; }
 }
 
 // This is more of a min-width
@@ -165,7 +165,7 @@ $bank-entry-width: 45em;
     border-bottom: 1px dashed #DDD;
     &:last-child { border-bottom: none; }
 
-    .date, .description, .distribute, .ammount, .account {
+    .date, .description, .distribute, .amount, .account {
       z-index: 100;
       input, select { width: 100%; }
     }

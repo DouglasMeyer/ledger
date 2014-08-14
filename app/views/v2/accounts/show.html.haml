@@ -8,5 +8,5 @@
       .date= account_entry.bank_entry.date
       .description= account_entry.bank_entry.description
       .account-entry
-        = currency account_entry.ammount_cents / 100.0, 'ammount'
+        = currency account_entry.amount_cents / 100.0, 'amount'
         = currency account_entry.balance_cents / 100.0, 'balance'

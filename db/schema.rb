@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140424132914) do
+ActiveRecord::Schema.define(version: 20140814135228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20140424132914) do
   create_table "account_entries", force: true do |t|
     t.integer  "account_id",    null: false
     t.integer  "bank_entry_id", null: false
-    t.integer  "ammount_cents", null: false
+    t.integer  "amount_cents",  null: false
     t.text     "notes"
     t.datetime "created_at",    null: false
     t.datetime "updated_at",    null: false
@@ -40,13 +40,13 @@ ActiveRecord::Schema.define(version: 20140424132914) do
   add_index "accounts", ["name"], name: "index_accounts_on_name", unique: true, using: :btree
 
   create_table "bank_entries", force: true do |t|
-    t.date     "date",          null: false
-    t.integer  "ammount_cents", null: false
+    t.date     "date",         null: false
+    t.integer  "amount_cents", null: false
     t.text     "notes"
-    t.string   "description",   null: false
+    t.string   "description",  null: false
     t.string   "external_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   add_index "bank_entries", ["external_id"], name: "index_bank_entries_on_external_id", unique: true, using: :btree

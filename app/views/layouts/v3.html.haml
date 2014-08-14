@@ -19,7 +19,7 @@
       = link_to "Strategies", v3_strategies_path, class: 'strategies navigation__page'
 
       - bank_import = BankImport.last
-      - ledger_sum = BankEntry.sum(:ammount_cents)
+      - ledger_sum = BankEntry.sum(:amount_cents)
       %small.bank_import(tabindex="0")
         = currency ledger_sum / 100.0, '', 'span'
         - if bank_import && ledger_sum != bank_import.balance_cents

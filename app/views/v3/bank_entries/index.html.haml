@@ -13,7 +13,7 @@
         %input(ng-hide="!isOpen || entry.externalId" type="text" ng-model="entry.date")
       .table__cell--summary(ng-class="{ 'l-text-overflow': !isOpen }")
         {{type}}&nbsp;
-        %em(ng-model="ammountCents" l-currency)
+        %em(ng-model="amountCents" l-currency)
         %span(ng-hide="isOpen")
           %span(ng-if="from")
             &nbsp;from&nbsp;
@@ -29,8 +29,8 @@
     .table__row( ng-show="isOpen"
       ng-repeat="accountEntry in entry.accountEntries"
     )
-      %input.table__cell--ammount.l-text-r( name="ammount"
-        ng-model="accountEntry.ammountCents" l-currency)
+      %input.table__cell--amount.l-text-r( name="amount"
+        ng-model="accountEntry.amountCents" l-currency)
       %select.table__cell--account( name="account"
         ng-model="accountEntry.accountName"
         ng-options="a.name as a.name for a in accounts | orderBy:'name'")

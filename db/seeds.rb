@@ -2,7 +2,7 @@
 #  harris.entries.create! do |e|
 #    e.date = n.days.ago
 #    e.description = "Entry #{n}"
-#    e.ammount = rand(100_00)/100.0 - 50
+#    e.amount = rand(100_00)/100.0 - 50
 #    e.external_id = n
 #  end
 #end
@@ -17,7 +17,7 @@
 #  ledger.entries.create! do |e|
 #    e.bank_entry = entries[n]
 #    e.date = Date.today
-#    e.ammount = entries[n].ammount
+#    e.amount = entries[n].amount
 #    e.account = ledger.accounts.order('RANDOM()').first
 #  end
 #end
@@ -26,12 +26,12 @@
 #ledger.entries.create! do |e|
 #  e.bank_entry = entry
 #  e.date = Date.today
-#  e.ammount = entry.ammount / 2
+#  e.amount = entry.amount / 2
 #  e.account = ledger.accounts.order('RANDOM()').first
 #end
 #ledger.entries.create! do |e|
 #  e.bank_entry = entry
 #  e.date = Date.today
-#  e.ammount = entry.ammount / 2
+#  e.amount = entry.amount / 2
 #  e.account = ledger.accounts.order('RANDOM()').first
 #end

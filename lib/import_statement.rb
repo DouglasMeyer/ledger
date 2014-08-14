@@ -19,7 +19,7 @@ module ImportStatement
           end
           transactions.sort_by{|t| t.id }.reverse.each do |transaction|
             transaction.balance = balance
-            balance -= transaction.ammount
+            balance -= transaction.amount
           end
         end
 
@@ -45,7 +45,7 @@ module ImportStatement
       end
       transactions.sort_by{|t| t.id }.reverse.each do |transaction|
         transaction.balance = balance
-        balance -= transaction.ammount
+        balance -= transaction.amount
       end
     end
 
@@ -55,20 +55,20 @@ module ImportStatement
     statement_attr :name,    'NAME'
     statement_attr :memo,    'MEMO'
     statement_attr(:date,    'DTPOSTED'){ |string| DateTime.parse(string) }
-    statement_attr(:ammount, 'TRNAMT'  ){ |string| BigDecimal.new(string) }
+    statement_attr(:amount, 'TRNAMT'  ){ |string| BigDecimal.new(string) }
     attr_accessor :balance
 
     def initialize(raw)
       @raw = raw
     end
 
-    def ammount_cents
-      ammount.to_f * 100
+    def amount_cents
+      amount.to_f * 100
     end
 
     def inspect
       attrs = %w(type id name memo).inject({}){|a,e| a[e.to_sym] = send(e); a}
-      attrs[:ammount] = ammount.to_f
+      attrs[:amount] = amount.to_f
       attrs[:balance] = balance.to_f
       attrs[:date] = date.strftime("%D")
       "#<StatementEntry: #{attrs.inspect}>"
@@ -86,18 +86,18 @@ module ImportStatement
     transactions.each do |t|
       ::BankEntry.find_or_create_by_external_id!(t.id.to_s) do |e|
         e.date          = t.date
-        e.ammount_cents = t.ammount_cents
+        e.amount_cents = t.amount_cents
         e.notes         = "#{t.type}: #{t.memo}"
         e.description   = t.name
         e.external_id   = t.id
       end
     end
 
-    missing = BigDecimal.new(transactions.last.balance.to_s)*100 - ::BankEntry.pluck(:ammount_cents).sum
+    missing = BigDecimal.new(transactions.last.balance.to_s)*100 - ::BankEntry.pluck(:amount_cents).sum
     unless missing.zero?
       e = ::BankEntry.create! do |e|
         e.date          = Date.today
-        e.ammount_cents = missing.to_s
+        e.amount_cents = missing.to_s
         e.description   = "The bank says we have an extra $#{missing/100}"
       end
       puts e.description
