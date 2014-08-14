@@ -55,7 +55,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
     restrict: 'C'
     link: (scope, element, attrs) ->
       watchAEs = undefined
-      ammountRemainingCentsExpression = 'entry.ammountCents - (entry.accountEntries | sum:"ammountCents")'
+      amountRemainingCentsExpression = 'entry.ammountCents - (entry.accountEntries | sum:"ammountCents")'
 
       reset = ->
         scope.isOpen = false
@@ -90,10 +90,16 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         return if scope.isOpen
         scope.isOpen = true
         scope.stashedEntry = angular.copy(scope.entry)
-        scope.addAccountEntry() unless scope.entry.accountEntries.length
-        watchAEs = scope.$watch ammountRemainingCentsExpression, (ammountRemainingCents)->
-          scope.ammountRemainingCents = ammountRemainingCents
-        selectAE(scope.entry.accountEntries[0])
+        watchAEs = scope.$watch amountRemainingCentsExpression, (amountRemainingCents)->
+          if amountRemainingCents
+            if !scope.form.ammount? || scope.form.ammount.$dirty || scope.form.account.$dirty
+              newAE = ammountCents: amountRemainingCents
+              scope.entry.accountEntries.push( newAE )
+              selectAE(newAE) if scope.entry.accountEntries.length == 1
+            else
+              lastAE = scope.entry.accountEntries[scope.entry.accountEntries.length-1]
+              lastAE.ammountCents += amountRemainingCents
+        selectAE(scope.entry.accountEntries[0]) if scope.entry.accountEntries[0]
 
       scope.close = (e)->
         e.stopPropagation()
@@ -105,11 +111,6 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           index = scope.entries.indexOf(scope.entry)
           scope.entries.splice(index, 1)
 
-      scope.addAccountEntry = ->
-        newAE = ammountCents: scope.ammountRemainingCents
-        scope.entry.accountEntries.push( newAE )
-        selectAE(newAE)
-
       scope.save = (e)->
         e.stopPropagation()
         scope.entry.accountEntries.forEach (ae)->
@@ -119,9 +120,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         reset()
 
       reset()
-      scope.ammountRemainingCents = $parse(ammountRemainingCentsExpression)(scope)
-      scope.open() if scope.ammountRemainingCents
-
+      scope.open() if $parse(amountRemainingCentsExpression)(scope)
 
   .factory 'Model', ($http)->
     underscore = (cObj)->
@@ -201,7 +200,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
     $scope.$on 'addEntry', ->
       today = (new Date).toJSON().slice(0,10)
-      $scope.entries.unshift({ date: today, accountEntries: [] })
+      $scope.entries.unshift({ date: today, accountEntries: [{}] })
 
         #    lCurrency = $filter('lCurrency')
         #

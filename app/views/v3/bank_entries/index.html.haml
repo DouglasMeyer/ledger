@@ -29,14 +29,13 @@
     .table__row( ng-show="isOpen"
       ng-repeat="accountEntry in entry.accountEntries"
     )
-      %input.table__cell--ammount.l-text-r(ng-model="accountEntry.ammountCents" l-currency)
-      %select.table__cell--account(ng-model="accountEntry.accountName" ng-options="a.name as a.name for a in accounts | orderBy:'name' ")
+      %input.table__cell--ammount.l-text-r( name="ammount"
+        ng-model="accountEntry.ammountCents" l-currency)
+      %select.table__cell--account( name="account"
+        ng-model="accountEntry.accountName"
+        ng-options="a.name as a.name for a in accounts | orderBy:'name'")
     .table__row( ng-show="isOpen" )
       .table__cell.l-text-r
-        Amount to distribute&nbsp;
-        %span(ng-model="ammountRemainingCents" l-currency)
-        %button(ng-show="isOpen" ng-click="addAccountEntry()") add entry
-        %button.button--remove(ng-show="isOpen && form.$pristine && !entry.externalId") delete
         %button(ng-show="isOpen && form.$pristine" ng-click="close($event)") close
         %button.button--primary(ng-show="form.$dirty" ng-click="save($event)") save
         %button(ng-show="form.$dirty" ng-click="close($event)") cancel
