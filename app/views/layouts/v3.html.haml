@@ -32,5 +32,11 @@
         = form_tag v3_bank_imports_path, multipart: true do
           = file_field_tag :upload
 
-      .page-actions= yield :navigation
+      .page-actions
+        .page-actions__calculator.is-clickable(ng-controller="CalculatorCtrl")
+          %label(for="calculator" ng-click="showCalc=!showCalc") Calc
+          %form.dropdown(name="form" ng-show="showCalc")
+            %pre.l-text-r(ng-model="output" l-currency)
+            %input#calculator.l-text-r(type="text" ng-model="input" name="input")
+        = yield :navigation
     = yield

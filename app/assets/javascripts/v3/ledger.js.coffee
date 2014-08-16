@@ -203,3 +203,14 @@ angular.module('ledger', ['ng', 'ngAnimate'])
     $scope.$on 'addEntry', ->
       today = (new Date).toJSON().slice(0,10)
       $scope.entries.unshift({ date: today, accountEntries: [{}] })
+
+  .controller 'CalculatorCtrl', ($scope, $parse)->
+    $scope.$watch 'input', (input)->
+      try
+        $scope.output = if input
+          $parse(input)() * 100
+        else
+          ''
+        $scope.form.input.$setValidity('parses', true)
+      catch
+        $scope.form.input.$setValidity('parses', false)

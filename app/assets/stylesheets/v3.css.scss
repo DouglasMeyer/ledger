@@ -35,7 +35,7 @@ button, .button, [class^="button--"] {
   text-decoration: none;
   &:hover, &:focus { color: black; }
 }
-.button--remove {
+.button--remove, input.ng-invalid {
   color: #F44;
   &:hover, &:focus { color: #F00; }
   &:focus { box-shadow: 0 1px 3px #F66; }
@@ -50,7 +50,7 @@ em {
   color: black;
   text-shadow: 0 1px 5px rgba(100, 100, 100, 0.3);
 }
-pre { display: inline; }
+pre { margin: 0; }
 
 // Elements
 .is-clickable { cursor: pointer; }
@@ -297,6 +297,20 @@ form .actions { clear: both; }
   .dropdown:hover {
     visibility: visible;
     opacity: 1;
+  }
+
+  .page-actions__calculator > .dropdown {
+    margin-left: -10.5em;
+    color: #444;
+
+    &:before, &:after {
+      left: auto;
+      right: 0.5rem;
+    }
+  }
+  .page-actions__calculator pre {
+    height: 2rem;
+    box-shadow: inset 0 1px 3px #BBB;
   }
 }
 
