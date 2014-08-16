@@ -8,7 +8,12 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
   .filter 'sum', ->
     (input, prop)->
-      input?.map((e)-> parseInt(e[prop]) || 0).reduce ((a, b)-> a+b), 0
+      input = input?.map((e)-> parseInt(e[prop]) || 0) if prop
+      input?.reduce ((a, b)-> a+b), 0
+
+  .filter 'underscore', ->
+    (input)->
+      input.replace(/\W+/g, '_').replace(/[A-Z]/g, (l)-> l.toLowerCase())
 
   .directive 'lCurrency', ($filter)->
     numberFilter = $filter('number')
@@ -124,13 +129,14 @@ angular.module('ledger', ['ng', 'ngAnimate'])
       reset()
       scope.open() if $parse(amountRemainingCentsExpression)(scope)
 
-  .factory 'Model', ($http)->
+  .factory 'Model', ($http, $filter)->
+    strUnderscore = $filter('underscore')
     underscore = (cObj)->
       return cObj unless angular.isObject(cObj)
 
       uObj = {}
       for name, val of cObj when name.charAt(0) != '$' && name != 'className'
-        newName = name.replace /[A-Z]/g, (l)-> '_'+l.toLowerCase()
+        newName = strUnderscore(name)
         if angular.isArray(val)
           uObj[newName] = ( underscore(v) for v in val )
         else if angular.isObject(val)
@@ -204,11 +210,20 @@ angular.module('ledger', ['ng', 'ngAnimate'])
       today = (new Date).toJSON().slice(0,10)
       $scope.entries.unshift({ date: today, accountEntries: [{}] })
 
-  .controller 'CalculatorCtrl', ($scope, $parse)->
+  .controller 'CalculatorCtrl', ($scope, Model, $filter, $parse)->
+    underscore = $filter('underscore')
+    accounts = {}
+    Model.account.read(limit: 1000).then (records)->
+      accounts[underscore(account.name)] = account.balanceCents / 100 for account in records
+
+    $scope.toggle = ->
+      $scope.showCalc = !$scope.showCalc
+      $scope.input = ''
+
     $scope.$watch 'input', (input)->
       try
         $scope.output = if input
-          $parse(input)() * 100
+          $parse(input)(accounts) * 100
         else
           ''
         $scope.form.input.$setValidity('parses', true)

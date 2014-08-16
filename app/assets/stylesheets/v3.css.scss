@@ -105,6 +105,7 @@ pre { margin: 0; }
     display: inline-block;
     content: "";
     border: $arrow_size solid transparent;
+    pointer-events: none;
   }
   &:before {
     top: unquote("calc(-2 * "+$arrow_size+" - 1px)");
@@ -264,7 +265,7 @@ form .actions { clear: both; }
     + .dropdown {
       display: inline-block;
       margin-top: 2.1em;
-      margin-left: -18em;
+      margin-left: -20em;
       color: #111;
       opacity: 0;
       visibility: hidden;
@@ -307,6 +308,9 @@ form .actions { clear: both; }
       left: auto;
       right: 0.5rem;
     }
+  }
+  .page-actions__calculator > label {
+    display: inline-block;
   }
   .page-actions__calculator pre {
     height: 2rem;
