@@ -65,6 +65,15 @@ describe ApiController do
       }.to_json)
     end
   end
+  describe "reading a collection with an invalid query" do
+    it "raises a InvalidQuery exception" do
+      lambda {
+        post :bulk, [
+          { resource: 'Account_v1', action: :read, query: { blas: 'true' } }
+        ].to_json
+      }.should raise_error(ApiController::InvalidQuery, '{"blas"=>"true"} is not a valid query.')
+    end
+  end
   describe "reading a collection with pagination" do
     it "works" do
       @account1 = Account.make!

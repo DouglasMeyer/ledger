@@ -1,6 +1,8 @@
 class ApiController < ApplicationController
   class ImpossibleAction < StandardError
   end
+  class InvalidQuery < StandardError
+  end
 
   class ApiResponse
     attr_reader :responses, :records
@@ -110,6 +112,8 @@ private
       query.each do |column, val|
         if column == 'id' && val.is_a?(Array)
           records = records.where(id: val)
+        else
+          raise InvalidQuery.new "#{{ column => val }.inspect} is not a valid query."
         end
       end
 
