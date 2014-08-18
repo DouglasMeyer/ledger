@@ -74,6 +74,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           'Transfered'
         else if scope.amountCents > 0
           #FIXME: I'm not sure I like how this sounds: Recieved $5.00 to Doug Blow
+          scope.amountCents = 0
           'Recieved'
         else
           'Spent'
@@ -211,18 +212,24 @@ angular.module('ledger', ['ng', 'ngAnimate'])
     window.Model = Model
     Model
 
-  .controller 'EntriesCtrl', ($scope, Model)->
+  .controller 'EntriesCtrl', ($scope, Model, $window)->
     bankEntryOffset = 0
 
     $scope.loadMore = ->
       $scope.isLoadingEntries = true
-      Model.bankEntry.read(limit: 30, offset: bankEntryOffset).then (entries)->
+      promise = Model.bankEntry.read(limit: 30, offset: bankEntryOffset).then (entries)->
         $scope.entries.splice($scope.entries.length, 0, entries...)
         delete $scope.isLoadingEntries
+        entries
       bankEntryOffset += 30
+      promise
 
-    $scope.loadMore()
-    $scope.entries = []
+    try
+      $scope.entries = angular.fromJson($window.localStorage.getItem('EntriesCtrl.entries'))
+    $scope.entries ||= []
+    $scope.loadMore().then (entries)->
+      $scope.entries.splice(0, $scope.entries.length, entries...)
+      $window.localStorage.setItem('EntriesCtrl.entries', angular.toJson(entries))
     $scope.accounts = Model.account.all
 
     $scope.$on 'addEntry', ->
