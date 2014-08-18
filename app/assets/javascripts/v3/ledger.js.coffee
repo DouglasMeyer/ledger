@@ -13,7 +13,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
   .filter 'underscore', ->
     (input)->
-      input.replace(/\W+/g, '_').replace(/[A-Z]/g, (l)-> l.toLowerCase())
+      input.replace(/([a-z])([A-Z])/g, (_,a,b)-> "#{a}_#{b}").replace(/\W+/g, '_').toLowerCase()
 
   .directive 'lCurrency', ($filter)->
     numberFilter = $filter('number')
@@ -122,8 +122,8 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           ae._destroy = true unless ae.amountCents
         scope.entry.accountEntries = scope.entry.accountEntries.filter (ae)->
           ae.id || (ae.amountCents && ae.accountName)
-        Model.bankEntry.save(scope.entry).then (bankEntry)->
-          scope.entry = bankEntry
+        Model.bankEntry.save(scope.entry).then (bankEntries)->
+          scope.entry = bankEntries[0]
         reset()
 
       reset()
@@ -187,10 +187,12 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
 
         save: (attrs, opts={})->
+          opts.resource = 'BankEntry_v1'
           opts.action = 'update'
-          opts.type = 'bank_entry'
+
           opts.id = attrs.id
           opts.data = underscore(attrs)
+          delete opts.data.balance_cents
           opts.data.account_entries_attributes = opts.data.account_entries
           delete opts.data.account_entries
 
