@@ -38,7 +38,6 @@ module V3
     end
 
     def index
-      accounts # populate @accounts
     end
 
     def show

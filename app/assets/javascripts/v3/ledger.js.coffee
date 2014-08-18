@@ -202,7 +202,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         return @_all if @_all?
         @read().then (all)=>
           $window.localStorage.setItem('Model.account.all', angular.toJson(all))
-          @_all.splice(0,0, all...)
+          @_all.splice(0,@all.length, all...)
         try
           @_all = angular.fromJson($window.localStorage.getItem('Model.account.all'))
         @_all ||= []
@@ -228,6 +228,16 @@ angular.module('ledger', ['ng', 'ngAnimate'])
     $scope.$on 'addEntry', ->
       today = (new Date).toJSON().slice(0,10)
       $scope.entries.unshift({ date: today, accountEntries: [{}] })
+
+  .controller 'AccountsCtrl', ($scope, Model)->
+    $scope.accounts = Model.account.all
+    $scope.$watchCollection 'accounts | orderBy:"position"', (accounts)->
+      $scope.assetCategories = []
+      $scope.liabilityCategories = []
+      for account in accounts
+        category = account.category
+        categories = if account.asset then $scope.assetCategories else $scope.liabilityCategories
+        categories.push(category) unless category in categories
 
   .controller 'CalculatorCtrl', ($scope, Model, $filter, $parse)->
     underscore = $filter('underscore')

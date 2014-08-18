@@ -1,7 +1,7 @@
 - content_for :navigation do
   .icon-plus.is-clickable(ng-click="$broadcast('addEntry')" title="Add Entry")
 
-.table.l-margin-v1.l-margin-h8(ng-app="ledger" ng-controller="EntriesCtrl")
+.table.l-margin-v1.l-margin-h8(ng-controller="EntriesCtrl")
   %form.EntryItem( name="form"
     ng-repeat="entry in entries"
     ng-click="open()"
