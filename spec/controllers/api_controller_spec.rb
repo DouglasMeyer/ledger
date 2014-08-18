@@ -8,19 +8,39 @@ describe ApiController do
     }
   end
 
+  def response_records(records)
+    records.map do |r|
+      { 'type' => r.class.name, 'id' => r.id }
+    end
+  end
+
+  def records_by_id(records)
+    records.inject({}) do |acc, r|
+      acc[r.id] = r
+      acc
+    end
+  end
+
   describe "reading a collection" do
     before do
       Account.make!
       Account.make!
       Account.make!
 
-      post :bulk, body: [
-        { action: :read, type: :account }
+      post :bulk, [
+        { resource: 'Account_v1', action: :read }
       ].to_json
     end
 
     it "responds with the collection" do
-      response.body.should eq([{ 'data' => Account.all }].to_json)
+      response.body.should eq({
+        'responses' => [
+          { 'records' => response_records(Account.all) }
+        ],
+        'records' => {
+          'Account' => records_by_id(Account.all)
+        }
+      }.to_json)
     end
   end
   describe "reading a collection with a query" do
@@ -29,13 +49,20 @@ describe ApiController do
       @account = Account.make!
       Account.make!
 
-      post :bulk, body: [
-        { action: :read, type: :account, query: { id: [ @account.id ] } }
+      post :bulk, [
+        { resource: 'Account_v1', action: :read, query: { id: [ @account.id ] } }
       ].to_json
     end
 
     it "responds with the collection matching the query" do
-      response.body.should eq([{ 'data' => Account.where(id: @account.id) }].to_json)
+      response.body.should eq({
+        'responses' => [
+          { 'records' => response_records(Account.where(id: @account.id)) }
+        ],
+        'records' => {
+          'Account' => records_by_id(Account.where(id: @account.id))
+        }
+      }.to_json)
     end
   end
   describe "reading a collection with pagination" do
@@ -43,22 +70,27 @@ describe ApiController do
       @account1 = Account.make!
       @account2 = Account.make!
 
-      post :bulk, body: [
-        { action: :read, type: :account, limit: 1 },
-        { action: :read, type: :account, limit: 1, offset: 1 }
+      post :bulk, [
+        { resource: 'Account_v1', action: :read, limit: 1 },
+        { resource: 'Account_v1', action: :read, limit: 1, offset: 1 }
       ].to_json
 
-      response.body.should eq([
-        { 'data' => [@account1] },
-        { 'data' => [@account2] }
-      ].to_json)
+      response.body.should eq({
+        'responses' => [
+          { 'records' => response_records([ @account1 ]) },
+          { 'records' => response_records([ @account2 ]) }
+        ],
+        'records' => {
+          'Account' => records_by_id([ @account1, @account2 ])
+        }
+      }.to_json)
     end
   end
 
   describe "creating a record" do
     before do
-      post :bulk, body: [
-        { action: :create, type: :account, reference: 'the new record',
+      post :bulk, [
+        { resource: 'Account_v1', action: :create, reference: 'the new record',
           data: { name: 'New Account', asset: 'true' }
         }
       ].to_json
@@ -68,17 +100,25 @@ describe ApiController do
       Account.where(name: 'New Account').first.asset.should eq(true)
     end
     it "responds with the new record and reference" do
-      JSON.parse(response.body).should eq([{
-        'reference' => 'the new record', 'data' => JSON.parse(Account.first.to_json)
-      }])
+      response.body.should eq({
+        'responses' => [
+          {
+            'reference' => 'the new record',
+            'records' => response_records([Account.first])
+          }
+        ],
+        'records' => {
+          'Account' => records_by_id([Account.first])
+        }
+      }.to_json)
     end
   end
 
   describe "updating a record" do
     let(:account){ Account.make! asset: false }
     before do
-      post :bulk, body: [
-        { action: :update, type: :account, id: account.id, reference: 'updating the record',
+      post :bulk, [
+        { resource: 'Account_v1', action: :update, id: account.id, reference: 'updating the record',
           data: { name: 'New Account Name', asset: 'true' }
         }
       ].to_json
@@ -89,19 +129,27 @@ describe ApiController do
       account.reload.asset.should eq(true)
     end
     it "responds with the updated record and reference" do
-      JSON.parse(response.body).should eq([{
-        'reference' => 'updating the record', 'data' => JSON.parse(account.reload.to_json)
-      }])
+      response.body.should eq({
+        'responses' => [
+          {
+            'reference' => 'updating the record',
+            'records' => response_records([ account ])
+          }
+        ],
+        'records' => {
+          'Account' => records_by_id([ account.reload ])
+        }
+      }.to_json)
     end
   end
 
   describe "attempting to perform an impossible action" do
     it "raises a ImpossibleAction exception" do
       lambda {
-        post :bulk, body: [
-          { action: :something }
+        post :bulk, [
+          { resource: 'Something', action: :something }
         ].to_json
-      }.should raise_error(ApiController::ImpossibleAction, "something isn't an accepted action")
+      }.should raise_error(ApiController::ImpossibleAction, "Something.something isn't an accepted resource/action")
     end
   end
 
@@ -109,44 +157,12 @@ describe ApiController do
     before do
       @account1_data = { 'asset' => true }
       @account2_data = { 'name' => 'New Account', 'asset' => true }
-      post :bulk, body: [
-        { action: :create, type: :account, reference: 'invalid', data: @account1_data },
-        { action: :create, type: :account, reference: 'valid', data: @account2_data }
+      post :bulk, [
+        { resource: 'Account_v1', action: :create, reference: 'failed creation', data: @account1_data },
+        { resource: 'Account_v1', action: :create, reference: 'actual created', data: @account2_data }
       ].to_json
       @json_response = JSON.parse(response.body)
-      @response_references = @json_response.inject({}){|acc,n| acc[n['reference']] = n ; acc }
-    end
-
-    it "has a response of :bad_request" do
-      response.status.should eq(400)
-    end
-    it "does not create any records" do
-      Account.count.should eq(0)
-    end
-    it "responds with the error" do
-      @json_response.length.should eq(2)
-      @response_references['invalid'].should eq({
-        'reference' => 'invalid',
-        'errors' => { 'name' => ["can't be blank"] },
-        'data' => @blank_account.merge(@account1_data)
-      })
-      @response_references['valid'].should eq({
-        'reference' => 'valid',
-        'data' => @blank_account.merge(@account2_data).merge('created_at' => @response_references['valid']['data']['created_at'],
-                                                             'updated_at' => @response_references['valid']['data']['updated_at'])
-      })
-    end
-  end
-  describe "failing to create a record with rollbackAll as false" do
-    before do
-      @account1_data = { 'asset' => true }
-      @account2_data = { 'name' => 'New Account', 'asset' => true }
-      post :bulk, rollbackAll: "false", body: [
-        { reference: 'failed creation', action: :create, type: :account, data: @account1_data },
-        { reference: 'actual created',  action: :create, type: :account, data: @account2_data }
-      ].to_json
-      @json_response = JSON.parse(response.body)
-      @response_references = @json_response.inject({}){|acc,n| acc[n['reference']] = n ; acc }
+      @response_references = @json_response['responses'].inject({}){|acc,n| acc[n['reference']] = n ; acc }
     end
 
     it "has a response of :multi_status" do
@@ -165,7 +181,7 @@ describe ApiController do
     it "responds with the created record" do
       @response_references['actual created'].should eq({
         'reference' => 'actual created',
-        'data' => JSON.parse(Account.first.to_json())
+        'records' => response_records([ Account.first ])
       })
     end
   end
@@ -176,13 +192,18 @@ describe ApiController do
       AccountEntry.make!
       AccountEntry.make!
 
-      post :bulk, body: [
-        { type: 'BankEntry_v1', action: :read }
+      post :bulk, [
+        { resource: 'BankEntry_v1', action: :read }
       ].to_json
-      response.body.should eq([{
-        data: BankEntry.with_balance.all,
-        associated: AccountEntry.all
-      }].to_json)
+      response.body.should eq({
+        'responses' => [{
+          'records' => response_records(BankEntry.all)
+        }],
+        'records' => {
+          'BankEntry' => records_by_id(BankEntry.with_balance.all),
+          'AccountEntry' => records_by_id(AccountEntry.all)
+        }
+      }.to_json)
     end
 
     it "paginates the response" do
@@ -190,21 +211,31 @@ describe ApiController do
       BankEntry.make!
       AccountEntry.make!
 
-      post :bulk, body: [
-        { type: 'BankEntry_v1', action: :read, limit: 2 }
+      post :bulk, [
+        { resource: 'BankEntry_v1', action: :read, limit: 2 }
       ].to_json
-      response.body.should eq([{
-        'data' => BankEntry.with_balance.limit(2).all,
-        'associated' => [ AccountEntry.last ]
-      }].to_json)
+      response.body.should eq({
+        'responses' => [{
+          'records' => response_records(BankEntry.limit(2).all)
+        }],
+        'records' => {
+          'BankEntry' => records_by_id(BankEntry.with_balance.limit(2).all),
+          'AccountEntry' => records_by_id([ AccountEntry.last ])
+        }
+      }.to_json)
 
-      post :bulk, body: [
-        { type: 'BankEntry_v1', action: :read, limit: 2, offset: 2 }
+      post :bulk, [
+        { resource: 'BankEntry_v1', action: :read, limit: 2, offset: 2 }
       ].to_json
-      response.body.should eq([{
-        data: [ BankEntry.with_balance.last ],
-        associated: [ AccountEntry.first ]
-      }].to_json)
+      response.body.should eq({
+        'responses' => [{
+          'records' => response_records([ BankEntry.last ])
+        }],
+        'records' => {
+          'BankEntry' => records_by_id([ BankEntry.with_balance.last ]),
+          'AccountEntry' => records_by_id([ AccountEntry.first ])
+        }
+      }.to_json)
     end
   end
 
@@ -219,17 +250,22 @@ describe ApiController do
 
       data['notes'] = 'New Note'
 
-      post :bulk, body: [
-        { type: 'BankEntry_v1', action: 'update', reference: 'update bank entry',
+      post :bulk, [
+        { resource: 'BankEntry_v1', action: 'update', reference: 'update bank entry',
           id: bank_entry.id, data: data }
       ].to_json
 
       bank_entry.reload
       bank_entry.notes.should eq('New Note')
-      response.body.should eq([{
-        data: bank_entry,
-        reference: 'update bank entry'
-      }].to_json)
+      response.body.should eq({
+        'responses' => [{
+          reference: 'update bank entry',
+          records: [{ type: 'BankEntry', id: bank_entry.id }]
+        }],
+        'records' => {
+          'BankEntry' => records_by_id([ bank_entry ])
+        }
+      }.to_json)
     end
 
     it "removes account_entries with _destroy attribute" do
@@ -240,8 +276,8 @@ describe ApiController do
 
       data['account_entries_attributes'] = [ { _destroy: true, id: bank_entry.account_entries.first.id } ]
 
-      post :bulk, body: [
-        { type: 'BankEntry_v1', action: 'update', id: bank_entry.id, data: data }
+      post :bulk, [
+        { resource: 'BankEntry_v1', action: 'update', id: bank_entry.id, data: data }
       ].to_json
 
       bank_entry.reload

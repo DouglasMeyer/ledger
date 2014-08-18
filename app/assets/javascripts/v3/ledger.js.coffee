@@ -129,7 +129,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
       reset()
       scope.open() if $parse(amountRemainingCentsExpression)(scope)
 
-  .factory 'Model', ($http, $filter)->
+  .factory 'Model', ($http, $filter, $window)->
     strUnderscore = $filter('underscore')
     underscore = (cObj)->
       return cObj unless angular.isObject(cObj)
@@ -159,38 +159,55 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           cObj[newName] = val
       cObj
 
-    account:
-      read: (opts={})->
-        opts.action = 'read'
-        opts.type = 'account'
+    handleApiResponse = (response)->
+      for type, recordsById of response.data.records
+        for id, record of recordsById
+          all[type][id] = camelize(record)
+      for reference in response.data.responses[0].records
+        all[reference.type][reference.id]
 
-        $http.post('/api', {
-          body: JSON.stringify([ opts ])
-        }).then (response)->
-          camelize(model) for model in response.data[0].data
+    all =
+      Account: {}
+      BankEntry: {}
+      AccountEntry: {}
 
-    bankEntry:
-      read: (opts={})->
-        opts.action = 'read'
-        opts.type = 'BankEntry_v1'
+    Model =
+      account:
+        read: (opts={})->
+          opts.resource = 'Account_v1'
+          opts.action = 'read'
 
-        $http.post('/api', {
-          body: JSON.stringify([ opts ])
-        }).then (response)->
-          camelize(model) for model in response.data[0].data
+          $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
 
-      save: (attrs, opts={})->
-        opts.action = 'update'
-        opts.type = 'bank_entry'
-        opts.id = attrs.id
-        opts.data = underscore(attrs)
-        opts.data.account_entries_attributes = opts.data.account_entries
-        delete opts.data.account_entries
+      bankEntry:
+        read: (opts={})->
+          opts.resource = 'BankEntry_v1'
+          opts.action = 'read'
 
-        $http.post('/api', {
-          body: JSON.stringify([ opts ])
-        }).then (response)->
-          camelize(response.data[0].data)
+          $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
+
+        save: (attrs, opts={})->
+          opts.action = 'update'
+          opts.type = 'bank_entry'
+          opts.id = attrs.id
+          opts.data = underscore(attrs)
+          opts.data.account_entries_attributes = opts.data.account_entries
+          delete opts.data.account_entries
+
+          $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
+    Object.defineProperty Model.account, 'all',
+      get: ->
+        return @_all if @_all?
+        @read().then (all)=>
+          $window.localStorage.setItem('Model.account.all', angular.toJson(all))
+          @_all.splice(0,0, all...)
+        try
+          @_all = angular.fromJson($window.localStorage.getItem('Model.account.all'))
+        @_all ||= []
+      enumerable: true
+      configurable: false
+    window.Model = Model
+    Model
 
   .controller 'EntriesCtrl', ($scope, Model)->
     bankEntryOffset = 0
@@ -204,7 +221,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
     $scope.loadMore()
     $scope.entries = []
-    Model.account.read(limit: 100).then (accounts)-> $scope.accounts = accounts
+    $scope.accounts = Model.account.all
 
     $scope.$on 'addEntry', ->
       today = (new Date).toJSON().slice(0,10)
@@ -212,9 +229,13 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
   .controller 'CalculatorCtrl', ($scope, Model, $filter, $parse)->
     underscore = $filter('underscore')
-    accounts = {}
-    Model.account.read(limit: 1000).then (records)->
-      accounts[underscore(account.name)] = account.balanceCents / 100 for account in records
+
+    calcScope = {}
+    $scope.accounts = Model.account.all
+    $scope.$watchCollection 'accounts', (all)->
+      calcScope = {}
+      return unless all
+      calcScope[underscore(account.name)] = account.balanceCents / 100 for account in all
 
     $scope.toggle = ->
       $scope.showCalc = !$scope.showCalc
@@ -223,7 +244,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
     $scope.$watch 'input', (input)->
       try
         $scope.output = if input
-          $parse(input)(accounts) * 100
+          $parse(input)(calcScope) * 100
         else
           ''
         $scope.form.input.$setValidity('parses', true)
