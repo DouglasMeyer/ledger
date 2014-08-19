@@ -12,21 +12,21 @@
 }
 .table__rows.ng-enter {
   opacity: 0;
-  -webkit-transform: translateX(10px);
+  transform: translateX(10px);
   height: 0;
 }
 .table__rows.ng-enter.ng-enter-active {
   opacity: 1;
-  -webkit-transform: translateX(0);
+  transform: translateX(0);
   height: auto;
 }
 .table__rows.ng-leave {
   opacity: 1;
-  -webkit-transform: translateX(0);
+  transform: translateX(0);
 }
 .table__rows.ng-leave.ng-leave-active {
   opacity: 0;
-  -webkit-transform: translateX(-10px);
+  transform: translateX(-10px);
 }
 
 .table__row {

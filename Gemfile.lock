@@ -83,6 +83,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     Platform (0.4.0)
+    autoprefixer-rails (2.2.0.20140804)
+      execjs
     bourbon (4.0.1)
       sass (~> 3.3)
       thor
@@ -190,6 +192,7 @@ PLATFORMS
 
 DEPENDENCIES
   arel!
+  autoprefixer-rails
   bourbon
   capybara
   coffee-rails!

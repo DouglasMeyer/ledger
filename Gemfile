@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 
 gem 'rails', github: "rails/rails", branch: "4-1-stable"
+gem 'autoprefixer-rails'
 gem 'arel',  github: "rails/arel",  branch: "5-0-stable"
 gem 'pg'
 gem 'sprockets-rails',  github: "rails/sprockets-rails"
