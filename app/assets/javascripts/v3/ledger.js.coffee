@@ -161,76 +161,70 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           cObj[newName] = val
       cObj
 
-    handleApiResponse = (response)->
-      for type, recordsById of response.data.records
-        Model[type].load(data for id, data of recordsById)
-      for reference in response.data.responses[0].records
-        all[reference.type][reference.id]
-
-    all =
-      Account: {}
-      BankEntry: {}
-      AccountEntry: {}
-
     Model =
-      Account:
-        load: (datas)->
-          for data in datas
-            record = (all.Account[data.id] ||= {})
-            record[k] = v for k, v of camelize(data)
-            record
+      get: (id)->
+        @_all ||= {}
+        @_all[id] ||= {}
 
-        read: (opts={})->
-          opts.resource = 'Account_v1'
-          opts.action = 'read'
+      load: (datas)->
+        for data in datas
+          record = @get(data.id)
+          record[k] = v for k, v of camelize(data)
+          record
 
-          $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
+      handleResponse: (response)->
+        for type, recordsById of response.data.records
+          models[type].load(data for id, data of recordsById)
+        for reference in response.data.responses[0].records
+          models[reference.type].get(reference.id)
 
-      BankEntry:
-        load: (datas)->
-          for data in datas
-            record = (all.BankEntry[data.id] ||= {})
-            record[k] = v for k, v of camelize(data)
-            record
+      read: (opts={})->
+        opts.resource = @resource
+        opts.action = 'read'
+        $http
+          .post('/api', JSON.stringify([ opts ]) )
+          .then(@handleResponse)
 
-        read: (opts={})->
-          opts.resource = 'BankEntry_v1'
-          opts.action = 'read'
+      save: (attrs, opts={})->
+        opts.resource = @resource
+        opts.action = if attrs.id? then 'update' else 'create'
+        opts.id = attrs.id
+        opts.data = attrs
+        $http
+          .post('/api', JSON.stringify([ opts ]) )
+          .then(@handleResponse)
 
-          $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
-
-        save: (attrs, opts={})->
-          opts.resource = 'BankEntry_v1'
-          opts.action = 'update'
-
-          opts.id = attrs.id
-          opts.data = underscore(attrs)
-          delete opts.data.balance_cents
-          opts.data.account_entries_attributes = opts.data.account_entries
-          delete opts.data.account_entries
-
-          $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
-
-      AccountEntry:
-        load: (datas)->
-          for data in datas
-            record = (all.AccountEntry[data.id] ||= {})
-            record[k] = v for k, v of camelize(data)
-            record
-
-    Object.defineProperty Model.Account, 'all',
+    Object.defineProperty Model, 'all',
       get: ->
-        return @_all if @_all?
+        return @_getAll if @_getAll?
         @read().then (all)=>
-          $window.localStorage.setItem('Model.Account.all', angular.toJson(all))
-          @_all.splice(0,@all.length, all...)
+          $window.localStorage.setItem("Model.#{@name}.all", angular.toJson(all))
+          @_getAll.splice(0,@_getAll.length, all...)
         try
-          @_all = angular.fromJson($window.localStorage.getItem('Model.Account.all'))
-        @_all ||= []
+          @_getAll = @load(angular.fromJson($window.localStorage.getItem("Model.#{@name}.all")))
+        @_getAll ||= (record for id, record of @_all)
       enumerable: true
       configurable: false
-    window.Model = Model
-    Model
+
+    models =
+      Account: Object.create Model,
+        name: value: 'Account'
+        resource: value: 'Account_v1'
+
+      BankEntry: Object.create Model,
+        name: value: 'BankEntry'
+        resource: value: 'BankEntry_v1'
+
+        save: value: (camelcaseAttrs, opts={})->
+          attrs = underscore(camelcaseAttrs)
+          delete attrs.balance_cents
+          attrs.account_entries_attributes = attrs.account_entries
+          delete attrs.account_entries
+
+          Model.save.call(this, attrs, opts)
+
+      AccountEntry: Object.create Model,
+        name: value: 'AccountEntry'
 
   .controller 'EntriesCtrl', ($scope, Model, $window)->
     bankEntryOffset = 0
