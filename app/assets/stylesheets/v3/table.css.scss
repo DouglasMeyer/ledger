@@ -7,6 +7,28 @@
   box-shadow: 0 0 2px 1px rgba(100, 100, 100, 0.2);
 }
 
+.table__rows.ng-enter, .table__rows.ng-leave {
+  transition: all 0.333s linear;
+}
+.table__rows.ng-enter {
+  opacity: 0;
+  -webkit-transform: translateX(10px);
+  height: 0;
+}
+.table__rows.ng-enter.ng-enter-active {
+  opacity: 1;
+  -webkit-transform: translateX(0);
+  height: auto;
+}
+.table__rows.ng-leave {
+  opacity: 1;
+  -webkit-transform: translateX(0);
+}
+.table__rows.ng-leave.ng-leave-active {
+  opacity: 0;
+  -webkit-transform: translateX(-10px);
+}
+
 .table__row {
   $item_height: 1.4em;
   height: $item_height;

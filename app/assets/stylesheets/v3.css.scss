@@ -19,6 +19,7 @@ input, select, textarea, button, .button, [class^="button--"] {
   color: inherit;
   border: none;
   box-shadow: 0 1px 3px #BBB;
+  text-align: inherit;
   &:focus {
     outline: none;
     box-shadow: 0 1px 3px #66F;

@@ -90,7 +90,8 @@ angular.module('ledger', ['ng', 'ngAnimate'])
       selectAE = (accountEntry)->
         $timeout ->
           index = scope.entry.accountEntries.indexOf(accountEntry)
-          element[0].querySelector(".table__row:nth-child(#{index+2})").querySelector('input, select').select()
+          input = element[0].querySelector(".table__row:nth-child(#{index+2})").querySelector('input, select')
+          input.select() if input
 
       scope.open = ->
         return if scope.isOpen
@@ -123,7 +124,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           ae._destroy = true unless ae.amountCents
         scope.entry.accountEntries = scope.entry.accountEntries.filter (ae)->
           ae.id || (ae.amountCents && ae.accountName)
-        Model.bankEntry.save(scope.entry).then (bankEntries)->
+        Model.BankEntry.save(scope.entry).then (bankEntries)->
           scope.entry = bankEntries[0]
         reset()
 
@@ -162,8 +163,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
     handleApiResponse = (response)->
       for type, recordsById of response.data.records
-        for id, record of recordsById
-          all[type][id] = camelize(record)
+        Model[type].load(data for id, data of recordsById)
       for reference in response.data.responses[0].records
         all[reference.type][reference.id]
 
@@ -173,14 +173,26 @@ angular.module('ledger', ['ng', 'ngAnimate'])
       AccountEntry: {}
 
     Model =
-      account:
+      Account:
+        load: (datas)->
+          for data in datas
+            record = (all.Account[data.id] ||= {})
+            record[k] = v for k, v of camelize(data)
+            record
+
         read: (opts={})->
           opts.resource = 'Account_v1'
           opts.action = 'read'
 
           $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
 
-      bankEntry:
+      BankEntry:
+        load: (datas)->
+          for data in datas
+            record = (all.BankEntry[data.id] ||= {})
+            record[k] = v for k, v of camelize(data)
+            record
+
         read: (opts={})->
           opts.resource = 'BankEntry_v1'
           opts.action = 'read'
@@ -198,14 +210,22 @@ angular.module('ledger', ['ng', 'ngAnimate'])
           delete opts.data.account_entries
 
           $http.post('/api', JSON.stringify([ opts ]) ).then(handleApiResponse)
-    Object.defineProperty Model.account, 'all',
+
+      AccountEntry:
+        load: (datas)->
+          for data in datas
+            record = (all.AccountEntry[data.id] ||= {})
+            record[k] = v for k, v of camelize(data)
+            record
+
+    Object.defineProperty Model.Account, 'all',
       get: ->
         return @_all if @_all?
         @read().then (all)=>
-          $window.localStorage.setItem('Model.account.all', angular.toJson(all))
+          $window.localStorage.setItem('Model.Account.all', angular.toJson(all))
           @_all.splice(0,@all.length, all...)
         try
-          @_all = angular.fromJson($window.localStorage.getItem('Model.account.all'))
+          @_all = angular.fromJson($window.localStorage.getItem('Model.Account.all'))
         @_all ||= []
       enumerable: true
       configurable: false
@@ -217,27 +237,36 @@ angular.module('ledger', ['ng', 'ngAnimate'])
 
     $scope.loadMore = ->
       $scope.isLoadingEntries = true
-      promise = Model.bankEntry.read(limit: 30, offset: bankEntryOffset).then (entries)->
-        $scope.entries.splice($scope.entries.length, 0, entries...)
+      promise = Model.BankEntry.read(limit: 30, offset: bankEntryOffset).then (entries)->
+        newEntries = entries.filter (entry)-> entry not in $scope.entries
+        if $scope.entriesFromLocalStorage
+          $scope.entries.splice(0, 0, newEntries...)
+        else
+          $scope.entries.splice($scope.entries.length, 0, newEntries...)
         delete $scope.isLoadingEntries
         entries
       bankEntryOffset += 30
       promise
 
     try
-      $scope.entries = angular.fromJson($window.localStorage.getItem('EntriesCtrl.entries'))
+      $scope.entries = Model.BankEntry.load(angular.fromJson($window.localStorage.getItem('EntriesCtrl.entries')))
+      $scope.entriesFromLocalStorage = true
     $scope.entries ||= []
     $scope.loadMore().then (entries)->
-      $scope.entries.splice(0, $scope.entries.length, entries...)
       $window.localStorage.setItem('EntriesCtrl.entries', angular.toJson(entries))
-    $scope.accounts = Model.account.all
+      oldEntries = $scope.entries.filter (entry)-> entry not in entries
+      for entry in oldEntries
+        index = $scope.entries.indexOf(entry)
+        $scope.entries.splice(index, 1)
+      delete $scope.entriesFromLocalStorage
+    $scope.accounts = Model.Account.all
 
     $scope.$on 'addEntry', ->
       today = (new Date).toJSON().slice(0,10)
       $scope.entries.unshift({ date: today, accountEntries: [{}] })
 
   .controller 'AccountsCtrl', ($scope, Model)->
-    $scope.accounts = Model.account.all
+    $scope.accounts = Model.Account.all
     $scope.$watchCollection 'accounts | orderBy:"position"', (accounts)->
       $scope.assetCategories = []
       $scope.liabilityCategories = []
@@ -250,7 +279,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
     underscore = $filter('underscore')
 
     calcScope = {}
-    $scope.accounts = Model.account.all
+    $scope.accounts = Model.Account.all
     $scope.$watchCollection 'accounts', (all)->
       calcScope = {}
       return unless all

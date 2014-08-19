@@ -2,15 +2,15 @@
   .icon-plus.is-clickable(ng-click="$broadcast('addEntry')" title="Add Entry")
 
 .table.l-margin-v1.l-margin-h8(ng-controller="EntriesCtrl")
-  %form.EntryItem( name="form"
+  %form.EntryItem.table__rows( name="form"
     ng-repeat="entry in entries"
     ng-click="open()"
-    ng-class="{ 'table__rows is-selected': isOpen }"
+    ng-class="{ 'is-selected': isOpen }"
   )
     .table__row( ng-class="{ 'is-clickable': !isOpen }" )
-      .table__cell--date
-        %span(ng-show="!isOpen || entry.externalId") {{ entry.date }}
-        %input(ng-hide="!isOpen || entry.externalId" type="text" ng-model="entry.date")
+      .table__cell--date(ng-switch="isOpen && !entry.externalId && !entriesFromLocalStorage")
+        %input(ng-switch-when="true" type="text" ng-model="entry.date")
+        %span(ng-switch-when="false") {{ entry.date }}
       .table__cell--summary(ng-class="{ 'l-text-overflow': !isOpen }")
         {{type}}&nbsp;
         %em(ng-model="amountCents" l-currency)
@@ -23,20 +23,29 @@
             %em {{ to | join }}
         %span(ng-show="isOpen")
           \:&nbsp;
-          .table__cell--description
-            %pre(ng-if="entry.externalId") {{entry.description}}
-            %input(ng-if="!entry.externalId" type="text" ng-model="entry.description")
+          .table__cell--description(ng-switch="!entry.externalId && !entriesFromLocalStorage")
+            %input(ng-switch-when="true" type="text" ng-model="entry.description")
+            %pre(ng-switch-when="false") {{entry.description}}
     .table__row( ng-show="isOpen"
       ng-repeat="accountEntry in entry.accountEntries"
     )
-      %input.table__cell--amount.l-text-r( name="amount"
-        ng-model="accountEntry.amountCents" l-currency)
-      %select.table__cell--account( name="account"
-        ng-model="accountEntry.accountName"
-        ng-options="a.name as a.name for a in accounts | orderBy:'name'")
+      .table__cell--amount.l-text-r
+        %input( ng-if="!entriesFromLocalStorage"
+          name="amount"
+          ng-model="accountEntry.amountCents"
+          l-currency)
+        %span( ng-if="entriesFromLocalStorage"
+          ng-model="accountEntry.amountCents"
+          l-currency)
+      .table__cell--account
+        %select( ng-if="!entriesFromLocalStorage"
+          name="account"
+          ng-model="accountEntry.accountName"
+          ng-options="a.name as a.name for a in accounts | orderBy:'name'")
+        %span( ng-if="entriesFromLocalStorage" ) {{accountEntry.accountName}}
     .table__row( ng-show="isOpen" )
       .table__cell.l-text-r
-        %a.button(              ng-show="form.$pristine" href="/v3/bank_entries/{{entry.id}}/edit") distribute
+        %a.button(              ng-show="form.$pristine && !entriesFromLocalStorage" href="/v3/bank_entries/{{entry.id}}/edit") distribute
         %button(                ng-show="form.$pristine" ng-click="close($event)") close
         %button.button--primary(ng-show="form.$dirty"    ng-click="save($event)") save
         %button(                ng-show="form.$dirty"    ng-click="close($event)") cancel
