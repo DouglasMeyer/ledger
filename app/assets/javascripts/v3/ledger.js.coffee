@@ -99,7 +99,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
         scope.stashedEntry = angular.copy(scope.entry)
         watchAEs = scope.$watch amountRemainingCentsExpression, (amountRemainingCents)->
           if amountRemainingCents
-            if !scope.form.amount? || scope.form.amount.$dirty || scope.form.account.$dirty
+            if !scope.form.amount? || scope.form.amount.$dirty || scope.form.account.$modelValue
               newAE = amountCents: amountRemainingCents
               scope.entry.accountEntries.push( newAE )
               selectAE(newAE) if scope.entry.accountEntries.length == 1
