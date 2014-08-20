@@ -6,97 +6,6 @@ destroyBlank = (accountEntries) ->
   ).each(->
     $('input:named(_destroy)', this).val('true')
   )
-class window.BankEntriesView
-  constructor: (el)->
-    @el = $(el)
-    @setup(el)
-    view = this
-
-    $('.page-actions .icon-plus').click (e) =>
-      e.preventDefault()
-      $('<li />', { html: $('#new-bank-entry').html() })
-        .prependTo(@el)
-        .find('form')
-          .attr('id', null)
-          .submit(-> view.submitBankEntry(this))
-        .end()
-        .find('input').trigger('change').end()
-        .find('input:visible:first')[0].focus()
-
-    @el.on 'change', 'select, input', ->
-      input = $(this)
-      updatedAccountEntry = $(this).closest('.account-entry')
-      form = updatedAccountEntry.closest('form')
-      amountRemaining = form.data('amount') * 100
-      # Mark the BankEntry as changed
-      form.addClass('changed')
-      # Update amount remaining
-      form.find('input:named(amount)').each ->
-        amount = $(this)
-        value = amount.currency()
-        amount.currency(value)
-        amountRemaining = Math.round(amountRemaining - value * 100)
-      blankAccountEntry = form.find('.account-entry').filter(->
-        $('select:named(account_name)', this).val() == '' && this != updatedAccountEntry[0]
-      ).last()
-      if amountRemaining != 0
-        if blankAccountEntry.length == 0
-          lastAccountEntry = form.find('.account-entry:last')
-          html = lastAccountEntry.get(0).outerHTML
-            .replace(/([\[_])\d+([\]_])/g, '$1'+(new Date).getTime()+'$2')
-          blankAccountEntry = lastAccountEntry.after(html).next()
-        else
-          amountRemaining = Math.round(amountRemaining + blankAccountEntry.find('input:named(amount)').currency() * 100)
-        blankAccountEntry.find('input:named(amount)').currency(amountRemaining / 100)
-        blankAccountEntry.find('select:named(account_name)').val(null)
-
-    # Handle cancel
-    this.el.on 'click', '.cancel', (e) ->
-      e.preventDefault()
-      form = $(this).closest('form')
-      bankEntry = form.closest('li')
-      if form.hasClass('new_bank_entry')
-        bankEntry.remove()
-      else
-        bankEntry.load form.attr('action'), ->
-          view.setup(this)
-
-    # Highlight the account entry
-    $('.bank-entries')
-      .on('focus', 'select, input, a', ->
-        $(this).closest('li').addClass('focus')
-      )
-      .on('blur', 'select, input, a', ->
-        $(this).closest('li').removeClass('focus')
-      )
-  setup: (el)->
-    view = this
-
-    # Format the amounts
-    $(el).find('input:named(amount)').each ->
-      amount = $(this)
-      amount.currency(amount.currency())
-
-    # Handle form submissions
-    $('form', el).submit -> view.submitBankEntry(this)
-  submitBankEntry: (form)->
-    form = $(form)
-    destroyBlank(form.find('.account-entry'))
-
-    $.ajax
-      url: form.attr('action')
-      data: form.serialize()
-      type: 'POST' # form data should have: _method: 'PUT' / 'POST'
-      context: form
-      complete: (xhr, status) =>
-        li = $(form).closest('li')
-        li.html(xhr.responseText)
-        @setup(li)
-
-    form.closest('li').next('li').find('select:visible, input:visible').first().focus()
-
-    return false
-
 class window.DistributeBankEntryView
   constructor: (el)->
     @el = $(el)
@@ -188,5 +97,4 @@ class window.DistributeBankEntryView
           el.html(xhr.responseText)
 
 jQuery ($)->
-  $('body.bank_entries.index ul.bank-entries').each -> new BankEntriesView(this)
   $('body.bank_entries.edit form.accounts-table').each -> new DistributeBankEntryView(this)
