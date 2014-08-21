@@ -59,7 +59,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
     selectTimeout = undefined
     selectElement = (element, selector)->
       element = element.querySelector(selector) if selector
-      element.select()
+      element?.select()
 
     restrict: 'A'
     link: (scope, element, attrs)->

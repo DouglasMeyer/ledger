@@ -34,7 +34,7 @@
 
       .page-actions
         .page-actions__calculator(ng-controller="CalculatorCtrl")
-          %label.is-clickable(for="calculator" ng-click="toggle()") Calc
+          %label.is-clickable.icon-calculator(for="calculator" ng-click="toggle()")
           %form.dropdown(name="form" ng-show="showCalc")
             %pre.l-text-r(ng-model="output" l-currency)
             %input#calculator.l-text-r(type="text" ng-model="input" name="input")
