@@ -9,6 +9,8 @@ gem 'sprockets-rails',  github: "rails/sprockets-rails"
 gem 'sass-rails',       github: "rails/sass-rails"
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails',     github: "rails/coffee-rails"
+gem 'rack-offline'
+gem 'active_model_serializers'
 
 gem 'haml'
 gem 'simple_form'

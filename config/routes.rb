@@ -1,7 +1,7 @@
 Ledger::Application.routes.draw do
   def self.version(version, default=false, &block)
     namespace version, &block
-    scope(module: version, &block) if default
+    root to: redirect("/#{version}") if default
   end
 
 
@@ -31,6 +31,18 @@ Ledger::Application.routes.draw do
     resources :bank_imports, only: [ :create ]
 
     root :to => 'accounts#index'
+    if Rails.env.production?
+      offline = Rack::Offline.configure :cache_interval => 120 do
+        cache ActionController::Base.helpers.asset_path("normalize.css")
+        cache ActionController::Base.helpers.asset_path("v3.css")
+        cache ActionController::Base.helpers.asset_path("v3.js")
+        cache ActionController::Base.helpers.asset_path("icomoon.svg")
+        cache "/v3"
+        cache "/v3/bank_entries"
+        network "/"
+      end
+      get '/application.manifest' => offline, as: :manifest
+    end
   end
 
   post '/api' => 'api#bulk'
