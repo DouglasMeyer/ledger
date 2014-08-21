@@ -2,10 +2,13 @@
   .icon-plus.is-clickable(ng-click="$broadcast('addEntry')" title="Add Entry")
 
 .table.l-margin-v1.l-margin-h8(ng-controller="EntriesCtrl")
-  %form.EntryItem.table__rows( name="form"
+  %form.table__rows( name="form"
     ng-repeat="entry in entries"
+    ng-controller="EntryCtrl"
     ng-click="open()"
     ng-class="{ 'is-selected': isOpen }"
+    l-select="isOpen"
+    l-select-selector=".table__row:nth-last-child(2) .table__cell--amount input"
   )
     .table__row( ng-class="{ 'is-clickable': !isOpen }" )
       .table__cell--date(ng-switch="isOpen && !entry.externalId && !entriesFromLocalStorage")
@@ -26,14 +29,15 @@
           .table__cell--description(ng-switch="!entry.externalId && !entriesFromLocalStorage")
             %input(ng-switch-when="true" type="text" ng-model="entry.description")
             %pre(ng-switch-when="false") {{entry.description}}
-    .table__row( ng-show="isOpen"
+    .table__row( ng-if="isOpen"
       ng-repeat="accountEntry in entry.accountEntries"
     )
       .table__cell--amount.l-text-r
         %input( ng-if="!entriesFromLocalStorage"
           name="amount"
           ng-model="accountEntry.amountCents"
-          l-currency)
+          l-currency
+        )
         %span( ng-if="entriesFromLocalStorage"
           ng-model="accountEntry.amountCents"
           l-currency)
