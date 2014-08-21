@@ -57,7 +57,13 @@ pre { margin: 0; }
 .is-clickable { cursor: pointer; }
 
 .l-margin-v1 { margin-top: 1em; margin-bottom: 1em; }
-.l-margin-h8 { margin-left: 8em; margin-right: 8em; }
+.l-width-full {
+  margin-left: 8em; margin-right: 8em;
+
+  @media (max-width: 40em) {
+    margin-left: 0.5em; margin-right: 0.5em;
+  }
+}
 
 .l-text-c { text-align: center; }
 .l-text-r { text-align: right; }
