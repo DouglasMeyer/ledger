@@ -10,27 +10,7 @@
 
   %body(class="#{controller_name} #{action_name}" ng-app="ledger")
     .navigation
-      = link_to "Accounts", v3_root_path, class: 'accounts navigation__page'
-      = link_to v3_bank_entries_path, class: 'entries navigation__page' do
-        Entries
-        - needs_distribution_count = BankEntry.needs_distribution.count
-        - if needs_distribution_count > 0
-          %span.count= needs_distribution_count
-      = link_to "Strategies", v3_strategies_path, class: 'strategies navigation__page'
-
-      - bank_import = BankImport.last
-      - ledger_sum = BankEntry.sum(:amount_cents)
-      %small.bank_import(tabindex="0")
-        = currency ledger_sum / 100.0, '', 'span'
-        - if bank_import && ledger_sum != bank_import.balance_cents
-          &nbsp;bank has
-          = currency (ledger_sum - bank_import.balance_cents) / 100.0, '', 'span'
-      .dropdown
-        - if bank_import
-          Last updated:
-          = bank_import.created_at.to_s :long
-        = form_tag v3_bank_imports_path, multipart: true do
-          = file_field_tag :upload
+      .navigation__toggle(tabindex="0") =
 
       .page-actions
         .page-actions__calculator(ng-controller="CalculatorCtrl")
@@ -39,4 +19,30 @@
             %pre.l-text-r(ng-model="output" l-currency)
             %input#calculator.l-text-r(type="text" ng-model="input" name="input")
         = yield :navigation
+
+      .navigation__details
+        = link_to "Accounts", v3_root_path, class: 'accounts navigation__page'
+        = link_to v3_bank_entries_path, class: 'entries navigation__page' do
+          Entries
+          - needs_distribution_count = BankEntry.needs_distribution.count
+          - if needs_distribution_count > 0
+            %span.count= needs_distribution_count
+        = link_to "Strategies", v3_strategies_path, class: 'strategies navigation__page'
+
+        - last_import = BankImport.last
+        .bank_import(tabindex="0")
+          %small upload
+          .bank_import__details
+            - if last_import
+              %div last updated: #{last_import.created_at.to_s :long}
+              - ledger_sum = BankEntry.sum(:amount_cents)
+              - bank_delta = last_import.balance_cents - ledger_sum
+              - unless bank_delta.zero?
+                %div
+                  bank has
+                  = "+" if bank_delta > 0
+                  = currency bank_delta / 100.0, '', 'span'
+                  &nbsp;than ledger
+            = form_tag v3_bank_imports_path, multipart: true do
+              = file_field_tag :upload
     = yield

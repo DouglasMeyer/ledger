@@ -1,5 +1,8 @@
 @import "bourbon";
 
+// Constants
+$textColor: #444;
+
 // Reset
 * {
   @include box-sizing(border-box);
@@ -10,7 +13,7 @@ body {
   position: relative;
   font-size: medium;
   line-height: 1.2;
-  color: #444;
+  color: $textColor;
 }
 h1, h2, h3 { color: #222; }
 input, select, textarea, button, .button, [class^="button--"] {
@@ -57,6 +60,8 @@ pre { margin: 0; }
 .is-clickable { cursor: pointer; }
 
 .l-margin-v1 { margin-top: 1em; margin-bottom: 1em; }
+.l-margin-l-24 { margin-left: -24em; }
+.l-margin-t2_5 { margin-top: 2.5em; }
 .l-width-full {
   margin-left: 8em; margin-right: 8em;
 
@@ -100,6 +105,7 @@ pre { margin: 0; }
 
 .dropdown {
   position: absolute;
+  color: $textColor;
   padding: 0.5rem;
   background-color: white;
   border: 1px solid #888;
@@ -124,6 +130,16 @@ pre { margin: 0; }
     left: $arrow_size;
     border-bottom-color: white;
   }
+
+  &.dropdown--right-arrow {
+    &:before, &:after {
+      left: auto;
+      right: 0.5rem;
+    }
+  }
+
+  * &.dropdown--focus-parent { display: none; }
+  *:focus &.dropdown--focus-parent { display: initial; }
 }
 
 @mixin bank_entry {
@@ -191,6 +207,7 @@ $bank-entry-width: 45em;
 form .actions { clear: both; }
 
 // Layout
+body { padding-top: 2.2rem; }
 .navigation {
   $base_width: 1em + // left-padding
               10em * 3 + // 3 .navigation__page's
@@ -199,44 +216,75 @@ form .actions { clear: both; }
   font-size: 1.1rem;
   height: 2em;
   line-height: 2em;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
   @include linear-gradient(tint(black, 25%), tint(black, 5%));
 
   @media (max-width: $base_width) {
-    height: auto;
-    text-align: center;
+    padding-top: 2em;
   }
 
   &, a {
     color: #CCC;
   }
+  .navigation__toggle {
+    display: none;
+
+    @media (max-width: $base_width) {
+      position: absolute;
+      top: 0; left: 0;
+      display: inline-block;
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      border-right: 1px solid black;
+      z-index: 101;
+
+      &:focus ~ .navigation__details,
+      ~ .navigation__details:hover { display: block; }
+    }
+  }
   .navigation__page {
     display: inline-block;
+    float: left;
     width: 10em;
     position: relative;
     text-align: center;
     border-right: 1px solid black;
 
-    &:first-child {
+    &:first-of-type {
       margin-left: 1em;
       border-left: 1px solid black;
-    }
 
-    @media (max-width: $base_width) {
-      display: block;
-      width: auto;
-      border-right: none;
-
-      &:first-child {
+      @media (max-width: $base_width) {
         margin-left: 0;
         border-left: none;
       }
+    }
+
+    @media (max-width: $base_width) {
+      width: 33%;
+
+      &:last-of-type {
+        border-right: none;
+      }
+    }
+  }
+  @media (max-width: $base_width) {
+    .navigation__details {
+      display: none;
+      background: black;
+      overflow: auto;
     }
   }
   .page-actions {
     float: right;
 
     @media (max-width: $base_width) {
-      border-top: 1px solid black;
+      position: absolute;
+      top: 0; right: 0;
+      z-index: 101;
     }
   }
   .page-actions > * {
@@ -266,50 +314,48 @@ form .actions { clear: both; }
     border-radius: 1.3ex;
     padding: 3px;
   }
-  small {
-    margin-left: 1rem;
+  .bank_import {
+    float: right;
+    margin-right: 1rem;
+    text-align: right;
+    position: relative;
 
-    + .dropdown {
-      display: inline-block;
-      margin-top: 2.1em;
-      margin-left: -20em;
-      color: #111;
-      opacity: 0;
-      visibility: hidden;
-      transition: all linear 0.25s 0.5s;
+    @media (max-width: $base_width) {
+      clear: both;
+      float: none;
+      margin-right: 0;
+      padding: 0 1rem;
 
-      &:before, &:after {
-        left: auto;
-        right: 0.5rem;
-      }
+      small { display: none; }
+    }
 
-      @media (max-width: $base_width) {
-        font-size: 0.8em;
-        margin-top: 0;
-        margin-left: 0;
-        color: inherit;
-        background-color: transparent;
-        padding: 0;
-        border: none;
-        opacity: 1;
-        visibility: visible;
-        position: relative;
-        &:before, &:after { display: none; }
+    input { width: 100%; }
+  }
+  .bank_import__details {
+    text-align: left;
 
-        input { display: none; }
-      }
+    @media (min-width: $base_width) {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 2rem;
+      padding: 0.5rem;
+      background-color: white;
+      color: $textColor;
+      border: 1px solid #888;
+      border-radius: 0.5rem;
+      z-index: 1000;
+      width: 20rem;
+    }
+    @media (max-width: $base_width) {
+      font-size: 1rem;
     }
   }
-  small:focus + .dropdown,
-  small:hover + .dropdown,
-  .dropdown:hover {
-    visibility: visible;
-    opacity: 1;
-  }
+  .bank_import:focus .bank_import__details,
+  .bank_import__details:hover { display: initial; }
 
   .page-actions__calculator > .dropdown {
     margin-left: -10.5em;
-    color: #444;
 
     &:before, &:after {
       left: auto;
