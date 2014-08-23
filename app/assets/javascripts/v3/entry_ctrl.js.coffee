@@ -8,21 +8,10 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
     $scope.form?.$setPristine()
 
     $scope.amountCents = $scope.entry.amountCents
-    $scope.type = if !$scope.entry.id
-      'New'
-    else if $scope.amountCents == 0
-      'Transfered'
-    else if $scope.amountCents > 0
-      #FIXME: I'm not sure I like how this sounds: Recieved $5.00 to Doug Blow
-      $scope.amountCents = 0
-      'Recieved'
-    else
-      'Spent'
-
     $scope.from = for ae in $scope.entry.accountEntries when ae.amountCents < 0
       ae.accountName
     $scope.to = for ae in $scope.entry.accountEntries when ae.amountCents > 0
-      $scope.amountCents += ae.amountCents
+      $scope.amountCents += ae.amountCents if $scope.entry.amountCents == 0
       ae.accountName
 
     $scope.open() unless $scope.entry.id

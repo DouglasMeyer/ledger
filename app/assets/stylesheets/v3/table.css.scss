@@ -46,8 +46,9 @@
   & > input, & > select { width: 100%; }
 }
 .table__cell--date { width: 6em; }
-.table__cell--summary { left: 7em; right: 0; }
-.table__cell--description { left: 10em; right: 0; }
+.table__cell--summary-amount { left: 7em; width: 5em; }
+.table__cell--summary { left: 12em; right: 0; }
+.table__cell--description { left: 1em; right: 0; }
 .table__cell--controls { width: 4em; right: 0; }
 .table__cell--amount { width: 8em; right: 11em; left: auto; }
 .table__cell--account { width: 10em; right: 0; left: auto; }
