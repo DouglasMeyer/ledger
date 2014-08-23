@@ -133,6 +133,11 @@ private
       { records: records, associated: account_entries }
     end
 
+    def self.create(command)
+      record = ::BankEntry.create!(command['data'])
+      { records: [ record ] }
+    end
+
     def self.update(command)
       record = ::BankEntry.find(command['id'])
       record.update!(command['data'])

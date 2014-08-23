@@ -293,4 +293,36 @@ describe ApiController do
       bank_entry.account_entries.should eq([])
     end
   end
+
+  describe "BankEntry_v1.create" do
+    it "creates bank_entry and associated account_entries" do
+      Account.make! name: 'Benevolence'
+      Account.make! name: 'Fun Money'
+      data = {
+        date: '2014-08-23',
+        amount_cents: 0,
+        description: '',
+        account_entries_attributes: [
+          { account_name: 'Benevolence', amount_cents: -100_00 },
+          { account_name: 'Fun Money',   amount_cents:  100_00 }
+        ]
+      }
+
+      post :bulk, [
+        { resource: 'BankEntry_v1', action: 'create', reference: 'create bank entry',
+          data: data }
+      ].to_json
+
+      bank_entry = BankEntry.last
+      response.body.should eq({
+        'responses' => [{
+          reference: 'create bank entry',
+          records: [{ type: 'BankEntry', id: bank_entry.id }]
+        }],
+        'records' => {
+          'BankEntry' => records_by_id([ bank_entry ])
+        }
+      }.to_json)
+    end
+  end
 end
