@@ -29,4 +29,4 @@ angular.module('ledger').controller 'EntriesCtrl', ($scope, Model, $window)->
 
   $scope.$on 'addEntry', ->
     today = (new Date).toJSON().slice(0,10)
-    $scope.entries.unshift({ date: today, amountCents: 0, description: '', accountEntries: [{}] })
+    $scope.entries.unshift({ date: today, amountCents: 0, accountEntries: [{}] })

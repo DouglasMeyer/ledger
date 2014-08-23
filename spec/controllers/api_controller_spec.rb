@@ -301,7 +301,6 @@ describe ApiController do
       data = {
         date: '2014-08-23',
         amount_cents: 0,
-        description: '',
         account_entries_attributes: [
           { account_name: 'Benevolence', amount_cents: -100_00 },
           { account_name: 'Fun Money',   amount_cents:  100_00 }
