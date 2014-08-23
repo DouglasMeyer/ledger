@@ -58,7 +58,7 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
       ae.id || (ae.amountCents && ae.accountName)
     Model.BankEntry.save($scope.entry).then (bankEntries)->
       $scope.entry = bankEntries[0]
-    reset()
+      reset()
 
   reset()
   $scope.open() if $parse(amountRemainingCentsExpression)($scope)
