@@ -11,7 +11,7 @@
     l-select-selector=".table__row:nth-last-child(2) .table__cell--amount input"
   )
     .table__row( ng-class="{ 'is-clickable': !isOpen }" )
-      .table__cell--date(ng-switch="isOpen && !entry.externalId && !entriesFromLocalStorage")
+      .table__cell--date(ng-switch="isOpen && !entry.externalId && isEditable()")
         %input(ng-switch-when="true" type="text" ng-model="entry.date")
         %span(ng-switch-when="false") {{ entry.date }}
       .table__cell--summary(ng-class="{ 'l-text-overflow': !isOpen }")
@@ -26,33 +26,34 @@
             %em {{ to | join }}
         %span(ng-show="isOpen")
           \:&nbsp;
-          .table__cell--description(ng-switch="!entry.externalId && !entriesFromLocalStorage")
+          .table__cell--description(ng-switch="!entry.externalId && isEditable()")
             %input(ng-switch-when="true" type="text" ng-model="entry.description")
             %pre(ng-switch-when="false") {{entry.description}}
     .table__row( ng-if="isOpen"
       ng-repeat="accountEntry in entry.accountEntries"
     )
       .table__cell--amount.l-text-r
-        %input( ng-if="!entriesFromLocalStorage"
+        %input( ng-if="isEditable()"
           name="amount"
           ng-model="accountEntry.amountCents"
           l-currency
         )
-        %span( ng-if="entriesFromLocalStorage"
+        %span( ng-if="!isEditable()"
           ng-model="accountEntry.amountCents"
           l-currency)
       .table__cell--account
-        %select( ng-if="!entriesFromLocalStorage"
+        %select( ng-if="isEditable()"
           name="account"
           ng-model="accountEntry.accountName"
           ng-options="a.name as a.name for a in accounts | orderBy:'name'")
-        %span( ng-if="entriesFromLocalStorage" ) {{accountEntry.accountName}}
+        %span( ng-if="!isEditable()" ) {{accountEntry.accountName}}
     .table__row( ng-show="isOpen" )
       .table__cell.l-text-r
-        %a.button(              ng-show="form.$pristine && !entriesFromLocalStorage" href="/v3/bank_entries/{{entry.id}}/edit") distribute
-        %button(                ng-show="form.$pristine" ng-click="close($event)") close
-        %button.button--primary(ng-show="form.$dirty"    ng-click="save($event)") save
-        %button(                ng-show="form.$dirty"    ng-click="close($event)") cancel
+        %a.button(              ng-show="form.$pristine && isEditable()" href="/v3/bank_entries/{{entry.id}}/edit") distribute
+        %button(                ng-show="form.$pristine"         ng-click="close($event)") close
+        %button.button--primary(ng-show="form.$dirty && !saving" ng-click="save($event)") save
+        %button(                ng-show="form.$dirty && !saving" ng-click="close($event)") cancel
+        %span(                  ng-show="saving") saving...
   .table__row
     .table__cell.l-text-c(ng-show="isLoadingEntries") Loading ...
     .table__cell.l-text-r

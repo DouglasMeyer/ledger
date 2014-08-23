@@ -27,6 +27,8 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
 
     $scope.open() unless $scope.entry.id
 
+  $scope.isEditable = -> !$scope.entriesFromLocalStorage && !$scope.saving
+
   $scope.open = ->
     return if $scope.isOpen
     $scope.isOpen = true
@@ -57,8 +59,10 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
     $scope.entry.accountEntries = $scope.entry.accountEntries.filter (ae)->
       ae.id || (ae.amountCents && ae.accountName)
     Model.BankEntry.save($scope.entry).then (bankEntries)->
+      delete $scope.saving
       $scope.entry = bankEntries[0]
       reset()
+    $scope.saving = true
 
   reset()
   $scope.open() if $parse(amountRemainingCentsExpression)($scope)
