@@ -240,9 +240,6 @@ body { padding-top: 2.2rem; }
       text-align: center;
       border-right: 1px solid black;
       z-index: 101;
-
-      &:focus ~ .navigation__details,
-      ~ .navigation__details:hover { display: block; }
     }
   }
   .navigation__page {
@@ -276,6 +273,8 @@ body { padding-top: 2.2rem; }
       display: none;
       background: black;
       overflow: auto;
+
+      &.is-open { display: block; }
     }
   }
   .page-actions {

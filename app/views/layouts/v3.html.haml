@@ -9,8 +9,8 @@
     %meta(name="google" value="notranslate")
 
   %body(class="#{controller_name} #{action_name}" ng-app="ledger")
-    .navigation
-      .navigation__toggle(tabindex="0") =
+    .navigation(ng-controller="NavigationCtrl")
+      .navigation__toggle(ng-click="toggle()") =
 
       .page-actions
         .page-actions__calculator(ng-controller="CalculatorCtrl")
@@ -20,7 +20,7 @@
             %input#calculator.l-text-r(type="text" ng-model="input" name="input")
         = yield :navigation
 
-      .navigation__details
+      .navigation__details(ng-class="{ 'is-open': showNav }")
         = link_to "Accounts", v3_root_path, class: 'accounts navigation__page'
         = link_to v3_bank_entries_path, class: 'entries navigation__page' do
           Entries
