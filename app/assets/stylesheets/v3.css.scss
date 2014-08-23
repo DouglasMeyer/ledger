@@ -78,6 +78,10 @@ pre { margin: 0; }
   text-overflow: ellipsis;
 }
 
+.balance {
+  &.is-negative { color: red; }
+}
+
 .currency {
   text-align: right;
   &.negative { color: red; }

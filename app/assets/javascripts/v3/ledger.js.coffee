@@ -24,7 +24,7 @@ angular.module('ledger', ['ng', 'ngAnimate'])
       return unless ngModel
 
       updateClass = (value) ->
-        element.toggleClass 's-negative', (value < 0)
+        element.toggleClass 'is-negative', (value < 0)
 
       formatter = (value) ->
         updateClass value
