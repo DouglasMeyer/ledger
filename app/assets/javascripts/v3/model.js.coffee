@@ -64,12 +64,14 @@ angular.module('ledger').factory 'Model', ($http, $filter, $window)->
   Object.defineProperty Model, 'all',
     get: ->
       return @_getAll if @_getAll?
-      @read().then (all)=>
+      promise = @read().then (all)=>
         $window.localStorage.setItem("Model.#{@name}.all", angular.toJson(all))
         @_getAll.splice(0,@_getAll.length, all...)
       try
         @_getAll = @load(angular.fromJson($window.localStorage.getItem("Model.#{@name}.all")))
       @_getAll ||= (record for id, record of @_all)
+      @_getAll.promise = promise
+      @_getAll
     enumerable: true
     configurable: false
 

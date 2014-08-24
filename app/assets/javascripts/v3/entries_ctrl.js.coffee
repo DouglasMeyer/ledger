@@ -11,6 +11,9 @@ angular.module('ledger').controller 'EntriesCtrl', ($scope, Model, $window)->
         $scope.entries.splice($scope.entries.length, 0, newEntries...)
       delete $scope.isLoadingEntries
       entries
+    $scope.$root.$emit 'status',
+      text: 'loading'
+      promise: promise
     bankEntryOffset += 30
     promise
 

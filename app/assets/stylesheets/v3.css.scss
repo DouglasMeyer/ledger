@@ -281,6 +281,15 @@ body { padding-top: 2.2rem; }
       &.is-open { display: block; }
     }
   }
+  .navigation__status {
+    text-align: center;
+
+    @media (max-width: $base_width) {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+    }
+  }
   .page-actions {
     float: right;
 
@@ -352,6 +361,8 @@ body { padding-top: 2.2rem; }
     }
     @media (max-width: $base_width) {
       font-size: 1rem;
+
+      form { display: none; }
     }
   }
   .bank_import:focus .bank_import__details,

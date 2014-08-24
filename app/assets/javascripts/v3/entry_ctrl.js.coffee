@@ -47,10 +47,13 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
       ae._destroy = true unless ae.amountCents
     $scope.entry.accountEntries = $scope.entry.accountEntries.filter (ae)->
       ae.id || (ae.amountCents && ae.accountName)
-    Model.BankEntry.save($scope.entry).then (bankEntries)->
+    promise = Model.BankEntry.save($scope.entry).then (bankEntries)->
       delete $scope.saving
       $scope.entry = bankEntries[0]
       reset()
+    $scope.$root.$emit 'status',
+      text: 'saving'
+      promise: promise
     $scope.saving = true
 
   reset()

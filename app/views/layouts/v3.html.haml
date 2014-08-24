@@ -45,4 +45,6 @@
                   &nbsp;than ledger
             = form_tag v3_bank_imports_path, multipart: true do
               = file_field_tag :upload
+
+      .navigation__status(ng-controller="StatusCtrl") {{text}}
     = yield
