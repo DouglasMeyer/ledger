@@ -60,4 +60,4 @@ jQuery ($) ->
 
   $('form input:visible, form select:visible').first().focus().select()
 
-  $('.bank_import + .dropdown input[type="file"]').change -> this.form.submit()
+  $('.bank_import input[type="file"]').change -> this.form.submit()
