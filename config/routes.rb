@@ -36,7 +36,7 @@ Ledger::Application.routes.draw do
         cache ActionController::Base.helpers.asset_path("normalize.css")
         cache ActionController::Base.helpers.asset_path("v3.css")
         cache ActionController::Base.helpers.asset_path("v3.js")
-        cache ActionController::Base.helpers.asset_path("icomoon.svg")
+        cache ActionController::Base.helpers.asset_path("icomoon.ttf")
         cache "/v3"
         cache "/v3/bank_entries"
         network "/api"
