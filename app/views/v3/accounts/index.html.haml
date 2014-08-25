@@ -4,7 +4,7 @@
 .accounts-table(ng-controller="AccountsCtrl")
   .assets-list
     %h2 Assets
-    %ul
+    %ul(ng-cloak)
       %li(ng-repeat-start="category in assetCategories")
         %h3 {{category}}
       %li(ng-repeat-end ng-repeat="account in accounts | filter:{deletedAt: null, asset: true, category: category} | orderBy:'position'")
@@ -12,7 +12,7 @@
 
   .liabilities-list
     %h2 Liabilities
-    %ul
+    %ul(ng-cloak)
       %li(ng-repeat-start="category in liabilityCategories")
         %h3 {{category}}
       %li(ng-repeat-end ng-repeat="account in accounts | filter:{deletedAt: null, asset: false, category: category} | orderBy:'position'")

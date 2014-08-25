@@ -15,7 +15,7 @@
       .page-actions
         .page-actions__calculator(ng-controller="CalculatorCtrl")
           %label.is-clickable.icon-calculator(for="calculator" ng-click="toggle()")
-          %form.dropdown(name="form" ng-show="showCalc")
+          %form.dropdown(name="form" ng-cloak ng-show="showCalc")
             %pre.l-text-r(ng-model="output" l-currency)
             %input#calculator.l-text-r(type="text" ng-model="input" name="input")
         = yield :navigation
@@ -46,5 +46,11 @@
             = form_tag v3_bank_imports_path, multipart: true do
               = file_field_tag :upload
 
-      .navigation__status(ng-controller="StatusCtrl") {{text}}
+      .navigation__status.list( ng-cloak
+        ng-controller="StatusCtrl"
+      )
+        %span.list__item( ng-repeat="status in statuses"
+          ng-click="status.fn && status.fn()"
+          ng-class="{ 'is-clickable': status.fn }"
+        ) {{status.text}}
     = yield

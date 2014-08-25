@@ -1,3 +1,4 @@
+@import "../javascripts/bower_components/angular/angular-csp";
 @import "bourbon";
 
 // Constants
@@ -390,4 +391,5 @@ body { padding-top: 2.2rem; }
 @import "./v3/strategies.css.scss";
 
 @import "./icon-fonts.css.scss";
+@import "./v3/list.css.scss";
 @import "./v3/table.css.scss";

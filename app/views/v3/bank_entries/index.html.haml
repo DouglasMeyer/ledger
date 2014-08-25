@@ -2,7 +2,8 @@
   .icon-plus.is-clickable(ng-click="$root.$broadcast('addEntry')" title="Add Entry")
 
 .table.l-margin-v1.l-width-full(ng-controller="EntriesCtrl")
-  %form.table__rows( name="form"
+  %form.table__rows( ng-cloak
+    name="form"
     ng-repeat="entry in entries"
     ng-controller="EntryCtrl"
     ng-click="open()"

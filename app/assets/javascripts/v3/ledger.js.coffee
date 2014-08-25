@@ -3,6 +3,28 @@
 
 angular.module('ledger', ['ng', 'ngAnimate'])
 
+  .run ($rootScope, $window, $q)->
+    deferred = undefined
+    $window.applicationCache.addEventListener('downloading', (event)->
+      deferred = $q.defer()
+      $rootScope.$apply ->
+        $rootScope.$emit 'status',
+          text: 'updating'
+          promise: deferred.promise
+    , false)
+    $window.applicationCache.addEventListener('error', (event)->
+      $rootScope.$apply ->
+        deferred?.reject('error')
+    , false)
+    $window.applicationCache.addEventListener('updateready', (event)->
+      $rootScope.$apply ->
+        deferred.resolve('updateready')
+        $rootScope.$emit 'status',
+          text: 'Refresh for update'
+          fn: -> $window.location.reload()
+    , false)
+
+
   .filter 'join', ->
     (input)-> input?.join(', ')
 

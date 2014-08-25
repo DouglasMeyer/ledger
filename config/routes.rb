@@ -39,7 +39,7 @@ Ledger::Application.routes.draw do
         cache ActionController::Base.helpers.asset_path("icomoon.svg")
         cache "/v3"
         cache "/v3/bank_entries"
-        network "/"
+        network "/api"
       end
       get '/application.manifest' => offline, as: :manifest
     end
