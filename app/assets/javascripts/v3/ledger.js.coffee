@@ -12,26 +12,21 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       .when('/entries',  templateUrl: 'v3/templates/entries.html')
       .otherwise redirectTo: '/accounts'
 
-  .run ($rootScope, $window, $q)->
+  .run ($rootScope, $window, $q, appCache)->
     deferred = undefined
-    $window.applicationCache.addEventListener('downloading', (event)->
-      deferred = $q.defer()
-      $rootScope.$apply ->
+    appCache
+      .on 'downloading', ->
+        deferred = $q.defer()
         $rootScope.$emit 'status',
           text: 'updating'
           promise: deferred.promise
-    , false)
-    $window.applicationCache.addEventListener('error', (event)->
-      $rootScope.$apply ->
+      .on 'error', ->
         deferred?.reject('error')
-    , false)
-    $window.applicationCache.addEventListener('updateready', (event)->
-      $rootScope.$apply ->
+      .on 'updateready', ->
         deferred.resolve('updateready')
         $rootScope.$emit 'status',
           text: 'Refresh for update'
           fn: -> $window.location.reload()
-    , false)
 
 
   .filter 'join', ->
