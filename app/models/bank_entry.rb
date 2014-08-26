@@ -69,33 +69,6 @@ class BankEntry < ActiveRecord::Base
     self.class.name
   end
 
-  def self.to_csv
-    CSV.generate do |csv|
-      csv << [ 'Date', 'Check #', 'Description', 'Debit', 'Credit', 'Status', 'Balance', 'id', 'Category' ]
-      all.each do |bank_entry|
-        debit = -bank_entry.amount if bank_entry.amount < 0
-        credit = bank_entry.amount if bank_entry.amount > 0
-        account_name = ''
-        if bank_entry.account_entries.length == 1
-          account_entry = bank_entry.account_entries.first
-          debit = -account_entry.amount if account_entry.amount < 0
-          credit = account_entry.amount if account_entry.amount > 0
-          account_name = account_entry.account_name
-        end
-        csv << [ bank_entry.date.strftime('%m/%d/%Y'), bank_entry.notes, bank_entry.description, debit, credit, '', '$', bank_entry.external_id, account_name ]
-        if bank_entry.account_entries.length > 1
-          bank_entry.account_entries.each do |account_entry|
-            csv << [ '', '', '',
-              (-account_entry.amount if account_entry.amount < 0),
-              (account_entry.amount if account_entry.amount > 0),
-              '', '', '', account_entry.account_name
-            ]
-          end
-        end
-      end
-    end
-  end
-
 private
   def fields_from_bank_do_not_update
     return if new_record?

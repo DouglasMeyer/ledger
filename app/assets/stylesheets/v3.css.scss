@@ -73,6 +73,7 @@ pre { margin: 0; }
 
 .l-text-c { text-align: center; }
 .l-text-r { text-align: right; }
+.l-float-r { float: right; }
 .l-text-overflow {
   white-space: nowrap;
   overflow: hidden;
@@ -88,7 +89,7 @@ pre { margin: 0; }
   &.negative { color: red; }
 }
 .accounts-table {
-  .assets-list, .liabilities-list {
+  .accounts-table__assets, .accounts-table__liabilities {
     float: left;
     width: 50%;
     @media (max-width: 35em) { width: 100%; }

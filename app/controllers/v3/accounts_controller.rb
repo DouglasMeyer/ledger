@@ -37,9 +37,6 @@ module V3
       end
     end
 
-    def index
-    end
-
     def show
       @account = Account.find(params[:id])
     end

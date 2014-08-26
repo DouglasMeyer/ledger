@@ -4,5 +4,5 @@
 .down.icon-down-arrow
 .category= f.text_field :category
 .name= f.text_field :name
-= currency f.object.balance, 'balance'
+.l-float-right= currency f.object.balance, 'balance'
 = f.check_box :_destroy, title: "Delete"

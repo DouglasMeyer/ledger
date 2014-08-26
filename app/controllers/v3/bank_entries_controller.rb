@@ -2,17 +2,6 @@ module V3
   class BankEntriesController < BaseController
     before_filter :load_account_names
 
-    def index
-      respond_to do |format|
-        format.html do
-        end
-        format.csv {
-          @bank_entries = BankEntry.includes(account_entries: :account)
-          render content_type: 'text', text: @bank_entries.reverse_order.to_csv
-        }
-      end
-    end
-
     def show
       render bank_entry
     end

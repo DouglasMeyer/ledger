@@ -3,7 +3,7 @@
   = f.fields_for :accounts, f.object.assets.build{|a| a.mark_for_destruction } do |account_f|
     .template(style="display: none;")= render partial: 'edit_account', locals: { f: account_f }
 
-  .assets-list
+  .accounts-table__assets
     %h2
       Assets
       .icon-plus
@@ -11,7 +11,7 @@
       = f.fields_for :accounts, f.object.assets.all do |account_f|
         %li= render partial: 'edit_account', locals: { f: account_f }
 
-  .liabilities-list
+  .accounts-table__liabilities
     %h2
       Liabilities
       .icon-plus

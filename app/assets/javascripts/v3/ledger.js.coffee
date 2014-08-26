@@ -1,7 +1,16 @@
 //= require ../bower_components/angular/angular
 //= require ../bower_components/angular-animate/angular-animate
+//= require ../bower_components/angular-route/angular-route
+//= require angular-rails-templates
+//= require_tree ./templates
 
-angular.module('ledger', ['ng', 'ngAnimate'])
+angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
+
+  .config ($routeProvider)->
+    $routeProvider
+      .when('/accounts', templateUrl: 'v3/templates/accounts.html')
+      .when('/entries',  templateUrl: 'v3/templates/entries.html')
+      .otherwise redirectTo: '/accounts'
 
   .run ($rootScope, $window, $q)->
     deferred = undefined

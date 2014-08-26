@@ -19,10 +19,16 @@
             %pre.l-text-r(ng-model="output" l-currency)
             %input#calculator.l-text-r(type="text" ng-model="input" name="input")
         = yield :navigation
+        %span( ng-cloak
+          ng-repeat="pageAction in pageActions"
+          class="is-clickable icon-{{pageAction.icon}}"
+          title="{{pageAction.text}}"
+          ng-click="pageAction.click()"
+        )
 
       .navigation__details(ng-class="{ 'is-open': showNav }")
-        = link_to "Accounts", v3_root_path, class: 'accounts navigation__page'
-        = link_to v3_bank_entries_path, class: 'entries navigation__page' do
+        = link_to "Accounts", v3_root_path(anchor: '/accounts'), class: 'accounts navigation__page'
+        = link_to v3_root_path(anchor: '/entries'), class: 'entries navigation__page' do
           Entries
           - needs_distribution_count = BankEntry.needs_distribution.count
           - if needs_distribution_count > 0

@@ -1,6 +1,14 @@
 angular.module('ledger').controller 'EntriesCtrl', ($scope, Model, $window)->
   bankEntryOffset = 0
 
+  $scope.$root.pageActions = [ {
+    text: 'Add ENtry'
+    icon: 'plus'
+    click: ->
+      today = (new Date).toJSON().slice(0,10)
+      $scope.entries.unshift({ date: today, amountCents: 0, accountEntries: [{}] })
+  } ]
+
   $scope.loadMore = ->
     $scope.isLoadingEntries = true
     promise = Model.BankEntry.read(limit: 30, offset: bankEntryOffset).then (entries)->
@@ -29,7 +37,3 @@ angular.module('ledger').controller 'EntriesCtrl', ($scope, Model, $window)->
       $scope.entries.splice(index, 1)
     delete $scope.entriesFromLocalStorage
   $scope.accounts = Model.Account.all
-
-  $scope.$on 'addEntry', ->
-    today = (new Date).toJSON().slice(0,10)
-    $scope.entries.unshift({ date: today, amountCents: 0, accountEntries: [{}] })

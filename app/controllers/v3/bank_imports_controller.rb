@@ -3,7 +3,7 @@ module V3
 
     def create
       BankImport.upload! params[:upload]
-      redirect_to v3_bank_entries_path
+      redirect_to v3_root_path(anchor: '/entries')
     end
 
   end

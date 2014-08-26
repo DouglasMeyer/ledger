@@ -1,8 +1,5 @@
-- content_for :navigation do
-  = link_to '', edit_v3_accounts_path, title: 'Edit Accounts', class: 'icon-pencil'
-
 .accounts-table(ng-controller="AccountsCtrl")
-  .assets-list
+  .accounts-table__assets
     %h2 Assets
     %ul(ng-cloak)
       %li(ng-repeat-start="category in assetCategories")
@@ -10,7 +7,7 @@
       %li(ng-repeat-end ng-repeat="account in accounts | filter:{deletedAt: null, asset: true, category: category} | orderBy:'position'")
         %div(ng-include src="'accounts/account.template'")
 
-  .liabilities-list
+  .accounts-table__liabilities
     %h2 Liabilities
     %ul(ng-cloak)
       %li(ng-repeat-start="category in liabilityCategories")
@@ -20,4 +17,4 @@
 
 %script(type="text/ng-template" id="accounts/account.template")
   %a(href="/v3/accounts/{{account.id}}") {{account.name}}
-  %span.balance(ng-model="account.balanceCents" l-currency)
+  %span.balance.l-float-r(ng-model="account.balanceCents" l-currency)
