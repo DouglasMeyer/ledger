@@ -27,8 +27,8 @@
         )
 
       .navigation__details(ng-class="{ 'is-open': showNav }")
-        = link_to "Accounts", v3_root_path(anchor: '/accounts'), class: 'accounts navigation__page'
-        = link_to v3_root_path(anchor: '/entries'), class: 'entries navigation__page' do
+        = link_to "Accounts", v3_root_path(anchor: '/accounts'), 'ng-click' => 'showNav=false', class: 'accounts navigation__page'
+        = link_to v3_root_path(anchor: '/entries'),              'ng-click' => 'showNav=false', class: 'entries navigation__page' do
           Entries
           - needs_distribution_count = BankEntry.needs_distribution.count
           - if needs_distribution_count > 0
