@@ -2,7 +2,7 @@ angular.module('ledger').controller 'EntriesCtrl', ($scope, Model, $window)->
   bankEntryOffset = 0
 
   $scope.$root.pageActions = [ {
-    text: 'Add ENtry'
+    text: 'Add Entry'
     icon: 'plus'
     click: ->
       today = (new Date).toJSON().slice(0,10)
@@ -30,7 +30,8 @@ angular.module('ledger').controller 'EntriesCtrl', ($scope, Model, $window)->
     $scope.entriesFromLocalStorage = true
   $scope.entries ||= []
   $scope.loadMore().then (entries)->
-    $window.localStorage.setItem('EntriesCtrl.entries', angular.toJson(entries))
+    try
+      $window.localStorage.setItem('EntriesCtrl.entries', angular.toJson(entries))
     oldEntries = $scope.entries.filter (entry)-> entry not in entries
     for entry in oldEntries
       index = $scope.entries.indexOf(entry)

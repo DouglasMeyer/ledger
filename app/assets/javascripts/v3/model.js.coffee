@@ -65,7 +65,8 @@ angular.module('ledger').factory 'Model', ($http, $filter, $window)->
     get: ->
       return @_getAll if @_getAll?
       promise = @read().then (all)=>
-        $window.localStorage.setItem("Model.#{@name}.all", angular.toJson(all))
+        try
+          $window.localStorage.setItem("Model.#{@name}.all", angular.toJson(all))
         @_getAll.splice(0,@_getAll.length, all...)
       try
         @_getAll = @load(angular.fromJson($window.localStorage.getItem("Model.#{@name}.all")))
