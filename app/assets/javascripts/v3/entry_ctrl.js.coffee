@@ -16,7 +16,7 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
 
     $scope.open() unless $scope.entry.id
 
-  $scope.isEditable = -> !$scope.entriesFromLocalStorage && !$scope.saving
+  $scope.isEditable = -> !$scope.entries.isFromLocalStorage && !$scope.saving
 
   $scope.open = ->
     return if $scope.isOpen

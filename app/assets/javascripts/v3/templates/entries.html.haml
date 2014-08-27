@@ -1,7 +1,7 @@
 .table.l-margin-v1.l-width-full(ng-controller="EntriesCtrl")
   %form.table__rows( ng-cloak
     name="form"
-    ng-repeat="entry in entries"
+    ng-repeat="entry in entries | orderBy:['-data','-id']"
     ng-controller="EntryCtrl"
     ng-click="open()"
     ng-class="{ 'is-selected': isOpen }"

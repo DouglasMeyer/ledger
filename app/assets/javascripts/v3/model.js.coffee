@@ -1,4 +1,4 @@
-angular.module('ledger').factory 'Model', ($http, $filter, $window)->
+angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
   strUnderscore = $filter('underscore')
   underscore = (cObj)->
     return cObj unless angular.isObject(cObj)
@@ -28,10 +28,50 @@ angular.module('ledger').factory 'Model', ($http, $filter, $window)->
         cObj[newName] = val
     cObj
 
+  requestId = 0
+  requests = []
+  requestTimer = undefined
+  deferreds = {}
+
+  doRequest = (opts)->
+    opts.reference = requestId++
+    deferred = deferreds[opts.reference] = $q.defer()
+    requests.push(opts)
+    $timeout.cancel(requestTimer) if requestTimer
+    requestTimer = $timeout(doRequestNow, 100)
+    deferred.promise
+
+  doRequestNow = ->
+    requestTimer = undefined
+
+    sentRequests = requests
+    sentDeferreds = deferreds
+    requests = []
+    deferreds = {}
+
+    $http
+      .post('/api', JSON.stringify(sentRequests) )
+      .then ({ data: { records, responses }})->
+        for type, recordsById of records
+          models[type].load(data for id, data of recordsById)
+        for response in responses
+          deferred = sentDeferreds[response.reference]
+          records = for reference in response.records
+            models[reference.type].get(reference.id)
+          deferred.resolve(records)
+        sentRequests = sentDeferreds = undefined
+
   Model =
+    init: ->
+      @_allById ||= {}
+      @all ||= []
+
     get: (id)->
-      @_all ||= {}
-      @_all[id] ||= {}
+      unless @_allById[id]?
+        @_allById[id] = {}
+        @all.push(@_allById[id])
+
+      @_allById[id]
 
     load: (datas)->
       for data in datas
@@ -39,42 +79,22 @@ angular.module('ledger').factory 'Model', ($http, $filter, $window)->
         record[k] = v for k, v of camelize(data)
         record
 
-    handleResponse: (response)->
-      for type, recordsById of response.data.records
-        models[type].load(data for id, data of recordsById)
-      for reference in response.data.responses[0].records
-        models[reference.type].get(reference.id)
+    unload: (record)->
+      delete @_allById[record.id]
+      index = @all.indexOf record
+      @all.splice(index, 1) if index?
 
     read: (opts={})->
       opts.resource = @resource
       opts.action = 'read'
-      $http
-        .post('/api', JSON.stringify([ opts ]) )
-        .then(@handleResponse)
+      doRequest(opts)
 
     save: (attrs, opts={})->
       opts.resource = @resource
       opts.action = if attrs.id? then 'update' else 'create'
       opts.id = attrs.id
       opts.data = attrs
-      $http
-        .post('/api', JSON.stringify([ opts ]) )
-        .then(@handleResponse)
-
-  Object.defineProperty Model, 'all',
-    get: ->
-      return @_getAll if @_getAll?
-      promise = @read().then (all)=>
-        try
-          $window.localStorage.setItem("Model.#{@name}.all", angular.toJson(all))
-        @_getAll.splice(0,@_getAll.length, all...)
-      try
-        @_getAll = @load(angular.fromJson($window.localStorage.getItem("Model.#{@name}.all")))
-      @_getAll ||= (record for id, record of @_all)
-      @_getAll.promise = promise
-      @_getAll
-    enumerable: true
-    configurable: false
+      doRequest(opts)
 
   models =
     Account: Object.create Model,
@@ -95,3 +115,8 @@ angular.module('ledger').factory 'Model', ($http, $filter, $window)->
 
     AccountEntry: Object.create Model,
       name: value: 'AccountEntry'
+
+  models.Account.init()
+  models.BankEntry.init()
+  models.AccountEntry.init()
+  models

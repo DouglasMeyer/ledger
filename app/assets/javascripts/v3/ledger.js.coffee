@@ -8,9 +8,45 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
 
   .config ($routeProvider)->
     $routeProvider
-      .when('/accounts', templateUrl: 'v3/templates/accounts.html')
-      .when('/entries',  templateUrl: 'v3/templates/entries.html')
+      .when('/accounts',
+        templateUrl: 'v3/templates/accounts.html'
+        controller: (dataRefresh)-> dataRefresh()
+      )
+      .when('/entries',
+        templateUrl: 'v3/templates/entries.html'
+        controller: (dataRefresh)-> dataRefresh()
+      )
       .otherwise redirectTo: '/accounts'
+
+  .factory 'dataRefresh', (Model, $window, $rootScope, $q)->
+    cachedModels = {}
+    storage = $window.localStorage
+
+    refresh = (name)->
+      unless Model[name].all.length
+        try
+          cachedModels[name] = Model[name].load(angular.fromJson(storage.getItem("Model.#{name}.all")))
+          Model[name].all.isFromLocalStorage = true
+      Model[name].read().then (all)->
+        try
+          storage.setItem("Model.#{name}.all", angular.toJson(all))
+        delete Model[name].all.isFromLocalStorage
+        if cachedModels[name]?
+          for model in cachedModels[name]
+            Model[name].unload(model) unless model in all
+          delete cachedModels[name]
+
+    ->
+      promises = []
+      promises.push(refresh('Account'))
+      promises.push(refresh('BankEntry'))
+
+      #Model.BankEntry.read(needsUpdate: true)
+      #Model.BankImport.read(limit: 1)
+
+      $rootScope.$emit 'status',
+        text: 'loading'
+        promise: $q.all(promises)
 
   .run ($rootScope, $window, $q, appCache)->
     deferred = undefined
