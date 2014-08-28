@@ -1,5 +1,5 @@
 .accounts-table
-  .assets-list
+  .accounts-table__assets
     %h2 Assets
     %ul
       - category = nil
@@ -13,7 +13,7 @@
           = currency account.average_spent(0.5), 'spent'
           = currency account.strategy.try(:value), 'strategy'
 
-  .liabilities-list
+  .accounts-table__liabilities
     %h2 Liabilities
     %ul
       - category = nil
