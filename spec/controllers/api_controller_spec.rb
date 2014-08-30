@@ -272,7 +272,8 @@ describe ApiController do
           records: [{ type: 'BankEntry', id: bank_entry.id }]
         }],
         'records' => {
-          'BankEntry' => records_by_id([ bank_entry ])
+          'BankEntry' => records_by_id([ bank_entry ]),
+          'Account' => records_by_id(Account.all)
         }
       }.to_json)
     end
@@ -319,7 +320,8 @@ describe ApiController do
           records: [{ type: 'BankEntry', id: bank_entry.id }]
         }],
         'records' => {
-          'BankEntry' => records_by_id([ bank_entry ])
+          'BankEntry' => records_by_id([ bank_entry ]),
+          'Account' => records_by_id(Account.all)
         }
       }.to_json)
     end

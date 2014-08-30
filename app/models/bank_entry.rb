@@ -4,6 +4,7 @@ class BankEntry < ActiveRecord::Base
   default_scope { order("bank_entries.date DESC, bank_entries.id DESC") }
   has_many :account_entries, dependent: :restrict_with_error
   accepts_nested_attributes_for :account_entries, allow_destroy: true
+  has_many :accounts, through: :account_entries
 
   validates :external_id, uniqueness: true, allow_nil: true
   validates :date, :amount_cents, :presence => true

@@ -13,7 +13,7 @@
     = check_box_tag 'distribute_as_income', nil, @distribute_as_income
     = label_tag 'distribute_as_income'
 
-  .assets-list
+  .accounts-table__assets
     %h2 Assets
     %ul
       - category = nil
@@ -24,7 +24,7 @@
             %h3= category
         = account_entry_fields f, account
 
-  .liabilities-list
+  .accounts-table__liabilities
     %h2 Liabilities
     %ul
       - category = nil

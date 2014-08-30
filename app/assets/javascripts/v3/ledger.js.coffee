@@ -68,9 +68,12 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
   .filter 'join', ->
     (input)-> input?.join(', ')
 
-  .filter 'sum', ->
+  .filter 'map', ->
     (input, prop)->
-      input = input?.map((e)-> parseInt(e[prop]) || 0) if prop
+      input = input?.map((e)-> parseInt(e[prop]) || 0)
+
+  .filter 'sum', ->
+    (input)->
       input?.reduce ((a, b)-> a+b), 0
 
   .filter 'underscore', ->

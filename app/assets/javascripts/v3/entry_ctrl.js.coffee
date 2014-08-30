@@ -1,6 +1,6 @@
 angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
   watchAEs = undefined
-  amountRemainingCentsExpression = 'entry.amountCents - (entry.accountEntries | sum:"amountCents")'
+  amountRemainingCentsExpression = 'entry.amountCents - (entry.accountEntries | map:"amountCents" | sum)'
 
   reset = ->
     $scope.isOpen = false
