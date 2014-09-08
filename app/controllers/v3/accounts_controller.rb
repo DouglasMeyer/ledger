@@ -48,7 +48,7 @@ module V3
     def update # update all accounts
       @edit_accounts = Accounts.new accounts: accounts
       @edit_accounts.update_attributes! params[:accounts]
-      redirect_to action: :index
+      redirect_to v3_root_path(anchor: '/accounts')
     end
 
   private

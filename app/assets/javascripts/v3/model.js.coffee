@@ -59,6 +59,9 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
           records = for reference in response.records
             models[reference.type].get(reference.id)
           deferred.resolve(records)
+      .catch (err)->
+        deferred.reject(err) for _, deferred of sentDeferreds
+      .finally ->
         sentRequests = sentDeferreds = undefined
 
   Model =
