@@ -145,4 +145,20 @@ private
     end
 
   end
+
+  module ProjectedEntry_v1
+    extend Service
+
+    def self.read(command)
+      records = ::ProjectedEntry
+        .limit(command['limit'] || 25)
+        .offset(command['offset'] || 0)
+      { records: records }
+    end
+
+    def self.create(command)
+      record = ::ProjectedEntry.create!(command['data'])
+      { records: [ record ] }
+    end
+  end
 end

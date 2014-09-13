@@ -36,6 +36,7 @@
           - if needs_distribution_count > 0
             %span.count= needs_distribution_count
         = link_to "Strategies", v3_strategies_path, class: 'strategies navigation__page'
+        = link_to "Forecast",   v3_root_path(anchor: '/forecast'), 'ng-click' => 'showNav=false', class: 'navigation__page'
 
         - last_import = BankImport.last
         .bank_import(tabindex="0")

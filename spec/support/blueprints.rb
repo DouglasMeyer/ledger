@@ -24,3 +24,8 @@ Strategy.blueprint do
   variable { (rand * 200_00).round / 100.0 - 100 }
   notes { "Strategy ##{sn}" }
 end
+
+ProjectedEntry.blueprint do
+  account { Account.make }
+  amount_cents { (rand * 200_00).round / 100.0 - 100 }
+end

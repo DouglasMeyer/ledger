@@ -119,7 +119,12 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
     AccountEntry: Object.create Model,
       name: value: 'AccountEntry'
 
+    ProjectedEntry: Object.create Model,
+      name: value: 'ProjectedEntry'
+      resource: value: 'ProjectedEntry_v1'
+
   models.Account.init()
   models.BankEntry.init()
   models.AccountEntry.init()
+  models.ProjectedEntry.init()
   models

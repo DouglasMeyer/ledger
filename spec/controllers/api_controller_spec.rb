@@ -326,4 +326,80 @@ describe ApiController do
       }.to_json)
     end
   end
+
+  describe "ProjectedEntry_v1.read" do
+    it "responds with collection" do
+      ProjectedEntry.make!
+      ProjectedEntry.make!
+
+      post :bulk, [
+        { resource: 'ProjectedEntry_v1', action: :read }
+      ].to_json
+      response.body.should eq({
+        'responses' => [{
+          'records' => response_records(ProjectedEntry.all)
+        }],
+        'records' => {
+          'ProjectedEntry' => records_by_id(ProjectedEntry.all)
+        }
+      }.to_json)
+    end
+
+    it "paginates the response" do
+      ProjectedEntry.make!
+      ProjectedEntry.make!
+      ProjectedEntry.make!
+
+      post :bulk, [
+        { resource: 'ProjectedEntry_v1', action: :read, limit: 2 }
+      ].to_json
+      response.body.should eq({
+        'responses' => [{
+          'records' => response_records(ProjectedEntry.limit(2).all)
+        }],
+        'records' => {
+          'ProjectedEntry' => records_by_id(ProjectedEntry.limit(2).all)
+        }
+      }.to_json)
+
+      post :bulk, [
+        { resource: 'ProjectedEntry_v1', action: :read, limit: 2, offset: 2 }
+      ].to_json
+      response.body.should eq({
+        'responses' => [{
+          'records' => response_records([ ProjectedEntry.last ])
+        }],
+        'records' => {
+          'ProjectedEntry' => records_by_id([ ProjectedEntry.last ])
+        }
+      }.to_json)
+    end
+  end
+
+  describe "ProjectedEntry_v1.create" do
+    it "creates bank_entry and associated account_entries" do
+      account = Account.make!
+      data = {
+        account_id: account.id,
+        amount: '$100.34',
+        date: 5.days.from_now
+      }
+
+      post :bulk, [
+        { resource: 'ProjectedEntry_v1', action: 'create', reference: 'create projected entry',
+          data: data }
+      ].to_json
+
+      projected_entry = ProjectedEntry.last
+      response.body.should eq({
+        'responses' => [{
+          reference: 'create projected entry',
+          records: [{ type: 'ProjectedEntry', id: projected_entry.id }]
+        }],
+        'records' => {
+          'ProjectedEntry' => records_by_id([ projected_entry ])
+        }
+      }.to_json)
+    end
+  end
 end

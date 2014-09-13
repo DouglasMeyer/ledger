@@ -1,0 +1,10 @@
+.table.l-margin-v1.l-width-full(ng-controller="ForecastCtrl")
+  .table__row( ng-cloak
+    ng-repeat="entry in entries | orderBy:['-date']"
+  )
+    .table__cell {{ entry.date }}
+    .table__cell {{ entry.until_date }}
+    .table__cell {{ entry.account }}
+    .table__cell.l-text-r(ng-model="amountCents" l-currency)
+    .table__cell {{ entry.description }}
+    .table__cell {{ entry.rrule }}

@@ -16,6 +16,9 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
         templateUrl: 'v3/templates/entries.html'
         controller: (dataRefresh)-> dataRefresh()
       )
+      .when('/forecast',
+        templateUrl: 'v3/templates/forecast.html'
+      )
       .otherwise redirectTo: '/accounts'
 
   .factory 'dataRefresh', (Model, $window, $rootScope, $q)->

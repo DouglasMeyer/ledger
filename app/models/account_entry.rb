@@ -38,13 +38,7 @@ class AccountEntry < ActiveRecord::Base
     self.account = Account.where(:name => name).first
   end
 
-  def amount
-    (amount_cents || 0) / 100.0
-  end
-  def amount= val
-    val = val.gsub(/,/, '').to_f if val.is_a? String
-    self.amount_cents = (val * 100).round
-  end
+  dollarify :amount_cents
 
   def as_json(options={})
     (options[:methods] ||= []).push(:account_name, :class_name)
