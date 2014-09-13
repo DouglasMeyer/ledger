@@ -1,0 +1,10 @@
+.table__row.is-clickable
+  .table__cell--date {{ entry.date }}
+  .table__cell--summary-amount.l-text-r(ng-model="amountCents" l-currency)
+  .table__cell--summary.l-text-overflow
+    %span(ng-if="from")
+      &nbsp;from&nbsp;
+      %em {{ from | join }}
+    %span(ng-if="to")
+      &nbsp;to&nbsp;
+      %em {{ to | join }}
