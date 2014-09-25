@@ -29,6 +29,10 @@ group :development, :test do
   gem 'debugger'
   gem 'rspec-rails'
   gem 'test_rails_js', '~> 0.1.2'
+  gem 'capybara-webkit'
+  gem 'site_prism'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 
 group :development do
