@@ -13,8 +13,7 @@ ActiveRecord::Migration.maintain_test_schema!
 
 Capybara.configure do |config|
   config.default_wait_time = 5
-  config.default_driver = ENV['DRIVER'] ? ENV['DRIVER'].to_sym : :webkit
-  config.javascript_driver = ENV['JSDRIVER'] ? ENV['JSDRIVER'].to_sym : :selenium
+  config.default_driver = :webkit
   config.ignore_hidden_elements = false
 end
 
@@ -31,7 +30,26 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = false
 
-  config.before(:all) do
+  config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
+
+  config.around(:each) do |example|
+    # Use really fast transaction strategy for all
+    # examples except `type: :feature` capybara specs
+    DatabaseCleaner.strategy = example.metadata[:type] == :feature ? :truncation : :transaction
+
+    # Start transaction
+    DatabaseCleaner.start
+
+    # Run example
+    example.run
+
+    # Rollback transaction
+    DatabaseCleaner.clean
+
+    # Clear session data
+    Capybara.reset_sessions!
+  end
+
 end

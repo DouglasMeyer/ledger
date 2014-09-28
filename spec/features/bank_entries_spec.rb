@@ -12,20 +12,20 @@ class BankEntriesPage < SitePrism::Page
   end
 end
 
-feature 'bank entries view' do
-  background do
+describe 'bank entries view', type: :feature do
+  before :each do
     30.times { BankEntry.make! }
   end
 
   let(:bank_entries_page){ BankEntriesPage.new }
 
-  scenario "loads bank entries" do
+  it "loads bank entries" do
     bank_entries_page.load
 
     expect(bank_entries_page).to have_bank_entries(count: 25)
   end
 
-  scenario "caches fetched bank entries" do
+  it "caches fetched bank entries" do
     bank_entries_page.load
     expect(bank_entries_page).to have_bank_entries(count: 25)
 

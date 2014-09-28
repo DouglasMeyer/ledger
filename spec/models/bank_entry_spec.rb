@@ -1,15 +1,15 @@
-require File.expand_path '../../spec_helper', __FILE__
+require 'rails_helper'
 
 describe BankEntry do
   describe "#amount" do
     it "is nil when amount_cents is nil" do
-      BankEntry.new.amount.should be_nil
+      expect(BankEntry.new.amount).to be_nil
     end
   end
 
   describe "#amount_remaining" do
     it "is 0 when amount_cents is nil" do
-      BankEntry.new.amount_remaining.should be(0)
+      expect(BankEntry.new.amount_remaining).to be(0)
     end
   end
 
@@ -17,38 +17,38 @@ describe BankEntry do
     it "is true when external_id is present" do
       bank_entry = BankEntry.new
       bank_entry.external_id = 123
-      bank_entry.from_bank?.should be(true)
+      expect(bank_entry).to be_from_bank
     end
     it "is false when external_id is nil" do
-      BankEntry.new.from_bank?.should be(false)
+      expect(BankEntry.new).to_not be_from_bank
     end
 
     it "prevents changes to external_id" do
       be = BankEntry.make!(external_id: 1)
       be.external_id = nil
-      be.valid?.should be(false)
-      be.errors[:external_id].should eq([I18n.t('errors.messages.immutable')])
+      expect(be).to_not be_valid
+      expect(be.errors[:external_id]).to eq([I18n.t('errors.messages.immutable')])
     end
 
     it "prevents changes to date" do
       be = BankEntry.make!(external_id: 1)
       be.date = 1.week.ago
-      be.valid?.should be(false)
-      be.errors[:date].should eq([I18n.t('errors.messages.immutable')])
+      expect(be).to_not be_valid
+      expect(be.errors[:date]).to eq([I18n.t('errors.messages.immutable')])
     end
 
     it "prevents changes to description" do
       be = BankEntry.make!(external_id: 1)
       be.description = "Something new"
-      be.valid?.should be(false)
-      be.errors[:description].should eq([I18n.t('errors.messages.immutable')])
+      expect(be).to_not be_valid
+      expect(be.errors[:description]).to eq([I18n.t('errors.messages.immutable')])
     end
 
     it "prevents changes to amount_cents" do
       be = BankEntry.make!(external_id: 1)
       be.amount_cents = 123_45
-      be.valid?.should be(false)
-      be.errors[:amount_cents].should eq([I18n.t('errors.messages.immutable')])
+      expect(be).to_not be_valid
+      expect(be.errors[:amount_cents]).to eq([I18n.t('errors.messages.immutable')])
     end
 
     it "allows changes when not from_bank?" do
@@ -56,7 +56,7 @@ describe BankEntry do
       be.date = 1.week.ago
       be.description = "Something new"
       be.amount_cents = 123_45
-      be.valid?.should be(true)
+      expect(be).to be_valid
     end
   end
 
@@ -67,12 +67,12 @@ describe BankEntry do
       AccountEntry.make! bank_entry: be, amount_cents:  8_15
 
       be = BankEntry.join_aggrigate_account_entries.select('aggrigate_account_entries.amount_cents').find(be.id)
-      be.amount_cents.should eq(10_12 + 8_15)
+      expect(be.amount_cents).to eq(10_12 + 8_15)
     end
 
     it "includes records without account_entries" do
       be = BankEntry.make!
-      BankEntry.join_aggrigate_account_entries.find(be.id).should_not be_nil
+      expect(BankEntry.join_aggrigate_account_entries.find(be.id)).to_not be_nil
     end
   end
 
@@ -83,7 +83,7 @@ describe BankEntry do
       be = BankEntry.make!
       AccountEntry.make! bank_entry: be, amount_cents: be.amount_cents
 
-      BankEntry.needs_distribution.count.should eq(1)
+      expect(BankEntry.needs_distribution.count).to eq(1)
     end
   end
 
@@ -98,7 +98,7 @@ describe BankEntry do
 
     it "includes balance_cents" do
       bes = bank_entries
-      BankEntry.join_aggrigate_bank_entries.pluck('bank_entries.id, aggrigate_bank_entries.balance_cents').should eq([
+      expect(BankEntry.join_aggrigate_bank_entries.pluck('bank_entries.id, aggrigate_bank_entries.balance_cents')).to eq([
         [ bes[0].id, bes[0].amount_cents ],
         [ bes[1].id, bes[0].amount_cents + bes[1].amount_cents ],
         [ bes[2].id, bes[0].amount_cents + bes[1].amount_cents + bes[2].amount_cents ]
@@ -108,7 +108,7 @@ describe BankEntry do
     describe ".with_balance" do
       it "includes the balance" do
         bes = bank_entries
-        BankEntry.with_balance.map{|be| [be.id, be.balance_cents]}.should eq([
+        expect(BankEntry.with_balance.map{|be| [be.id, be.balance_cents]}).to eq([
           [ bes[0].id, bes[0].amount_cents ],
           [ bes[1].id, bes[0].amount_cents + bes[1].amount_cents ],
           [ bes[2].id, bes[0].amount_cents + bes[1].amount_cents + bes[2].amount_cents ]

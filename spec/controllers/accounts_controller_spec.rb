@@ -1,4 +1,4 @@
-require File.expand_path '../../spec_helper', __FILE__
+require File.expand_path '../../rails_helper', __FILE__
 
 describe V2::AccountsController do
 
@@ -33,8 +33,8 @@ describe V2::AccountsController do
           }
         }
 
-      account1.reload.attributes.should include(account1_attributes)
-      account2.reload.attributes.should include(account2_attributes)
+      expect(account1.reload.attributes).to include(account1_attributes)
+      expect(account2.reload.attributes).to include(account2_attributes)
     end
 
     it "can delete accounts" do
@@ -63,7 +63,7 @@ describe V2::AccountsController do
           }
         }
 
-      Account.where(name: 'Crazy').first.attributes.should include(account_attributes)
+      expect(Account.where(name: 'Crazy').first.attributes).to include(account_attributes)
     end
   end
 
