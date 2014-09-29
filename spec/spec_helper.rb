@@ -4,14 +4,17 @@ RSpec.configure do |config|
   # to individual examples or groups you care about by tagging them with
   # `:focus` metadata. When nothing is tagged with `:focus`, all examples
   # get run.
-  #config.filter_run :focus
+  config.filter_run :focus
   config.run_all_when_everything_filtered = true
 
   # Many RSpec users commonly either run the entire suite or an individual
   # file, and it's useful to allow more verbose output when running an
   # individual spec file.
 
-  # config.profile_examples = 10
+  # Print the 10 slowest examples and example groups at the
+  # end of the spec run, to help surface which specs are running
+  # particularly slow.
+  #config.profile_examples = 10
 
   config.order = :random
 
@@ -27,6 +30,5 @@ RSpec.configure do |config|
 
   config.mock_with :rspec do |mocks|
     mocks.syntax = :expect
-    #mocks.verify_partial_doubles = true
   end
 end

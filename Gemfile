@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
-ruby '2.0.0'
+ruby '2.1.2'
 
-gem 'rails', github: "rails/rails", branch: "4-1-stable"
+gem 'rails', '4.1.5'
 gem 'autoprefixer-rails'
-gem 'arel',  github: "rails/arel",  branch: "5-0-stable"
+#gem 'arel',  github: "rails/arel",  branch: "5-0-stable"
 gem 'pg'
-gem 'sprockets-rails',  github: "rails/sprockets-rails"
-gem 'sass-rails',       github: "rails/sass-rails"
+#gem 'sprockets-rails',  github: "rails/sprockets-rails"
+gem 'sass-rails', '~> 4.0.3'
 gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails',     github: "rails/coffee-rails"
+gem 'coffee-rails', '~> 4.0.0'
 gem 'rack-offline'
 gem 'active_model_serializers'
 gem 'angular-rails-templates'
@@ -26,9 +26,9 @@ gem 'jquery-rails'
 
 group :development, :test do
 #  gem 'ruby-debug19', require:  'ruby-debug'
-  gem 'debugger'
+  #gem 'debugger'
   gem 'rspec-rails'
-  gem 'test_rails_js', '~> 0.1.2'
+  gem 'test_rails_js', github: 'DouglasMeyer/test_rails_js'
   gem 'capybara-webkit'
   gem 'site_prism'
   gem 'selenium-webdriver'
