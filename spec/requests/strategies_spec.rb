@@ -1,4 +1,4 @@
-require File.expand_path '../../spec_helper', __FILE__
+require 'rails_helper'
 
 describe "show" do
 

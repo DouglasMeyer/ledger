@@ -1,4 +1,4 @@
-require File.expand_path '../../rails_helper', __FILE__
+require 'rails_helper'
 
 describe V2::AccountsController do
 

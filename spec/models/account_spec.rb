@@ -1,12 +1,12 @@
-require File.expand_path '../../spec_helper', __FILE__
+require 'rails_helper'
 
 describe Account do
   def add_ae(amount, month, day, from_bank=true)
     AccountEntry.make! account: @account,
                  amount_cents: amount * 100,
                     bank_entry: BankEntry.make!(amount_cents: amount * 100,
-                                                         date: Date.new(2013, month, day),
-                                                  external_id: from_bank ? BankEntry.count : nil)
+                                                        date: Date.new(2013, month, day),
+                                                 external_id: from_bank ? BankEntry.count : nil)
   end
 
   it "can't be deleted with a balance" do

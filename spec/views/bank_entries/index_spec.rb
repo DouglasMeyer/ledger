@@ -1,4 +1,4 @@
-require File.expand_path '../../../spec_helper', __FILE__
+require 'rails_helper'
 
 describe "v2/bank_entries/_bank_entry" do
 

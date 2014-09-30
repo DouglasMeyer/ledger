@@ -1,4 +1,4 @@
-require File.expand_path '../../spec_helper', __FILE__
+require 'rails_helper'
 
 describe V2::BankEntriesController do
 
@@ -30,10 +30,10 @@ describe V2::BankEntriesController do
         }
 
       bank_entry = BankEntry.last
-      bank_entry.date.should eq(Date.civil(2013,2,13))
-      bank_entry.account_entries.count.should eq(2)
-      bank_entry.account_entries.first.amount.should eq(-8)
-      bank_entry.account_entries.first.account_name.should eq('Doug Blow')
+      expect(bank_entry.date).to eq(Date.civil(2013,2,13))
+      expect(bank_entry.account_entries.count).to eq(2)
+      expect(bank_entry.account_entries.first.amount).to eq(-8)
+      expect(bank_entry.account_entries.first.account_name).to eq('Doug Blow')
     end
   end
 
@@ -54,13 +54,13 @@ describe V2::BankEntriesController do
         }
 
       first_ae.reload
-      first_ae.amount.should eq(123.45)
+      expect(first_ae.amount).to eq(123.45)
 
-      AccountEntry.where(id: last_ae.id).count.should eq(0)
+      expect(AccountEntry.where(id: last_ae.id).count).to eq(0)
 
       bank_entry.reload
-      bank_entry.account_entries.count.should eq(2)
-      bank_entry.account_entries.last.amount.should eq(9.99)
+      expect(bank_entry.account_entries.count).to eq(2)
+      expect(bank_entry.account_entries.last.amount).to eq(9.99)
     end
   end
 

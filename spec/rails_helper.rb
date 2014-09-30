@@ -27,33 +27,15 @@ SitePrism.configure do |config|
 end
 
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  #config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
-  config.use_transactional_fixtures = true
-
   config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
   end
 
   config.around(:each) do |example|
-    # Use really fast transaction strategy for all
-    # examples except `type: :feature` capybara specs
-    DatabaseCleaner.strategy = example.metadata[:type] == :feature ? :truncation : :transaction
-
-    # Start transaction
-    DatabaseCleaner.start
-
-    # Run example
-    example.run
-
-    # Rollback transaction
-    DatabaseCleaner.clean
-
-    # Clear session data
+    DatabaseCleaner.cleaning do
+      example.run
+    end
     Capybara.reset_sessions!
   end
 

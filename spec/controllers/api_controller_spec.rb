@@ -1,4 +1,4 @@
-require File.expand_path '../../spec_helper', __FILE__
+require 'rails_helper'
 
 describe ApiController do
   before do
@@ -33,7 +33,7 @@ describe ApiController do
     end
 
     it "responds with the collection" do
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [
           { 'records' => response_records(Account.all) }
         ],
@@ -55,7 +55,7 @@ describe ApiController do
     end
 
     it "responds with the collection matching the query" do
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [
           { 'records' => response_records(Account.where(id: @account.id)) }
         ],
@@ -67,11 +67,11 @@ describe ApiController do
   end
   describe "reading a collection with an invalid query" do
     it "raises a InvalidQuery exception" do
-      lambda {
+      expect(lambda {
         post :bulk, [
           { resource: 'Account_v1', action: :read, query: { blas: 'true' } }
         ].to_json
-      }.should raise_error(ApiController::InvalidQuery, '{"blas"=>"true"} is not a valid query.')
+      }).to raise_error(ApiController::InvalidQuery, '{"blas"=>"true"} is not a valid query.')
     end
   end
   describe "reading a collection with pagination" do
@@ -84,7 +84,7 @@ describe ApiController do
         { resource: 'Account_v1', action: :read, limit: 1, offset: 1 }
       ].to_json
 
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [
           { 'records' => response_records([ @account1 ]) },
           { 'records' => response_records([ @account2 ]) }
@@ -106,10 +106,10 @@ describe ApiController do
     end
 
     it "creates the record" do
-      Account.where(name: 'New Account').first.asset.should eq(true)
+      expect(Account.where(name: 'New Account').first.asset).to eq(true)
     end
     it "responds with the new record and reference" do
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [
           {
             'reference' => 'the new record',
@@ -134,11 +134,11 @@ describe ApiController do
     end
 
     it "updates the record" do
-      account.reload.name.should eq('New Account Name')
-      account.reload.asset.should eq(true)
+      expect(account.reload.name).to eq('New Account Name')
+      expect(account.reload.asset).to eq(true)
     end
     it "responds with the updated record and reference" do
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [
           {
             'reference' => 'updating the record',
@@ -154,11 +154,11 @@ describe ApiController do
 
   describe "attempting to perform an impossible action" do
     it "raises a ImpossibleAction exception" do
-      lambda {
+      expect(lambda {
         post :bulk, [
           { resource: 'Something', action: :something }
         ].to_json
-      }.should raise_error(ApiController::ImpossibleAction, "Something.something isn't an accepted resource/action")
+      }).to raise_error(ApiController::ImpossibleAction, "Something.something isn't an accepted resource/action")
     end
   end
 
@@ -175,20 +175,20 @@ describe ApiController do
     end
 
     it "has a response of :multi_status" do
-      response.status.should eq(207)
+      expect(response.status).to eq(207)
     end
     it "creates only 1 record" do
-      Account.count.should eq(1)
+      expect(Account.count).to eq(1)
     end
     it "responds with invalid record" do
-      @response_references['failed creation'].should eq({
+      expect(@response_references['failed creation']).to eq({
         'reference' => 'failed creation',
         'data' => @blank_account.merge(@account1_data),
         'errors' => { 'name' => ["can't be blank"] }
       })
     end
     it "responds with the created record" do
-      @response_references['actual created'].should eq({
+      expect(@response_references['actual created']).to eq({
         'reference' => 'actual created',
         'records' => response_records([ Account.first ])
       })
@@ -204,7 +204,7 @@ describe ApiController do
       post :bulk, [
         { resource: 'BankEntry_v1', action: :read }
       ].to_json
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [{
           'records' => response_records(BankEntry.all)
         }],
@@ -223,7 +223,7 @@ describe ApiController do
       post :bulk, [
         { resource: 'BankEntry_v1', action: :read, limit: 2 }
       ].to_json
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [{
           'records' => response_records(BankEntry.limit(2).all)
         }],
@@ -236,7 +236,7 @@ describe ApiController do
       post :bulk, [
         { resource: 'BankEntry_v1', action: :read, limit: 2, offset: 2 }
       ].to_json
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [{
           'records' => response_records([ BankEntry.last ])
         }],
@@ -265,8 +265,8 @@ describe ApiController do
       ].to_json
 
       bank_entry.reload
-      bank_entry.notes.should eq('New Note')
-      response.body.should eq({
+      expect(bank_entry.notes).to eq('New Note')
+      expect(response.body).to eq({
         'responses' => [{
           reference: 'update bank entry',
           records: [{ type: 'BankEntry', id: bank_entry.id }]
@@ -291,7 +291,7 @@ describe ApiController do
       ].to_json
 
       bank_entry.reload
-      bank_entry.account_entries.should eq([])
+      expect(bank_entry.account_entries).to eq([])
     end
   end
 
@@ -314,7 +314,7 @@ describe ApiController do
       ].to_json
 
       bank_entry = BankEntry.last
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [{
           reference: 'create bank entry',
           records: [{ type: 'BankEntry', id: bank_entry.id }]
@@ -335,7 +335,7 @@ describe ApiController do
       post :bulk, [
         { resource: 'ProjectedEntry_v1', action: :read }
       ].to_json
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [{
           'records' => response_records(ProjectedEntry.all)
         }],
@@ -353,7 +353,7 @@ describe ApiController do
       post :bulk, [
         { resource: 'ProjectedEntry_v1', action: :read, limit: 2 }
       ].to_json
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [{
           'records' => response_records(ProjectedEntry.limit(2).all)
         }],
@@ -365,7 +365,7 @@ describe ApiController do
       post :bulk, [
         { resource: 'ProjectedEntry_v1', action: :read, limit: 2, offset: 2 }
       ].to_json
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [{
           'records' => response_records([ ProjectedEntry.last ])
         }],
@@ -391,7 +391,7 @@ describe ApiController do
       ].to_json
 
       projected_entry = ProjectedEntry.last
-      response.body.should eq({
+      expect(response.body).to eq({
         'responses' => [{
           reference: 'create projected entry',
           records: [{ type: 'ProjectedEntry', id: projected_entry.id }]
