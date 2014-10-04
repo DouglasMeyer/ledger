@@ -24,7 +24,7 @@ module V3
       if request.xhr?
         render bank_entry
       else
-        redirect_to action: :index
+        redirect_to v3_root_path(anchor: '/entries')
       end
     end
 
