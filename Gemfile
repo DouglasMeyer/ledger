@@ -23,8 +23,7 @@ gem 'jquery-rails'
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
 group :development, :test do
-#  gem 'ruby-debug19', require:  'ruby-debug'
-  #gem 'debugger'
+  gem 'pry'
   gem 'rspec-rails'
   gem 'test_rails_js', github: 'DouglasMeyer/test_rails_js'
   gem 'capybara-webkit'
