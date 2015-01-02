@@ -1,17 +1,5 @@
 require 'rails_helper'
 
-class BankEntriesPage < SitePrism::Page
-  set_url '/v3#/entries'
-  set_url_matcher /\/v3#\/entries/
-
-  elements :bank_entries, ".table__rows"
-  elements :status, ".navigation__status .list__item"
-
-  def reload
-    page.execute_script('location.reload()')
-  end
-end
-
 describe 'bank entries view', type: :feature do
   before :each do
     30.times { BankEntry.make! }
