@@ -12,6 +12,10 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
         templateUrl: 'v3/templates/accounts.html'
         controller: (dataRefresh)-> dataRefresh()
       )
+      .when('/accounts/edit',
+        templateUrl: 'v3/templates/accounts_edit.html'
+        controller: (dataRefresh)-> dataRefresh()
+      )
       .when('/entries',
         templateUrl: 'v3/templates/entries.html'
         controller: (dataRefresh)-> dataRefresh()
@@ -68,8 +72,20 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
           fn: -> $window.location.reload()
 
 
+  .filter 'unique', ->
+    (list)->
+      list.reduce( (p, c)->
+        if p.indexOf(c) < 0
+          p.push(c)
+        p
+      , [])
+
   .filter 'join', ->
     (input)-> input?.join(', ')
+
+  .filter 'pMap', ->
+    (input, prop)->
+      input?.map((e)-> e[prop])
 
   .filter 'map', ->
     (input, prop)->
@@ -136,3 +152,34 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
           $timeout.cancel(selectTimeout) if selectTimeout
           selectTimeout = $timeout ->
             selectElement(element[0], attrs.lSelectSelector)
+
+  .directive 'lDraggable', ($parse)->
+    restrict: 'A'
+    link: (scope, element, attrs)->
+      if attrs.lDraggableHandle
+        element.on 'mouseover', attrs.lDraggableHandle, (event)->
+          element.attr('draggable', 'true')
+
+        element.on 'mouseout', attrs.lDraggableHandle, (event)->
+          element.attr('draggable', 'false')
+      else
+        element.attr('draggable', 'true')
+
+      if dragStart = $parse attrs.lDraggable
+        element.on 'dragstart', (e)->
+          scope.$apply -> dragStart(scope)
+      if dragEnd = $parse attrs.lDraggableEnd
+        element.on 'dragend', (e)->
+          scope.$apply -> dragEnd(scope)
+
+  .directive 'lDroppable', ($parse)->
+    restrict: 'A'
+    link: (scope, element, attrs)->
+      dragover = $parse(attrs.lDroppableOver)
+
+      element.on 'dragover', (e)->
+        e.preventDefault()
+        if dragover
+          scope.$apply ->
+            dragover(scope, { $event: e })
+        false

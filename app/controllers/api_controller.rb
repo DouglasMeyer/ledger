@@ -107,6 +107,12 @@ private
       { records: [ record ] }
     end
 
+    def self.delete(command)
+      record = ::Account.find(command['id'])
+      record.update!({ deleted_at: Time.now })
+      { records: [ record ] }
+    end
+
   private
     def self.query(records, query)
       query.each do |column, val|

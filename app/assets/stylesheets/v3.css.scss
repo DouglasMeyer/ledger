@@ -3,6 +3,7 @@
 
 // Constants
 $textColor: #444;
+$bodyBackground: #F0F0F0;
 
 // Reset
 * {
@@ -15,18 +16,20 @@ body {
   font-size: medium;
   line-height: 1.2;
   color: $textColor;
+  background-color: $bodyBackground;
 }
 h1, h2, h3 { color: #222; }
 input, select, textarea, button, .button, [class^="button--"] {
   display: inline-block;
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.5);
   color: inherit;
   border: none;
-  box-shadow: 0 1px 3px #BBB;
+  box-shadow: 0 1px 2px #ccc inset;
   text-align: inherit;
+  border-radius: 3px;
   &:focus {
     outline: none;
-    box-shadow: 0 1px 3px #66F;
+    box-shadow: 0 0 1px 1px #aaf inset;
   }
 }
 input[type="file"] { border-bottom-width: 0; }
@@ -59,6 +62,9 @@ pre { margin: 0; }
 
 // Elements
 .is-clickable { cursor: pointer; }
+.is-ghost { opacity: 0.3; }
+.is-focused { box-shadow: 0 0 1px 1px #aaf inset; }
+[draggable] { cursor: move; }
 
 .l-margin-v1 { margin-top: 1em; margin-bottom: 1em; }
 .l-margin-l-24 { margin-left: -24em; }
@@ -71,9 +77,25 @@ pre { margin: 0; }
   }
 }
 
+// Layout
+[l-flex] { display: flex; }
+[l-flex~="wrap"] { flex-wrap: wrap; }
+[l-flex~="center"] { justify-content: center; }
+[l-flex~="between"] { justify-content: space-between; }
+@for $i from 1 through 5 {
+  [l-flex-grow="#{$i}"] { flex-grow: #{$i}; }
+  [l-margin~="r#{$i}"] { margin-right: #{$i}rem; }
+  [l-margin~="l#{$i}"] { margin-left: #{$i}rem; }
+  [l-width="#{$i}"] { width: #{$i}rem; }
+}
+[l-align="center"] { text-align: center; }
+[l-align="right"] { text-align: right; }
+
 .l-text-c { text-align: center; }
 .l-text-r { text-align: right; }
 .l-float-r { float: right; }
+.l-float-l { float: left; }
+.l-clear { clear: both; }
 .l-text-overflow {
   white-space: nowrap;
   overflow: hidden;

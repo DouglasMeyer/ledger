@@ -1,0 +1,39 @@
+%div(ng-controller="AccountsEditCtrl" l-flex="wrap center")
+  %div(class="m-accountType"
+    l-margin="{{ accountType == 'Asset' ? 'r2' : '0' }}"
+    ng-repeat="accountType in ['Asset', 'Liability']"
+  )
+    %h2(l-align="center") {{accountType}}
+    %div(class="m-category"
+      ng-repeat="category in accounts | filter:{'asset': accountType == 'Asset'} | orderBy:'position' | pMap:'category' | unique"
+    )
+      %h3(l-flex="")
+        %div(l-width="1")
+        %input(l-flex-grow="1" value="{{category}}" ng-blur="updateCategory($event)")
+      %div(class="m-account"
+        l-flex="between"
+        ng-repeat="account in accounts | filter:{'asset': accountType == 'Asset', 'category': category} | orderBy:'position'"
+        ng-class="{'is-ghost': account.isDeleted, 'is-focused': account == draggingAccount}"
+        l-droppable
+        l-droppable-over="dragOverAccount($event, account)"
+      )
+        %span(l-width="1"
+          l-draggable="dragAccount(account)"
+          l-draggable-end="dropAccount()"
+        ) =
+        %input(l-margin="r1" ng-model="account.name")
+        %span(l-width="5" l-margin="r1" l-align="right" l-currency ng-model="account.balanceCents")
+        %input(l-width="1" type="checkbox" ng-model="account.isDeleted")
+      %div
+        %input(l-margin="l1 r1"
+          placeholder="add account"
+          ng-blur="addNewAccount($event, accountType == 'Asset', category)"
+        )
+    %h3(l-flex="")
+      %input(l-margin="l1" l-flex-grow="1"
+        placeholder="add category"
+        ng-blur="addNewCategory($event, accountType == 'Asset')"
+      )
+
+  .actions
+    %button.button--primary(ng-click="save()") Save

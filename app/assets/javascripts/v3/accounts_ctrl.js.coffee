@@ -4,7 +4,7 @@ angular.module('ledger').controller 'AccountsCtrl', ($scope, Model, $window)->
   $scope.$root.pageActions = [ {
     text: 'Edit Accounts'
     icon: 'pencil'
-    click: -> $window.location = '/v3/accounts/edit'
+    click: -> $window.location = '#/accounts/edit'
   } ]
 
   $scope.$watchCollection 'accounts | orderBy:"position"', (accounts)->

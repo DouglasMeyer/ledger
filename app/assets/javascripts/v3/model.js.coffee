@@ -71,7 +71,7 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
 
     get: (id)->
       unless @_allById[id]?
-        @_allById[id] = {}
+        @_allById[id] = Object.create Model.Instance, @Instance
         @all.push(@_allById[id])
 
       @_allById[id]
@@ -99,10 +99,29 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
       opts.data = attrs
       doRequest(opts)
 
+    destroy: (attrs, opts={})->
+      opts.resource = @resource
+      opts.action = 'delete'
+      opts.id = attrs.id
+      doRequest(opts)
+
+    Instance: {}
+
   models =
     Account: Object.create Model,
       name: value: 'Account'
       resource: value: 'Account_v1'
+
+      Instance: value:
+        isDeleted:
+          get: ->
+            !!(if @deletedAt == null then @_destroy else @deletedAt)
+          set: (val)->
+            if val
+              @_destroy = true
+            else
+              delete @_destroy
+              @deletedAt = null
 
     BankEntry: Object.create Model,
       name: value: 'BankEntry'

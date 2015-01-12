@@ -1,3 +1,5 @@
+# vim: filetype=ruby
+
 source 'https://rubygems.org'
 ruby '2.1.3'
 
@@ -38,6 +40,7 @@ group :development do
   gem 'httparty', require: false
 end
 
-gem 'machinist', group: :test
-
-gem 'sentry-raven', group: :production
+group :test do
+  gem 'machinist'
+  gem 'capybara-screenshot'
+end

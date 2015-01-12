@@ -1,3 +1,17 @@
+.m-accountType input[placeholder],
+.m-category input[placeholder] {
+  opacity: 0;
+  transition: 0.3s 0.3s opacity;
+}
+.m-accountType:hover > h3 > input,
+.m-category:hover > div > input {
+  opacity: 1;
+  transition-delay: 0;
+}
+.m-account {
+  border-bottom: 1px dotted #ddd;
+}
+
 .accounts-table {
   width: 50em;
   @media (max-width: 50em) { width: auto; }
