@@ -109,7 +109,9 @@ private
 
     def self.delete(command)
       record = ::Account.find(command['id'])
-      record.update!({ deleted_at: Time.now })
+      record.update!(command['data'].merge({
+        deleted_at: Time.now
+      }))
       { records: [ record ] }
     end
 

@@ -407,15 +407,26 @@ describe ApiController do
     it "sets the deleted_at column" do
       account = Account.make!
 
-      data = {
-        id: account.id,
-        _destroy: 'true'
-      }
+      data = { id: account.id }
       post :bulk, [
         { resource: 'Account_v1', action: 'delete', id: account.id, refrence: 'delete account', data: data }
       ].to_json
 
       expect(account.reload.deleted_at).to_not be_nil
+    end
+
+    it "updates the record" do
+      account = Account.make!
+
+      data = {
+        id: account.id,
+        position: 12
+      }
+      post :bulk, [
+        { resource: 'Account_v1', action: 'delete', id: account.id, refrence: 'delete account', data: data }
+      ].to_json
+
+      expect(account.reload.position).to eq(12)
     end
   end
 end

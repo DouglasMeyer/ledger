@@ -103,6 +103,7 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
       opts.resource = @resource
       opts.action = 'delete'
       opts.id = attrs.id
+      opts.data = attrs
       doRequest(opts)
 
     Instance: {}

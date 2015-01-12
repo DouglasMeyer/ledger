@@ -90,6 +90,14 @@ pre { margin: 0; }
 }
 [l-align="center"] { text-align: center; }
 [l-align="right"] { text-align: right; }
+[l-fixed="bottom"] {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 0 1px 1px #aaa;
+  background-color: $bodyBackground;
+}
 
 .l-text-c { text-align: center; }
 .l-text-r { text-align: right; }

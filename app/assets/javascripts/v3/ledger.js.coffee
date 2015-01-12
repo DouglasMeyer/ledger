@@ -34,7 +34,9 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
         try
           cachedModels[name] = Model[name].load(angular.fromJson(storage.getItem("Model.#{name}.all")))
           Model[name].all.isFromLocalStorage = true
-      Model[name].read().then (all)->
+      Model[name].promise = Model[name].read()
+      Model[name].promise.then (all)->
+        delete Model[name].promise
         try
           storage.setItem("Model.#{name}.all", angular.toJson(all))
         delete Model[name].all.isFromLocalStorage
