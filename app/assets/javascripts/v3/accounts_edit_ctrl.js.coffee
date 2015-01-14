@@ -31,7 +31,8 @@ angular.module('ledger').controller 'AccountsEditCtrl', ($scope, Model, $window,
         name: account.name
         category: account.category
       if account.isDeleted
-        Model.Account.destroy args
+        if account.id
+          Model.Account.destroy args
       else
         Model.Account.save args
     ).then ->

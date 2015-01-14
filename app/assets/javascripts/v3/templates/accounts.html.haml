@@ -1,20 +1,17 @@
-.accounts-table(ng-controller="AccountsCtrl")
-  .accounts-table__assets
-    %h2 Assets
-    %ul(ng-cloak)
-      %li(ng-repeat-start="category in assetCategories")
-        %h3 {{category}}
-      %li(ng-repeat-end ng-repeat="account in accounts | filter:{deletedAt: null, asset: true, category: category} | orderBy:'position'")
-        %div(ng-include src="'accounts/account.template'")
-
-  .accounts-table__liabilities
-    %h2 Liabilities
-    %ul(ng-cloak)
-      %li(ng-repeat-start="category in liabilityCategories")
-        %h3 {{category}}
-      %li(ng-repeat-end ng-repeat="account in accounts | filter:{deletedAt: null, asset: false, category: category} | orderBy:'position'")
-        %div(ng-include src="'accounts/account.template'")
-
-%script(type="text/ng-template" id="accounts/account.template")
-  %a(href="/v3/accounts/{{account.id}}") {{account.name}}
-  %span.balance.l-float-r(ng-model="account.balanceCents" l-currency)
+%div(ng-controller="AccountsCtrl"
+  l-flex="wrap center"
+)
+  %div(l-margin="{{ accountType == 'Asset' ? 'r2' : '0' }}"
+    ng-repeat="accountType in ['Asset', 'Liability']"
+  )
+    %h2(l-align="center") {{accountType}}
+    %div(class="m-category"
+      ng-repeat="category in accounts | filter:{'deletedAt': null, 'asset': accountType == 'Asset'} | orderBy:'position' | pMap:'category' | unique"
+    )
+      %h4(l-flex class="m-line") {{ category }}
+      %div(class="m-line m-account"
+        l-flex="between"
+        ng-repeat="account in accounts | filter:{'deletedAt': null, 'asset': accountType == 'Asset', 'category': category} | orderBy:'position'"
+      )
+        %a(href="/v3/accounts/{{account.id}}") {{ account.name }}
+        %span(l-width="5" l-margin="r1" l-align="right" l-currency ng-model="account.balanceCents")

@@ -3,7 +3,7 @@
   l-droppable="drop($event)"
 )
   %div(class="m-accountType"
-    l-margin="{{ accountType == 'Asset' ? 'r2' : '0' }}"
+    l-margin="{{ accountType == 'Asset' ? 'r2 b4' : 'b4' }}"
     ng-repeat="accountType in ['Asset', 'Liability']"
     l-droppable
     l-droppable-over="dragOverAccountType($event, accountType == 'Asset')"
@@ -15,13 +15,13 @@
       l-droppable-over="dragOverCategory($event, accountType == 'Asset', category)"
       ng-class="{'is-focused': category == draggingCategory.name && (accountType == 'Asset') == draggingCategory.asset}"
     )
-      %h3(l-flex="")
+      %h4(l-flex class="m-line")
         %span(l-width="1"
           l-draggable="dragCategory(accountType == 'Asset', category)"
           l-draggable-end="drop($event)"
         ) =
         %input(l-flex-grow="1" value="{{category}}" ng-blur="updateCategory($event)")
-      %div(class="m-account"
+      %div(class="m-line m-account"
         l-flex="between"
         ng-repeat="account in accounts | filter:{'asset': accountType == 'Asset', 'category': category} | orderBy:'position'"
         ng-class="{'is-ghost': account.isDeleted, 'is-focused': account == draggingAccount}"
@@ -40,7 +40,7 @@
           placeholder="add account"
           ng-blur="addNewAccount($event, accountType == 'Asset', category)"
         )
-    %h3(l-flex="")
+    %h4(l-flex)
       %input(l-margin="l1" l-flex-grow="1"
         placeholder="add category"
         ng-blur="addNewCategory($event, accountType == 'Asset')"

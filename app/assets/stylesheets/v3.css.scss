@@ -3,7 +3,7 @@
 
 // Constants
 $textColor: #444;
-$bodyBackground: #F0F0F0;
+$bodyBackground: #F3F3F3;
 
 // Reset
 * {
@@ -19,6 +19,14 @@ body {
   background-color: $bodyBackground;
 }
 h1, h2, h3 { color: #222; }
+h4 {
+  font-size: 0.8rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-transform: uppercase;
+  color: #888;
+}
 input, select, textarea, button, .button, [class^="button--"] {
   display: inline-block;
   background-color: rgba(255, 255, 255, 0.5);
@@ -65,6 +73,9 @@ pre { margin: 0; }
 .is-ghost { opacity: 0.3; }
 .is-focused { box-shadow: 0 0 1px 1px #aaf inset; }
 [draggable] { cursor: move; }
+.m-line {
+  border-bottom: 1px dotted #ddd;
+}
 
 .l-margin-v1 { margin-top: 1em; margin-bottom: 1em; }
 .l-margin-l-24 { margin-left: -24em; }
@@ -86,6 +97,8 @@ pre { margin: 0; }
   [l-flex-grow="#{$i}"] { flex-grow: #{$i}; }
   [l-margin~="r#{$i}"] { margin-right: #{$i}rem; }
   [l-margin~="l#{$i}"] { margin-left: #{$i}rem; }
+  [l-margin~="t#{$i}"] { margin-top: #{$i}rem; }
+  [l-margin~="b#{$i}"] { margin-bottom: #{$i}rem; }
   [l-width="#{$i}"] { width: #{$i}rem; }
 }
 [l-align="center"] { text-align: center; }

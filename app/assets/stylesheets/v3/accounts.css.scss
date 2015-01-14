@@ -3,13 +3,10 @@
   opacity: 0;
   transition: 0.3s 0.3s opacity;
 }
-.m-accountType:hover > h3 > input,
+.m-accountType:hover > h4 > input,
 .m-category:hover > div > input {
   opacity: 1;
   transition-delay: 0;
-}
-.m-account {
-  border-bottom: 1px dotted #ddd;
 }
 
 .accounts-table {
