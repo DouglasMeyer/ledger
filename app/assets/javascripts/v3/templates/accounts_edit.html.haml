@@ -1,14 +1,25 @@
-%div(ng-controller="AccountsEditCtrl" l-flex="wrap center")
+%div(ng-controller="AccountsEditCtrl"
+  l-flex="wrap center"
+  l-droppable="drop($event)"
+)
   %div(class="m-accountType"
     l-margin="{{ accountType == 'Asset' ? 'r2' : '0' }}"
     ng-repeat="accountType in ['Asset', 'Liability']"
+    l-droppable
+    l-droppable-over="dragOverAccountType($event, accountType == 'Asset')"
   )
     %h2(l-align="center") {{accountType}}
     %div(class="m-category"
       ng-repeat="category in accounts | filter:{'asset': accountType == 'Asset'} | orderBy:'position' | pMap:'category' | unique"
+      l-droppable
+      l-droppable-over="dragOverCategory($event, accountType == 'Asset', category)"
+      ng-class="{'is-focused': category == draggingCategory.name && (accountType == 'Asset') == draggingCategory.asset}"
     )
       %h3(l-flex="")
-        %div(l-width="1")
+        %span(l-width="1"
+          l-draggable="dragCategory(accountType == 'Asset', category)"
+          l-draggable-end="drop($event)"
+        ) =
         %input(l-flex-grow="1" value="{{category}}" ng-blur="updateCategory($event)")
       %div(class="m-account"
         l-flex="between"
@@ -19,7 +30,7 @@
       )
         %span(l-width="1"
           l-draggable="dragAccount(account)"
-          l-draggable-end="dropAccount()"
+          l-draggable-end="drop($event)"
         ) =
         %input(l-margin="r1" ng-model="account.name")
         %span(l-width="5" l-margin="r1" l-align="right" l-currency ng-model="account.balanceCents")

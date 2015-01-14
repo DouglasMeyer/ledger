@@ -169,19 +169,21 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
 
       if dragStart = $parse attrs.lDraggable
         element.on 'dragstart', (e)->
-          scope.$apply -> dragStart(scope)
+          scope.$apply -> dragStart(scope, { $event: e })
+
       if dragEnd = $parse attrs.lDraggableEnd
         element.on 'dragend', (e)->
-          scope.$apply -> dragEnd(scope)
+          scope.$apply -> dragEnd(scope, { $event: e })
 
   .directive 'lDroppable', ($parse)->
     restrict: 'A'
     link: (scope, element, attrs)->
-      dragover = $parse(attrs.lDroppableOver)
 
-      element.on 'dragover', (e)->
-        e.preventDefault()
-        if dragover
-          scope.$apply ->
-            dragover(scope, { $event: e })
-        false
+      if dragover = $parse(attrs.lDroppableOver)
+        element.on 'dragover', (e)->
+          scope.$apply -> dragover(scope, { $event: e })
+
+      if attrs.lDroppable
+        drop = $parse(attrs.lDroppable)
+        element.on 'drop', (e)->
+          scope.$apply -> drop(scope, { $event: e })

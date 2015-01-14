@@ -69,29 +69,62 @@ angular.module('ledger').controller 'AccountsEditCtrl', ($scope, Model, $window,
     })
     e.target.value = ''
 
-  categoryAccounts = (category)->
-    $scope.accounts.filter((a)-> a.category == category)
+  $scope.drop = (e)->
+    e.stopPropagation()
+    delete $scope.draggingAccount
+    delete $scope.draggingCategory
+    false
 
   $scope.dragAccount = (account)->
     $scope.draggingAccount = account
 
-  $scope.dropAccount = ->
-    delete $scope.draggingAccount
-
   $scope.dragOverAccount = (e, account)->
+    return true unless dAccount = $scope.draggingAccount
+    e.preventDefault()
     e.originalEvent.dataTransfer.dropEffect = 'move'
-    dAccount = $scope.draggingAccount
-    if dAccount && dAccount != account
-      if account.asset != dAccount.asset
-        for a in $scope.accounts when a.asset == dAccount.asset && a.position > dAccount.position
-          a.position--
-        dAccount.asset = account.asset
-        dAccount.position = $scope.accounts.filter((a)-> a.asset == account.asset).length
-      newPosition = account.position
-      for a in $scope.accounts when a.asset == account.asset
-        if newPosition < dAccount.position
-          a.position++ if newPosition <= a.position && a.position < dAccount.position
-        else
-          a.position-- if dAccount.position < a.position && a.position <= newPosition
-      dAccount.position = newPosition
+    if dAccount != account
+      dAccount.asset = account.asset
       dAccount.category = account.category
+      if account.position < dAccount.position
+        dAccount.position = account.position - 0.001
+      else
+        dAccount.position = account.position + 0.001
+      sortAccounts()
+    false
+
+  $scope.dragCategory = (asset, category)->
+    $scope.draggingCategory =
+      asset: asset
+      name: category
+
+  $scope.dragOverCategory = (e, asset, category)->
+    return true unless dCategory = $scope.draggingCategory
+    e.preventDefault()
+    e.originalEvent.dataTransfer.dropEffect = 'move'
+    if dCategory.name != category
+      dCategoryAccounts = $scope.accounts.filter((a)-> a.asset == dCategory.asset && a.category == dCategory.name).sort((a,b)-> a.position - b.position)
+      tCategoryAccounts = $scope.accounts.filter((a)-> a.asset == asset && a.category == category).sort((a,b)-> a.position - b.position)
+
+      a.asset = asset for a in dCategoryAccounts
+      dCategory.asset = asset
+      start = if tCategoryAccounts[0].position < dCategoryAccounts[0].position then tCategoryAccounts[0].position - 1 else tCategoryAccounts[0].position
+      dCategoryAccounts.forEach (a, index)->
+        a.position = start + (index+1) * 0.001
+      sortAccounts()
+    false
+
+  $scope.dragOverAccountType = (e, asset)->
+    return true unless dCategory = $scope.draggingCategory
+    e.preventDefault()
+    e.originalEvent.dataTransfer.dropEffect = 'move'
+    if dCategory.asset != asset
+      dCategoryAccounts = $scope.accounts.filter((a)-> a.asset == dCategory.asset && a.category == dCategory.name).sort((a,b)-> a.position - b.position)
+
+      a.asset = asset for a in dCategoryAccounts
+      dCategory.asset = asset
+
+      start = $scope.accounts.filter((a)-> a.asset == asset).length
+      dCategoryAccounts.forEach (a, index)->
+        a.position = start + (index+1) * 0.001
+      sortAccounts()
+    false
