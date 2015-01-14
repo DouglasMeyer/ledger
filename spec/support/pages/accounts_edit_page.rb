@@ -7,7 +7,7 @@ class AccountsEditPage < SitePrism::Page
 
   class CategorySection < SitePrism::Section
     def name
-      root_element.find('h3 > input').value
+      root_element.find('h4 > input').value
     end
 
     sections :accounts, AccountSection, '.m-account'
@@ -19,7 +19,7 @@ class AccountsEditPage < SitePrism::Page
   end
 
   set_url '/v3#/accounts/edit'
-  set_url_matcher /\/v3#\/accounts\/edit/
+  set_url_matcher /\/v3#\/accounts\/edit$/
 
   sections :asset_categories,     CategorySection, ".m-accountType:nth-child(1) .m-category"
   sections :liability_categories, CategorySection, ".m-accountType:nth-child(2) .m-category"

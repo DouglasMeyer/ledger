@@ -1,13 +1,18 @@
 class AccountsPage < SitePrism::Page
   class AccountTypeLine < SitePrism::Section
     def name
-      root_element.find('h3, a').text
+      account_name = root_element.all('a')
+      if account_name.any?
+        account_name.first.text
+      else
+        root_element.text
+      end
     end
   end
 
   set_url '/v3#/accounts'
-  set_url_matcher /\/v3#\/accounts/
+  set_url_matcher /\/v3#\/accounts$/
 
-  sections :asset_lines,     AccountTypeLine, ".accounts-table__assets li"
-  sections :liability_lines, AccountTypeLine, ".accounts-table__liabilities li"
+  sections :asset_lines,     AccountTypeLine, "[ng-controller='AccountsCtrl'] > *:nth-child(1) .m-line"
+  sections :liability_lines, AccountTypeLine, "[ng-controller='AccountsCtrl'] > *:nth-child(2) .m-line"
 end
