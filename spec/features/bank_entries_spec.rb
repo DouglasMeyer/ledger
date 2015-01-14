@@ -13,12 +13,13 @@ describe 'bank entries view', type: :feature do
     expect(bank_entries_page).to have_bank_entries(count: 25)
   end
 
-  it "caches fetched bank entries" do
-    bank_entries_page.load
-    expect(bank_entries_page).to have_bank_entries(count: 25)
+  #TODO: to test this properly, I would need the server to be down :(
+  #it "caches fetched bank entries" do
+  #  bank_entries_page.load
+  #  expect(bank_entries_page).to have_bank_entries(count: 25)
 
-    bank_entries_page.reload
-    expect(bank_entries_page).to have_status(text: 'loading')
-    expect(bank_entries_page.bank_entries.count).to be(25)
-  end
+  #  bank_entries_page.reload
+  #  expect(bank_entries_page).to have_status(text: 'loading')
+  #  expect(bank_entries_page).to have_bank_entries(count: 25)
+  #end
 end

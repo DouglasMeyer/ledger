@@ -87,6 +87,21 @@ pre { margin: 0; }
     margin-left: 0.5em; margin-right: 0.5em;
   }
 }
+[ng-view] {
+  transition: opacity 0.2s;
+  & + [ng-view] {
+    transition-delay: 0.2s;
+  }
+
+  &.ng-enter,
+  &.ng-leave.ng-leave-active {
+    opacity: 0;
+  }
+  &.ng-enter.ng-enter-active,
+  &.ng-leave {
+    opacity: 1;
+  }
+}
 
 // Layout
 [l-flex] { display: flex; }
