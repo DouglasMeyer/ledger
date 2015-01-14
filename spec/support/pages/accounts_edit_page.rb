@@ -10,7 +10,7 @@ class AccountsEditPage < SitePrism::Page
       root_element.find('h4 > input').value
     end
 
-    sections :accounts, AccountSection, '.m-account'
+    sections :accounts, AccountSection, '[ng-repeat^="account in accounts"]'
 
     def add_account(account_name)
       root_element.find('input[placeholder="add account"]')

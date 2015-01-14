@@ -21,7 +21,7 @@
           l-draggable-end="drop($event)"
         ) =
         %input(l-flex-grow="1" value="{{category}}" ng-blur="updateCategory($event)")
-      %div(class="m-line m-account"
+      %div(class="m-line"
         l-flex="between"
         ng-repeat="account in accounts | filter:{'asset': accountType == 'Asset', 'category': category} | orderBy:'position'"
         ng-class="{'is-ghost': account.isDeleted, 'is-focused': account == draggingAccount}"

@@ -9,7 +9,7 @@
       ng-repeat="category in accounts | filter:{'deletedAt': null, 'asset': accountType == 'Asset'} | orderBy:'position' | pMap:'category' | unique"
     )
       %h4(l-flex class="m-line") {{ category }}
-      %div(class="m-line m-account"
+      %div(class="m-line"
         l-flex="between"
         ng-repeat="account in accounts | filter:{'deletedAt': null, 'asset': accountType == 'Asset', 'category': category} | orderBy:'position'"
       )
