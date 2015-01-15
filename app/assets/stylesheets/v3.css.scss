@@ -123,7 +123,7 @@ pre { margin: 0; }
   text-overflow: ellipsis;
 }
 
-.balance {
+.balance, .m-balance {
   &.is-negative { color: red; }
 }
 

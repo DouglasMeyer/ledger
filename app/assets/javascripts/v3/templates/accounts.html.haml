@@ -14,4 +14,4 @@
         ng-repeat="account in accounts | filter:{'deletedAt': null, 'asset': accountType == 'Asset', 'category': category} | orderBy:'position'"
       )
         %a(href="/v3/accounts/{{account.id}}") {{ account.name }}
-        %span(l-width="5" l-margin="r1" l-align="right" l-currency ng-model="account.balanceCents")
+        %span.m-balance(l-width="5" l-margin="r1" l-align="right" l-currency ng-model="account.balanceCents")

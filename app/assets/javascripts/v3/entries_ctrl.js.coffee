@@ -15,4 +15,3 @@ angular.module('ledger').controller 'EntriesCtrl', ($scope, Model)->
       delete $scope.isLoadingEntries
 
   $scope.entries = Model.BankEntry.all
-  $scope.accounts = Model.Account.all

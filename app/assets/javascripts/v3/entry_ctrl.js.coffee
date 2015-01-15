@@ -1,4 +1,9 @@
 angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
+
+  $scope.accounts = Model.Account.all
+  $scope.$watchCollection 'accounts | filter:{isDeleted:false} | pMap:"name"', (accountNames)->
+    $scope.accountNames = accountNames
+
   watchAEs = undefined
   amountRemainingCentsExpression = 'entry.amountCents - (entry.accountEntries | map:"amountCents" | sum)'
 

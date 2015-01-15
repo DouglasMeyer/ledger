@@ -21,7 +21,7 @@
     %select( ng-if="isEditable()"
       name="account"
       ng-model="accountEntry.accountName"
-      ng-options="a.name as a.name for a in accounts | filter:{ isDeleted: false } | orderBy:'name'")
+      ng-options="name for name in accountNames")
     %span( ng-if="!isEditable()" ) {{accountEntry.accountName}}
 .table__row
   .table__cell.l-text-r
