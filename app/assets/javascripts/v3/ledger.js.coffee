@@ -10,15 +10,18 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
     $routeProvider
       .when('/accounts',
         templateUrl: 'v3/templates/accounts.html'
-        controller: (dataRefresh)-> dataRefresh()
+        resolve:
+          data: (dataRefresh)-> dataRefresh()
       )
       .when('/accounts/edit',
         templateUrl: 'v3/templates/accounts_edit.html'
-        controller: (dataRefresh)-> dataRefresh()
+        resolve:
+          data: (dataRefresh)-> dataRefresh()
       )
       .when('/entries',
         templateUrl: 'v3/templates/entries.html'
-        controller: (dataRefresh)-> dataRefresh()
+        resolve:
+          data: (dataRefresh)-> dataRefresh()
       )
       .when('/forecast',
         templateUrl: 'v3/templates/forecast.html'
@@ -49,13 +52,16 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       promises = []
       promises.push(refresh('Account'))
       promises.push(refresh('BankEntry'))
+      promiseEverything = $q.all(promises)
 
       #Model.BankEntry.read(needsUpdate: true)
       #Model.BankImport.read(limit: 1)
 
       $rootScope.$emit 'status',
         text: 'loading'
-        promise: $q.all(promises)
+        promise: promiseEverything
+
+      promiseEverything
 
   .run ($rootScope, $window, $q, appCache)->
     deferred = undefined
