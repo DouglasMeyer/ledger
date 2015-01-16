@@ -1,7 +1,7 @@
 angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
 
   $scope.accounts = Model.Account.all
-  $scope.$watchCollection 'accounts | filter:{isDeleted:false} | pMap:"name"', (accountNames)->
+  $scope.$watchCollection 'accounts | filter:{isDeleted:false} | orderBy:"name" | pMap:"name"', (accountNames)->
     $scope.accountNames = accountNames
 
   watchAEs = undefined
