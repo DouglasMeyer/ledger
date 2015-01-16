@@ -47,7 +47,6 @@ module ParseStatement
     require 'date'
 
     transactions, balance = StatementEntry.parse(file)
-    return unless transactions.any?
 
     transactions.sort_by!{|tr| tr.id }
 
