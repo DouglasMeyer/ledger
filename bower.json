@@ -10,8 +10,8 @@
     "tests"
   ],
   "dependencies": {
-    "angular-animate": "1.2.26",
-    "angular-route": "1.2.26",
-    "angular": "1.2.26"
+    "angular-animate": "",
+    "angular-route": "",
+    "angular": ""
   }
 }
