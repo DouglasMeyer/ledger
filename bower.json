@@ -8,5 +8,10 @@
     "vendor/assets/bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "angular-animate": "1.2.26",
+    "angular-route": "1.2.26",
+    "angular": "1.2.26"
+  }
 }
