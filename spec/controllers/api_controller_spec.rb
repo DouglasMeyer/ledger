@@ -246,6 +246,28 @@ describe ApiController do
         }
       }.to_json)
     end
+
+    it "responds with entries needing distribution" do
+      needs_distribution = []
+      needs_distribution << BankEntry.make!
+      BankEntry.make! amount_cents: 0
+      needs_distribution << BankEntry.make!
+
+      post :bulk, [
+        { resource: 'BankEntry_v1', action: :read, needsDistribution: true }
+      ].to_json
+      expect(JSON.parse(response.body)['records']['BankEntry']).to eq(
+        JSON.parse(records_by_id(BankEntry.with_balance.find(needs_distribution.map(&:id))).to_json)
+      )
+      expect(response.body).to eq({
+        'responses' => [{
+          'records' => response_records(needs_distribution.reverse)
+        }],
+        'records' => {
+          'BankEntry' => records_by_id(BankEntry.with_balance.find(needs_distribution.map(&:id)))
+        }
+      }.to_json)
+    end
   end
 
   describe "BankEntry_v1.update" do

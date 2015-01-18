@@ -133,12 +133,19 @@ private
     extend Service
 
     def self.read(command)
-      records = ::BankEntry
-        .with_balance
-        .limit(command['limit'] || 25)
-        .offset(command['offset'] || 0)
-      account_entries = ::AccountEntry.where(bank_entry_id: records.pluck(:id))
-      { records: records, associated: account_entries }
+      if command['needsDistribution'] == true
+        records = ::BankEntry
+          .needs_distribution
+          .with_balance
+        { records: records }
+      else
+        records = ::BankEntry
+          .with_balance
+          .limit(command['limit'] || 25)
+          .offset(command['offset'] || 0)
+        account_entries = ::AccountEntry.where(bank_entry_id: records.pluck(:id))
+        { records: records, associated: account_entries }
+      end
     end
 
     def self.create(command)

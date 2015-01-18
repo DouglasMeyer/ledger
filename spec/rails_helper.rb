@@ -14,6 +14,7 @@ Capybara::Screenshot.prune_strategy = :keep_last_run
 # run as spec files by default. This means that files in spec/support that end
 # in _spec.rb will both be required and run as specs, causing the specs to be
 # run twice. It is recommended that you do not name files matching this glob to
+require_relative 'support/pages/base_page'
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 # Checks for pending migrations before tests are run.

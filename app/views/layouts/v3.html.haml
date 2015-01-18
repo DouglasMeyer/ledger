@@ -32,9 +32,7 @@
         = link_to "Accounts", v3_root_path(anchor: '/accounts'), 'ng-click' => 'showNav=false', class: 'accounts navigation__page'
         = link_to v3_root_path(anchor: '/entries'),              'ng-click' => 'showNav=false', class: 'entries navigation__page' do
           Entries
-          - needs_distribution_count = BankEntry.needs_distribution.count
-          - if needs_distribution_count > 0
-            %span.count= needs_distribution_count
+          %span.count(ng-show="distributionCount != 0") {{ distributionCount }}
         = link_to "Strategies", v3_strategies_path, class: 'strategies navigation__page'
         =# link_to "Forecast",   v3_root_path(anchor: '/forecast'), 'ng-click' => 'showNav=false', class: 'navigation__page'
 

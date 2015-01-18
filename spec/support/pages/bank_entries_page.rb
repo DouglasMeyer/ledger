@@ -1,4 +1,4 @@
-class BankEntriesPage < SitePrism::Page
+class BankEntriesPage < BasePage
   class AccountEntrySection < SitePrism::Section
     element :amount,        ".table__cell--amount"
     element :amount_field,  ".table__cell--amount input"
