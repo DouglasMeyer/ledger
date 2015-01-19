@@ -29,15 +29,18 @@ h4 {
 }
 input, select, textarea, button, .button, [class^="button--"] {
   display: inline-block;
-  background-color: rgba(255, 255, 255, 0.5);
   color: inherit;
-  border: none;
-  box-shadow: 0 1px 2px #ccc inset;
   text-align: inherit;
-  border-radius: 3px;
-  &:focus {
+  background-color: rgba(255, 255, 255, 0.5);
+  border: none;
+  box-shadow: 0 0 2px #ccc inset,
+              0 1px 1px #ccc inset;
+  border-radius: 4px;
+  &:not([type="button"]):not(button):not(.button):focus {
     outline: none;
-    box-shadow: 0 0 1px 1px #aaf inset;
+    box-shadow: 0 0 2px #ccc inset,
+                0 1px 1px #ccc inset,
+                0 0 1px blue;
   }
 }
 input[type="file"] { border-bottom-width: 0; }
@@ -45,20 +48,44 @@ button, .button, [class^="button--"] {
   margin-left: 0.3em;
   margin-right: 0.3em;
   cursor: pointer;
-  border-bottom-width: 1px;
-  border-bottom-style: solid;
-  box-shadow: none;
   text-decoration: none;
-  &:hover, &:focus { color: black; }
+  &:hover, &:focus {
+    outline: none;
+    text-shadow: 0 1px 2px #aaa;
+  }
+  &:active {
+    box-shadow: 0 0 6px #aaa inset,
+                0 1px 4px #aaa inset;
+  }
+
+  &.button--primary {
+    color: #00a;
+    box-shadow: 0 0 4px #ccf inset,
+                0 1px 2px #ccf inset;
+
+    &:focus,
+    &:hover {
+      text-shadow: 0 1px 2px #aaf;
+    }
+    &:active {
+      box-shadow: 0 0 6px #aaf inset,
+                  0 1px 4px #aaf inset;
+    }
+  }
+
+  &.button--remove {
+    color: #A00;
+    &:hover, &:focus {
+      text-shadow: 0 1px 2px #faa;
+    }
+    &:active {
+      box-shadow: 0 0 6px #faa inset,
+                  0 1px 4px #faa inset;
+    }
+  }
 }
-.button--remove, input.ng-invalid {
-  color: #F44;
-  &:hover, &:focus { color: #F00; }
-  &:focus { box-shadow: 0 1px 3px #F66; }
-}
-.button--primary {
-  color: #44F;
-  &:hover, &:focus { color: #00F; }
+input.ng-invalid {
+  color: #A00; //FIXME: same as button--remove
 }
 ul { margin: 0; padding: 0; }
 em {
