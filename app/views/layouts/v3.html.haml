@@ -9,6 +9,9 @@
     %meta(name="apple-mobile-web-app-capable" content="yes")
     %meta(name="mobile-web-app-status-bar-style" content="black")
     %meta(name="google" value="notranslate")
+    - if Rails.env.production?
+      %script(type="text/javascript" src="//d2zah9y47r7bi2.cloudfront.net/releases/current/tracker.js" data-token="60d376c2ed1748caa6c3f413d699c539")
+
 
   %body(class="#{controller_name} #{action_name}" ng-app="ledger")
     .navigation(ng-controller="NavigationCtrl")

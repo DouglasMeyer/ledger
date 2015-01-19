@@ -6,7 +6,16 @@
 
 angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
 
-  .config ($routeProvider)->
+  .config ($routeProvider, $provide)->
+
+    # TrackJs exception handling
+    $provide.decorator '$exceptionHandler', ($delegate, $window)->
+      (exception, cause)->
+        if $window.trackJs
+          $window.trackJs.track(exception)
+        $delegate(exception, cause)
+
+    # routes
     $routeProvider
       .when('/accounts',
         templateUrl: 'v3/templates/accounts.html'
