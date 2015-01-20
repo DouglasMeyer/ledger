@@ -19,6 +19,52 @@ describe 'bank entries view', type: :feature do
     end
   end
 
+  it "displays an expense bank entry" do
+    be = BankEntry.make!(
+      date: Date.new(2015,1,19),
+      amount_cents: -10_00,
+      account_entries: [
+        AccountEntry.make!(amount_cents: -10_00)
+      ]
+    )
+    account = be.account_entries.first.account.name
+    bank_entries_page.load
+
+    bank_entries_page.wait_for_bank_entries
+    expect(bank_entries_page.bank_entries.first.text).to eq("2015-01-19 $-10.00 from #{account}")
+  end
+
+  it "displays an income bank entry" do
+    be = BankEntry.make!(
+      date: Date.new(2015,1,19),
+      amount_cents: 10_00,
+      account_entries: [
+        AccountEntry.make!(amount_cents: 10_00)
+      ]
+    )
+    account = be.account_entries.first.account.name
+    bank_entries_page.load
+
+    bank_entries_page.wait_for_bank_entries
+    expect(bank_entries_page.bank_entries.first.text).to eq("2015-01-19 $10.00 to #{account}")
+  end
+
+  it "displays a transfer bank entry" do
+    be = BankEntry.make!(
+      date: Date.new(2015,1,19),
+      amount_cents: 0,
+      account_entries: [
+        AccountEntry.make!(amount_cents: -10_00),
+        AccountEntry.make!(amount_cents:  10_00)
+      ]
+    )
+    accounts = be.account_entries.map{|ae| ae.account.name }
+    bank_entries_page.load
+
+    bank_entries_page.wait_for_bank_entries
+    expect(bank_entries_page.bank_entries.first.text).to eq("2015-01-19 $10.00 from #{accounts.first} to #{accounts.last}")
+  end
+
   #TODO: to test this properly, I would need the server to be down :(
   #it "caches fetched bank entries" do
   #  bank_entries_page.load

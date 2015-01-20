@@ -2,9 +2,9 @@
   .table__cell--date {{ entry.date }}
   .table__cell--summary-amount.l-text-r(ng-model="amountCents" l-currency)
   .table__cell--summary.l-text-overflow
-    %span(ng-if="from")
+    %span(ng-if="from.length")
       &nbsp;from&nbsp;
       %em {{ from | join }}
-    %span(ng-if="to")
+    %span(ng-if="to.length")
       &nbsp;to&nbsp;
       %em {{ to | join }}
