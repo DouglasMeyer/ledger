@@ -16,6 +16,10 @@ class BankEntriesPage < BasePage
     def click
       root_element.click
     end
+
+    def text
+      root_element.text
+    end
   end
 
   set_url '/v3#/entries'
