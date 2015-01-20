@@ -3,9 +3,9 @@ require 'rails_helper'
 describe ApiController do
   before do
     @blank_account = {
-      'class_name' => 'Account', 'id' => nil, 'created_at' => nil, 'updated_at' => nil, 'deleted_at' => nil,
-      'name' => nil, 'position' => nil, 'category' => nil, 'strategy_id' => nil, 'balance_cents' => 0
-    }
+      class_name: 'Account', id: nil, created_at: nil, updated_at: nil, deleted_at: nil,
+      name: nil, position: nil, category: nil, strategy_id: nil, balance_cents: 0
+    }.stringify_keys
   end
 
   def response_records(records)
@@ -33,12 +33,12 @@ describe ApiController do
     end
 
     it "responds with the collection" do
-      expect(response.body).to eq({
-        'responses' => [
-          { 'records' => response_records(Account.all) }
+      expect(response.body).to be_json_eql({
+        responses: [
+          { records: response_records(Account.all) }
         ],
-        'records' => {
-          'Account' => records_by_id(Account.all)
+        records: {
+          Account: records_by_id(Account.all)
         }
       }.to_json)
     end
@@ -55,12 +55,12 @@ describe ApiController do
     end
 
     it "responds with the collection matching the query" do
-      expect(response.body).to eq({
-        'responses' => [
-          { 'records' => response_records(Account.where(id: @account.id)) }
+      expect(response.body).to be_json_eql({
+        responses: [
+          { records: response_records(Account.where(id: @account.id)) }
         ],
-        'records' => {
-          'Account' => records_by_id(Account.where(id: @account.id))
+        records: {
+          Account: records_by_id(Account.where(id: @account.id))
         }
       }.to_json)
     end
@@ -84,13 +84,13 @@ describe ApiController do
         { resource: 'Account_v1', action: :read, limit: 1, offset: 1 }
       ].to_json
 
-      expect(response.body).to eq({
-        'responses' => [
-          { 'records' => response_records([ @account1 ]) },
-          { 'records' => response_records([ @account2 ]) }
+      expect(response.body).to be_json_eql({
+        responses: [
+          { records: response_records([ @account1 ]) },
+          { records: response_records([ @account2 ]) }
         ],
-        'records' => {
-          'Account' => records_by_id([ @account1, @account2 ])
+        records: {
+          Account: records_by_id([ @account1, @account2 ])
         }
       }.to_json)
     end
@@ -109,15 +109,15 @@ describe ApiController do
       expect(Account.where(name: 'New Account').first.asset).to eq(true)
     end
     it "responds with the new record and reference" do
-      expect(response.body).to eq({
-        'responses' => [
+      expect(response.body).to be_json_eql({
+        responses: [
           {
-            'reference' => 'the new record',
-            'records' => response_records([Account.first])
+            reference: 'the new record',
+            records: response_records([Account.first])
           }
         ],
-        'records' => {
-          'Account' => records_by_id([Account.first])
+        records: {
+          Account: records_by_id([Account.first])
         }
       }.to_json)
     end
@@ -138,15 +138,15 @@ describe ApiController do
       expect(account.reload.asset).to eq(true)
     end
     it "responds with the updated record and reference" do
-      expect(response.body).to eq({
-        'responses' => [
+      expect(response.body).to be_json_eql({
+        responses: [
           {
-            'reference' => 'updating the record',
-            'records' => response_records([ account ])
+            reference: 'updating the record',
+            records: response_records([ account ])
           }
         ],
-        'records' => {
-          'Account' => records_by_id([ account.reload ])
+        records: {
+          Account: records_by_id([ account.reload ])
         }
       }.to_json)
     end
@@ -182,16 +182,16 @@ describe ApiController do
     end
     it "responds with invalid record" do
       expect(@response_references['failed creation']).to eq({
-        'reference' => 'failed creation',
-        'data' => @blank_account.merge(@account1_data),
-        'errors' => { 'name' => ["can't be blank"] }
-      })
+        reference: 'failed creation',
+        data: @blank_account.merge(@account1_data),
+        errors: { 'name' => ["can't be blank"] }
+      }.stringify_keys)
     end
     it "responds with the created record" do
       expect(@response_references['actual created']).to eq({
-        'reference' => 'actual created',
-        'records' => response_records([ Account.first ])
-      })
+        reference: 'actual created',
+        records: response_records([ Account.first ])
+      }.stringify_keys)
     end
   end
 
@@ -204,13 +204,13 @@ describe ApiController do
       post :bulk, [
         { resource: 'BankEntry_v1', action: :read }
       ].to_json
-      expect(response.body).to eq({
-        'responses' => [{
-          'records' => response_records(BankEntry.all)
+      expect(response.body).to be_json_eql({
+        responses: [{
+          records: response_records(BankEntry.all)
         }],
-        'records' => {
-          'BankEntry' => records_by_id(BankEntry.with_balance.all),
-          'AccountEntry' => records_by_id(AccountEntry.all)
+        records: {
+          BankEntry: records_by_id(BankEntry.with_balance.all),
+          AccountEntry: records_by_id(AccountEntry.all)
         }
       }.to_json)
     end
@@ -223,26 +223,26 @@ describe ApiController do
       post :bulk, [
         { resource: 'BankEntry_v1', action: :read, limit: 2 }
       ].to_json
-      expect(response.body).to eq({
-        'responses' => [{
-          'records' => response_records(BankEntry.limit(2).all)
+      expect(response.body).to be_json_eql({
+        responses: [{
+          records: response_records(BankEntry.limit(2).all)
         }],
-        'records' => {
-          'BankEntry' => records_by_id(BankEntry.with_balance.limit(2).all),
-          'AccountEntry' => records_by_id([ AccountEntry.last ])
+        records: {
+          BankEntry: records_by_id(BankEntry.with_balance.limit(2).all),
+          AccountEntry: records_by_id([ AccountEntry.last ])
         }
       }.to_json)
 
       post :bulk, [
         { resource: 'BankEntry_v1', action: :read, limit: 2, offset: 2 }
       ].to_json
-      expect(response.body).to eq({
-        'responses' => [{
-          'records' => response_records([ BankEntry.last ])
+      expect(response.body).to be_json_eql({
+        responses: [{
+          records: response_records([ BankEntry.last ])
         }],
-        'records' => {
-          'BankEntry' => records_by_id([ BankEntry.with_balance.last ]),
-          'AccountEntry' => records_by_id([ AccountEntry.first ])
+        records: {
+          BankEntry: records_by_id([ BankEntry.with_balance.last ]),
+          AccountEntry: records_by_id([ AccountEntry.first ])
         }
       }.to_json)
     end
@@ -259,12 +259,12 @@ describe ApiController do
       expect(JSON.parse(response.body)['records']['BankEntry']).to eq(
         JSON.parse(records_by_id(BankEntry.with_balance.find(needs_distribution.map(&:id))).to_json)
       )
-      expect(response.body).to eq({
-        'responses' => [{
-          'records' => response_records(needs_distribution.reverse)
+      expect(response.body).to be_json_eql({
+        responses: [{
+          records: response_records(needs_distribution.reverse)
         }],
-        'records' => {
-          'BankEntry' => records_by_id(BankEntry.with_balance.find(needs_distribution.map(&:id)))
+        records: {
+          BankEntry: records_by_id(BankEntry.with_balance.find(needs_distribution.map(&:id)))
         }
       }.to_json)
     end
@@ -288,14 +288,14 @@ describe ApiController do
 
       bank_entry.reload
       expect(bank_entry.notes).to eq('New Note')
-      expect(response.body).to eq({
-        'responses' => [{
+      expect(response.body).to be_json_eql({
+        responses: [{
           reference: 'update bank entry',
           records: [{ type: 'BankEntry', id: bank_entry.id }]
         }],
-        'records' => {
-          'BankEntry' => records_by_id([ bank_entry ]),
-          'Account' => records_by_id(Account.all)
+        records: {
+          BankEntry: records_by_id([ bank_entry ]),
+          Account: records_by_id(Account.all)
         }
       }.to_json)
     end
@@ -336,14 +336,14 @@ describe ApiController do
       ].to_json
 
       bank_entry = BankEntry.last
-      expect(response.body).to eq({
-        'responses' => [{
+      expect(response.body).to be_json_eql({
+        responses: [{
           reference: 'create bank entry',
           records: [{ type: 'BankEntry', id: bank_entry.id }]
         }],
-        'records' => {
-          'BankEntry' => records_by_id([ bank_entry ]),
-          'Account' => records_by_id(Account.all)
+        records: {
+          BankEntry: records_by_id([ bank_entry ]),
+          Account: records_by_id(Account.all)
         }
       }.to_json)
     end
@@ -357,12 +357,12 @@ describe ApiController do
       post :bulk, [
         { resource: 'ProjectedEntry_v1', action: :read }
       ].to_json
-      expect(response.body).to eq({
-        'responses' => [{
-          'records' => response_records(ProjectedEntry.all)
+      expect(response.body).to be_json_eql({
+        responses: [{
+          records: response_records(ProjectedEntry.all)
         }],
-        'records' => {
-          'ProjectedEntry' => records_by_id(ProjectedEntry.all)
+        records: {
+          ProjectedEntry: records_by_id(ProjectedEntry.all)
         }
       }.to_json)
     end
@@ -375,24 +375,24 @@ describe ApiController do
       post :bulk, [
         { resource: 'ProjectedEntry_v1', action: :read, limit: 2 }
       ].to_json
-      expect(response.body).to eq({
-        'responses' => [{
-          'records' => response_records(ProjectedEntry.limit(2).all)
+      expect(response.body).to be_json_eql({
+        responses: [{
+          records: response_records(ProjectedEntry.limit(2).all)
         }],
-        'records' => {
-          'ProjectedEntry' => records_by_id(ProjectedEntry.limit(2).all)
+        records: {
+          ProjectedEntry: records_by_id(ProjectedEntry.limit(2).all)
         }
       }.to_json)
 
       post :bulk, [
         { resource: 'ProjectedEntry_v1', action: :read, limit: 2, offset: 2 }
       ].to_json
-      expect(response.body).to eq({
-        'responses' => [{
-          'records' => response_records([ ProjectedEntry.last ])
+      expect(response.body).to be_json_eql({
+        responses: [{
+          records: response_records([ ProjectedEntry.last ])
         }],
-        'records' => {
-          'ProjectedEntry' => records_by_id([ ProjectedEntry.last ])
+        records: {
+          ProjectedEntry: records_by_id([ ProjectedEntry.last ])
         }
       }.to_json)
     end
@@ -413,13 +413,13 @@ describe ApiController do
       ].to_json
 
       projected_entry = ProjectedEntry.last
-      expect(response.body).to eq({
-        'responses' => [{
+      expect(response.body).to be_json_eql({
+        responses: [{
           reference: 'create projected entry',
           records: [{ type: 'ProjectedEntry', id: projected_entry.id }]
         }],
-        'records' => {
-          'ProjectedEntry' => records_by_id([ projected_entry ])
+        records: {
+          ProjectedEntry: records_by_id([ projected_entry ])
         }
       }.to_json)
     end
@@ -466,15 +466,15 @@ describe ApiController do
       post :bulk, [
         { resource: 'LedgerSummary_v1', action: :read }
       ].to_json
-      expect(JSON.parse(response.body)).to eq(JSON.parse({
-        'responses' => [{
-          'data' => {
-            'latest_bank_import' => latest_bank_import,
-            'ledger_sum_cents' => ledger_sum_cents
+      expect(response.body).to be_json_eql({
+        responses: [{
+          data: {
+            latest_bank_import: latest_bank_import,
+            ledger_sum_cents: ledger_sum_cents
           }
         }],
-        'records' => {}
-      }.to_json))
+        records: {}
+      }.to_json)
     end
   end
 end

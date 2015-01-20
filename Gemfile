@@ -41,6 +41,7 @@ group :development do
 end
 
 group :test do
-  gem 'machinist'
   gem 'capybara-screenshot'
+  gem 'json_spec'
+  gem 'machinist'
 end
