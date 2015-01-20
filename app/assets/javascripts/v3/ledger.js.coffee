@@ -37,7 +37,7 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       )
       .otherwise redirectTo: '/accounts'
 
-  .factory 'dataRefresh', (Model, $window, $rootScope, $q, entriesNeedingDistribution)->
+  .factory 'dataRefresh', (Model, $window, $rootScope, $q, entriesNeedingDistribution, ledgerSummary)->
     cachedModels = {}
     storage = $window.localStorage
 
@@ -66,9 +66,10 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
         args = [0,oldLength].concat(entries)
         entriesNeedingDistribution.splice.apply(entriesNeedingDistribution, args)
       )
+      promises.push(Model.LedgerSummary.read().then (summary)->
+        angular.copy summary, ledgerSummary
+      )
       promiseEverything = $q.all(promises)
-
-      #Model.BankImport.read(limit: 1)
 
       $rootScope.$emit 'status',
         text: 'loading'
@@ -77,6 +78,8 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       promiseEverything
 
   .value 'entriesNeedingDistribution', []
+
+  .value 'ledgerSummary', {}
 
   .run ($rootScope, $window, $q, appCache)->
     deferred = undefined

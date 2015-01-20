@@ -451,4 +451,30 @@ describe ApiController do
       expect(account.reload.position).to eq(12)
     end
   end
+
+  describe "LedgerSummary_v1.read" do
+    it "responds with collection" do
+      BankImport.make!
+      latest_bank_import = BankImport.make!
+      BankEntry.make!(amount_cents:  1_00)
+      BankEntry.make!(amount_cents: -1_00)
+      BankEntry.make!(amount_cents: -1_00)
+      BankEntry.make!(amount_cents:  1_00)
+      BankEntry.make!(amount_cents:  1_00)
+      ledger_sum_cents = 1_00
+
+      post :bulk, [
+        { resource: 'LedgerSummary_v1', action: :read }
+      ].to_json
+      expect(JSON.parse(response.body)).to eq(JSON.parse({
+        'responses' => [{
+          'data' => {
+            'latest_bank_import' => latest_bank_import,
+            'ledger_sum_cents' => ledger_sum_cents
+          }
+        }],
+        'records' => {}
+      }.to_json))
+    end
+  end
 end

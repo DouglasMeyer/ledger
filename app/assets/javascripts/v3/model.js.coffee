@@ -56,9 +56,12 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
           models[type].load(data for id, data of recordsById)
         for response in responses
           deferred = sentDeferreds[response.reference]
-          records = for reference in response.records
-            models[reference.type].get(reference.id)
-          deferred.resolve(records)
+          if response.records
+            records = for reference in response.records
+              models[reference.type].get(reference.id)
+            deferred.resolve(records)
+          else if response.data
+            deferred.resolve(response.data)
       .catch (err)->
         deferred.reject(err) for _, deferred of sentDeferreds
       .finally ->
@@ -143,8 +146,13 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
       name: value: 'ProjectedEntry'
       resource: value: 'ProjectedEntry_v1'
 
+    LedgerSummary: Object.create Model,
+      name: value: 'LedgerSummary'
+      resource: value: 'LedgerSummary_v1'
+
   models.Account.init()
   models.BankEntry.init()
   models.AccountEntry.init()
   models.ProjectedEntry.init()
+  models.LedgerSummary.init()
   models
