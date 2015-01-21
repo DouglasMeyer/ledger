@@ -26,13 +26,14 @@ gem 'jquery-rails'
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
 group :development, :test do
+  gem 'capybara-webkit'
+  gem 'database_cleaner'
   gem 'pry'
   gem 'rspec-rails'
-  gem 'test_rails_js', github: 'DouglasMeyer/test_rails_js'
-  gem 'capybara-webkit'
-  gem 'site_prism'
   gem 'selenium-webdriver'
-  gem 'database_cleaner'
+  gem 'site_prism'
+  gem 'teaspoon'
+  gem 'test_rails_js', github: 'DouglasMeyer/test_rails_js'
 end
 
 group :development do

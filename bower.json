@@ -13,5 +13,8 @@
     "angular-animate": "",
     "angular-route": "",
     "angular": ""
+  },
+  "devDependencies": {
+    "angular-mocks": ""
   }
 }
