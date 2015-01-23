@@ -54,7 +54,9 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
   $scope.$watchCollection 'projectedEntries', (newPEntries, oldPEntries)->
     for projectedEntry in oldPEntries
       unless projectedEntry in newPEntries
-        $scope.forecastedEntries = e for e in $scope.forecastedEntries when e.projectedEntry != projectedEntry
+        for fEntry in $scope.forecastedEntries when fEntry.projectedEntry == projectedEntry
+          index = $scope.forecastedEntries.indexOf fEntry
+          $scope.forecastedEntries.splice index, 1
 
     for projectedEntry in newPEntries
       if newPEntries == oldPEntries || projectedEntry not in oldPEntries
@@ -80,6 +82,11 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
 
   $scope.startEdit = (entry)->
     entry.isEditing = true
+
+  $scope.cancelEdit = (entry)->
+    delete entry.isEditing
+    index = $scope.projectedEntries.indexOf entry.projectedEntry
+    $scope.projectedEntries.splice index, 1
 
   $scope.saveEdit = (entry)->
     delete entry.isEditing

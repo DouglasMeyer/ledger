@@ -16,12 +16,15 @@ describe 'forecast view', type: :feature do
   end
 
   describe "creating" do
-    it "creates" do
-      account_name = Account.make!.name
+    let(:account_name){ Account.make!.name }
+
+    before do
       forecast_page.load
       forecast_page.page_action('Add Projection').click
+      forecast_page.wait_for_projected_entries(count: 1)
+    end
 
-      expect(forecast_page).to have_projected_entries(count: 1)
+    it "creates" do
       forecast_page.projected_entries.first.tap do |pe|
         pe.date.set Date.today.to_s
         pe.account.set account_name
@@ -32,6 +35,17 @@ describe 'forecast view', type: :feature do
       end
 
       expect(forecast_page).to have_projected_entries(count: 11)
+    end
+
+    it "is cancelable" do
+      forecast_page.projected_entries.first.tap do |pe|
+        pe.date.set Date.today.to_s
+        pe.account.set account_name
+        pe.amount.set '56.78'
+        pe.cancel
+      end
+
+      expect(forecast_page).to have_projected_entries(count: 0)
     end
   end
 end

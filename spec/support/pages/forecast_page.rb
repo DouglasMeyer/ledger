@@ -11,7 +11,11 @@ class ForecastPage < BasePage
     end
 
     def save
-      root_element.find('.button--primary').click
+      root_element.find('button', text: 'Save').click
+    end
+
+    def cancel
+      root_element.find('button', text: 'cancel').click
     end
   end
 
