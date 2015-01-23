@@ -135,10 +135,13 @@ pre { margin: 0; }
 [l-flex~="wrap"] { flex-wrap: wrap; }
 [l-flex~="center"] { justify-content: center; }
 [l-flex~="between"] { justify-content: space-between; }
-@for $i from 1 through 5 {
+@for $i from 1 through 10 {
   [l-flex-grow="#{$i}"] { flex-grow: #{$i}; }
+
+  [l-margin~="h#{$i}"] { margin-right: #{$i}rem; margin-left: #{$i}rem; }
   [l-margin~="r#{$i}"] { margin-right: #{$i}rem; }
   [l-margin~="l#{$i}"] { margin-left: #{$i}rem; }
+  [l-margin~="v#{$i}"] { margin-top: #{$i}rem; margin-bottom: #{$i}rem; }
   [l-margin~="t#{$i}"] { margin-top: #{$i}rem; }
   [l-margin~="b#{$i}"] { margin-bottom: #{$i}rem; }
   [l-width="#{$i}"] { width: #{$i}rem; }

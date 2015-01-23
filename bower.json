@@ -12,7 +12,8 @@
   "dependencies": {
     "angular-animate": "",
     "angular-route": "",
-    "angular": ""
+    "angular": "",
+    "rrule": ""
   },
   "devDependencies": {
     "angular-mocks": ""

@@ -1,10 +1,29 @@
-.table.l-margin-v1.l-width-full(ng-controller="ForecastCtrl")
-  .table__row( ng-cloak
-    ng-repeat="entry in entries | orderBy:['-date']"
+%div(l-margin="v1 l4 r3 b3" ng-controller="ForecastCtrl")
+  .table__rows( ng-cloak
+    ng-repeat="entry in forecastedEntries | orderBy:'date'"
   )
-    .table__cell {{ entry.date }}
-    .table__cell {{ entry.until_date }}
-    .table__cell {{ entry.account }}
-    .table__cell.l-text-r(ng-model="amountCents" l-currency)
-    .table__cell {{ entry.description }}
-    .table__cell {{ entry.rrule }}
+    .table__row( l-flex
+      ng-include="'v3/templates/projected_entry_'+(entry.isEditing && entry.isFirst ? 'edit' : 'show')+'.html'"
+      ng-click="startEdit(entry)"
+      ng-class="{'is-clickable': entry.isFirst}"
+    )
+
+%script(type="text/ng-template" id="v3/templates/projected_entry_show.html")
+  %div(l-width="8"     l-margin="r1") {{ entry.date | date:'EEE dd-MM-yyyy' }}
+  %div(l-width="8"     l-margin="r1") {{ entry.projectedEntry.account }}
+  %div(l-width="6"     l-margin="r1" l-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
+  %div(l-flex-grow="1" l-margin="r1") {{ entry.projectedEntry.description }}
+  %div(l-align="right" ng-show="entry.isFirst") open
+
+%script(type="text/ng-template" id="v3/templates/projected_entry_edit.html")
+  %input(l-width="8"     l-margin="r1" ng-model="entry.date" type="date")
+  %input(l-width="8"     l-margin="r1" ng-model="entry.projectedEntry.account")
+  %input(l-width="6"     l-margin="r1" l-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
+  %input(l-flex-grow="1" l-margin="r1" ng-model="entry.projectedEntry.description")
+  %select(l-width="8"    l-margin="r1"
+    ng-model="entry.frequency"
+    ng-options="label as label for (label, freq) in frequencyOptions"
+  )
+  %div(l-width="9" l-flex="between")
+    %button(ng-click="cancelEdit(entry)") cancel
+    %button.button--primary(ng-click="saveEdit(entry)") Save

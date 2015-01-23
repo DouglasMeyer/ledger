@@ -1,5 +1,6 @@
 %div(ng-controller="AccountsCtrl"
   l-flex="wrap center"
+  l-margin="b3"
 )
   %div(l-margin="{{ accountType == 'Asset' ? 'r2' : '0' }}"
     ng-repeat="accountType in ['Asset', 'Liability']"

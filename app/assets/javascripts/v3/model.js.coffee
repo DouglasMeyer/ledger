@@ -146,6 +146,15 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
       name: value: 'ProjectedEntry'
       resource: value: 'ProjectedEntry_v1'
 
+      Instance: value:
+        rrule:
+          enumerable: true
+          get: -> @_rrule
+          set: (val)->
+            @_rrule = val
+            delete @_rule
+        rule: get: -> @_rule ||= RRule.fromString(@rrule)
+
     LedgerSummary: Object.create Model,
       name: value: 'LedgerSummary'
       resource: value: 'LedgerSummary_v1'

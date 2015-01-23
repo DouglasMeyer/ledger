@@ -23,7 +23,7 @@ class BankEntriesPage < BasePage
   end
 
   set_url '/v3#/entries'
-  set_url_matcher /\/v3#\/entries/
+  set_url_matcher /\/v3#\/entries$/
 
   sections :bank_entries, BankEntrySection, ".table__rows"
 
