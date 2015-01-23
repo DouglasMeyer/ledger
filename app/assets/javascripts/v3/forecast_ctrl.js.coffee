@@ -20,10 +20,8 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
   endDate = new Date(startDate.getTime() + 2.5 * 30 * day)
 
   createForecastedEntries = (pEntry)->
-    entries = []
-    for e in $scope.forecastedEntries when e.projectedEntry != pEntry
-      entries.push e
-    $scope.forecastedEntries = entries
+    $scope.forecastedEntries = $scope.forecastedEntries.filter (forecatedEntry)->
+      forecatedEntry.projectedEntry != pEntry
 
     for date, index in pEntry.rule.between(startDate, endDate)
       forecastedEntry = Object.defineProperties({

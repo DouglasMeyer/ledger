@@ -17,6 +17,10 @@ class ForecastPage < BasePage
     def cancel
       root_element.find('button', text: 'cancel').click
     end
+
+    def click
+      root_element.click
+    end
   end
 
   set_url '/v3#/forecast'
