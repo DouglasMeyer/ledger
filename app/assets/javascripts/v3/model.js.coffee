@@ -148,7 +148,6 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
 
       Instance: value:
         rrule:
-          enumerable: true
           get: -> @_rrule
           set: (val)->
             @_rrule = val

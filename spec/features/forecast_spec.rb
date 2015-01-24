@@ -54,10 +54,10 @@ describe 'forecast view', type: :feature do
       ProjectedEntry.make!
       forecast_page.load
       forecast_page.wait_for_projected_entries
+      forecast_page.projected_entries.first.click
     end
 
     it "edits" do
-      forecast_page.projected_entries.first.click
       forecast_page.projected_entries.first.tap do |pe|
         pe.date.set Date.today.to_s
         pe.account.set account_name
@@ -68,6 +68,16 @@ describe 'forecast view', type: :feature do
       end
 
       expect(forecast_page).to have_projected_entries(count: 1)
+    end
+
+    it "is cancelable" do
+      forecast_page.projected_entries.first.tap do |pe|
+        pe.description.set 'crazy'
+        pe.cancel
+      end
+
+      expect(forecast_page).to have_projected_entries(count: 11)
+      expect(forecast_page.projected_entries.first).not_to have_text('crazy')
     end
   end
 end
