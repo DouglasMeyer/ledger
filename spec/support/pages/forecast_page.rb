@@ -1,10 +1,14 @@
 class ForecastPage < BasePage
   class ProjectedEntrySection < SitePrism::Section
-    element :date,        "input[ng-model='entry.date']"
-    element :account,     "input[ng-model='entry.projectedEntry.account']"
-    element :amount,      "input[ng-model='entry.projectedEntry.amountCents']"
-    element :description, "input[ng-model='entry.projectedEntry.description']"
+    element :date,        "input[ng-model$='.date']"
+    element :account,     "select[ng-model$='.accountName']"
+    element :amount,      "input[ng-model$='.amountCents']"
+    element :description, "input[ng-model$='.description']"
     element :frequency,   "select[ng-model='entry.frequency']"
+
+    def set_account(text)
+      account.find(:xpath, "option[normalize-space(text())='#{text}']").select_option
+    end
 
     def set_frequency(text)
       frequency.find(:xpath, "option[normalize-space(text())='#{text}']").select_option

@@ -175,6 +175,12 @@ private
       record = ::ProjectedEntry.create!(command['data'])
       { records: [ record ] }
     end
+
+    def self.update(command)
+      record = ::ProjectedEntry.find(command['id'])
+      record.update!(command['data'])
+      { records: [ record ] }
+    end
   end
 
   module LedgerSummary_v1

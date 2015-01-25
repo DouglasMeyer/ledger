@@ -8,15 +8,23 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
       newEntry.rrule = new RRule(
         freq: RRule.DAILY
         count: 1
+        dtstart: new Date
       ).toString()
       $scope.projectedEntries.unshift newEntry
   } ]
+
+  $scope.accounts = Model.Account.all
+  $scope.$watchCollection 'accounts | filter:{isDeleted:false} | pMap:"name" | orderBy', (accountNames)->
+    $scope.accountNames = accountNames
 
   $scope.projectedEntries = Model.ProjectedEntry.all
   $scope.forecastedEntries = []
 
   day = 24 * 60 * 60 * 1000
-  startDate = new Date(parseInt(Date.now() / day) * day)
+  startDate = new Date
+  startDate.setHours(0)
+  startDate.setMinutes(0)
+  startDate.setSeconds(0)
   endDate = new Date(startDate.getTime() + 2.5 * 30 * day)
 
   createForecastedEntries = (pEntry)->
@@ -94,5 +102,14 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
 
   $scope.saveEdit = (entry)->
     delete entry.isEditing
-    entry.projectedEntry.id = new Date
-    createForecastedEntries(entry.projectedEntry)
+    entry.saving = true
+    promise = Model.ProjectedEntry.save(entry.projectedEntry).then (projectedEntries)->
+      if entry.projectedEntry != projectedEntries[0] # you just created a ProjectedEntry
+        index = $scope.projectedEntries.indexOf entry.projectedEntry
+        $scope.projectedEntries.splice index, 1
+      else
+        delete entry.saving
+        createForecastedEntries(entry.projectedEntry)
+    $scope.$root.$emit 'status',
+      text: 'saving'
+      promise: promise

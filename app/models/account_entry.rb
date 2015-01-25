@@ -1,4 +1,6 @@
 class AccountEntry < ActiveRecord::Base
+  include AccountName
+
   belongs_to :bank_entry, inverse_of: :account_entries
   belongs_to :account, inverse_of: :account_entries
   belongs_to :strategy
@@ -30,13 +32,6 @@ class AccountEntry < ActiveRecord::Base
                         .joins(:bank_entry)
                         .order("bank_entries.date DESC, bank_entries.id DESC")
                         .select("account_entries.*, aggrigate_account_entries.balance_cents") }
-
-  def account_name
-    account && account.name
-  end
-  def account_name= name
-    self.account = Account.where(:name => name).first
-  end
 
   dollarify :amount_cents
 

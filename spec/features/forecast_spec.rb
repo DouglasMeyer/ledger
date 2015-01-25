@@ -14,7 +14,7 @@ describe 'forecast view', type: :feature do
   end
 
   describe "creating" do
-    let(:account_name){ Account.make!.name }
+    let!(:account_name){ Account.make!.name }
 
     before do
       forecast_page.load
@@ -25,7 +25,7 @@ describe 'forecast view', type: :feature do
     it "creates" do
       forecast_page.projected_entries.first.tap do |pe|
         pe.date.set Date.today.to_s
-        pe.account.set account_name
+        pe.set_account account_name
         pe.amount.set '56.78'
         pe.description.set 'something'
         pe.set_frequency 'Weekly'

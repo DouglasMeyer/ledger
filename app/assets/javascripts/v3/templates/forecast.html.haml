@@ -10,14 +10,14 @@
 
 %script(type="text/ng-template" id="v3/templates/projected_entry_show.html")
   %div(l-width="8"     l-margin="r1") {{ entry.date | date:'EEE dd-MM-yyyy' }}
-  %div(l-width="8"     l-margin="r1") {{ entry.projectedEntry.account }}
+  %div(l-width="8"     l-margin="r1") {{ entry.projectedEntry.accountName }}
   %div(l-width="6"     l-margin="r1" l-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
   %div(l-flex-grow="1" l-margin="r1") {{ entry.projectedEntry.description }}
   %div(l-align="right" ng-show="entry.isFirst") open
 
 %script(type="text/ng-template" id="v3/templates/projected_entry_edit.html")
   %input(l-width="8"     l-margin="r1" ng-model="entry.date" type="date")
-  %input(l-width="8"     l-margin="r1" ng-model="entry.projectedEntry.account")
+  %select(ng-model="entry.projectedEntry.accountName" ng-options="name for name in accountNames")
   %input(l-width="6"     l-margin="r1" l-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
   %input(l-flex-grow="1" l-margin="r1" ng-model="entry.projectedEntry.description")
   %select(l-width="8"    l-margin="r1"
@@ -25,5 +25,6 @@
     ng-options="label as label for (label, freq) in frequencyOptions"
   )
   %div(l-width="9" l-flex="between")
-    %button(ng-click="cancelEdit(entry)") cancel
-    %button.button--primary(ng-click="saveEdit(entry)") Save
+    %button(                ng-show="!entry.saving" ng-click="cancelEdit(entry)") cancel
+    %button.button--primary(ng-show="!entry.saving" ng-click="saveEdit(entry)") Save
+    %span(                  ng-show=" entry.saving") saving...
