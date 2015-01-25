@@ -19,7 +19,12 @@ class ApiController < ApplicationController
           id         = record.id
 
           @records[class_name] ||= {}
-          @records[class_name][id] = record
+          if serializer = ActiveModel::Serializer.serializer_for(record)
+            object = serializer.new(record, root: false)
+            @records[class_name][id] = object
+          else
+            @records[class_name][id] = record
+          end
           { type: class_name, id: id }
         end
       end
