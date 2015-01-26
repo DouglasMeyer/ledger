@@ -35,8 +35,10 @@
   line-height: $item_height;
   position: relative;
 }
-.table__row.is-clickable:hover {
-  box-shadow: 0 0 1px 1px rgba(100, 100, 100, 0.1);
+.table__rows, .table__row {
+  &.is-clickable:hover {
+    box-shadow: 0 0 1px 1px rgba(100, 100, 100, 0.1);
+  }
 }
 
 .table__cell, [class^="table__cell--"] {

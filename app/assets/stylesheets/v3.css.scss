@@ -42,6 +42,12 @@ input, select, textarea, button, .button, [class^="button--"] {
                 0 1px 1px #ccc inset,
                 0 0 1px blue;
   }
+  &[disabled] {
+    background-color: transparent;
+    box-shadow: 0 0 2px #ddd inset,
+                0 1px 1px #ddd inset;
+    color: lighten($textColor, 25%);
+  }
 }
 input[type="file"] { border-bottom-width: 0; }
 button, .button, [class^="button--"] {

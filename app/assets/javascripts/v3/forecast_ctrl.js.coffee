@@ -96,29 +96,30 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
       interval: 6
       count: null
 
-  $scope.startEdit = (entry)->
-    return if entry.isEditing
-    entry.isEditing = true
-    if entry.projectedEntry.id
-      entry.stashedProjectedEntry = angular.copy entry.projectedEntry
+  $scope.startEdit = (fEntry)->
+    return if fEntry.isEditing || !fEntry.isFirst
+    fEntry.isEditing = true
+    if fEntry.projectedEntry.id
+      fEntry.stashedProjectedEntry = angular.copy fEntry.projectedEntry
 
-  $scope.cancelEdit = (entry)->
-    delete entry.isEditing
-    if entry.stashedProjectedEntry
-      angular.copy entry.stashedProjectedEntry, entry.projectedEntry
-      delete entry.stashedProjectedEntry
+  $scope.cancelEdit = (fEntry, e)->
+    e.stopPropagation()
+    delete fEntry.isEditing
+    if fEntry.stashedProjectedEntry
+      angular.copy fEntry.stashedProjectedEntry, fEntry.projectedEntry
+      delete fEntry.stashedProjectedEntry
     else
-      arrayRemove $scope.projectedEntries, entry.projectedEntry
+      arrayRemove $scope.projectedEntries, fEntry.projectedEntry
 
-  $scope.saveEdit = (entry)->
-    delete entry.isEditing
-    entry.saving = true
-    promise = Model.ProjectedEntry.save(entry.projectedEntry).then (projectedEntries)->
-      if entry.projectedEntry != projectedEntries[0] # you just created a ProjectedEntry
-        arrayRemove $scope.projectedEntries, entry.projectedEntry
+  $scope.saveEdit = (fEntry)->
+    delete fEntry.isEditing
+    fEntry.saving = true
+    promise = Model.ProjectedEntry.save(fEntry.projectedEntry).then (projectedEntries)->
+      if fEntry.projectedEntry != projectedEntries[0] # you just created a ProjectedEntry
+        arrayRemove $scope.projectedEntries, fEntry.projectedEntry
       else
-        delete entry.saving
-        createForecastedEntries(entry.projectedEntry)
+        delete fEntry.saving
+        createForecastedEntries(fEntry.projectedEntry)
     $scope.$root.$emit 'status',
       text: 'saving'
       promise: promise

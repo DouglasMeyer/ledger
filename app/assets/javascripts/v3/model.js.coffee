@@ -182,6 +182,13 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
             @rule.origOptions.dtstart = val
             @rrule = @rule.toString()
 
+        until:
+          get: ->
+            @rule.origOptions.until
+          set: (val)->
+            @rule.origOptions.until = val
+            @rrule = @rule.toString()
+
     LedgerSummary: Object.create Model,
       name: value: 'LedgerSummary'
       resource: value: 'LedgerSummary_v1'
