@@ -1,6 +1,7 @@
 %div(l-margin="v1 l4 r3 b3" ng-controller="ForecastCtrl")
   .table__rows( ng-cloak
     ng-repeat="entry in forecastedEntries | orderBy:'date'"
+    ng-class="{'is-selected': entry.isEditing}"
   )
     .table__row( l-flex
       ng-include="'v3/templates/projected_entry_'+(entry.isEditing && entry.isFirst ? 'edit' : 'show')+'.html'"
@@ -9,8 +10,8 @@
     )
 
 %script(type="text/ng-template" id="v3/templates/projected_entry_show.html")
-  %div(l-width="3") {{ entry.date | date:'EEE' }}
-  %div(l-width="9"     l-margin="r1") {{ entry.date | date }}
+  %div(l-width="3" ng-class="{'m-balance is-negative': entry.date < today}") {{ entry.date | date:'EEE' }}
+  %div(l-width="9" ng-class="{'m-balance is-negative': entry.date < today}"    l-margin="r1") {{ entry.date | date }}
   %div(l-width="8"     l-margin="r1") {{ entry.projectedEntry.accountName }}
   %div(l-width="6"     l-margin="r1" t-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
   %div(l-flex-grow="1" l-margin="r1") {{ entry.projectedEntry.description }}

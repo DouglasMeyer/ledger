@@ -7,7 +7,8 @@ describe 'forecast view', type: :feature do
     ProjectedEntry.make!
     forecast_page.load
 
-    expect(forecast_page).to have_projected_entries(count: 11)
+    forecast_page.wait_for_projected_entries
+    expect(forecast_page.projected_entries.count).to be_between(10, 11)
     forecast_page.projected_entries.each do |projected_entry|
       expect(projected_entry).to have_text('Mon')
     end
@@ -76,7 +77,8 @@ describe 'forecast view', type: :feature do
         pe.cancel
       end
 
-      expect(forecast_page).to have_projected_entries(count: 11)
+      forecast_page.wait_for_projected_entries
+      expect(forecast_page.projected_entries.count).to be_between(10, 11)
       expect(forecast_page.projected_entries.first).not_to have_text('crazy')
     end
   end

@@ -38,6 +38,22 @@ describe "ForecastCtrl", ->
     expect(scope.forecastedEntries[2].projectedEntry).toBe projectedEntry
     expect(scope.forecastedEntries[2].isFirst).toBe false
 
+  it 'shows projected entries that ended in the past', ->
+    scope = @$rootScope.$new()
+    day = 1000*3600*24
+    pEntry = @Model.ProjectedEntry.new()
+    pEntry.rrule = new RRule(
+      dtstart: new Date(Date.now() - day * 10)
+      freq: RRule.DAILY
+      until: new Date(Date.now() - day * 5)
+    ).toString()
+    @Model.ProjectedEntry.all = [ pEntry ]
+
+    controller = @$controller('ForecastCtrl', $scope: scope)
+    scope.$digest()
+
+    expect(scope.forecastedEntries.length).toEqual 1
+
   it 'creates forecastedEntries for new projectedEntries', ->
     scope = @$rootScope.$new()
     controller = @$controller('ForecastCtrl', $scope: scope)
