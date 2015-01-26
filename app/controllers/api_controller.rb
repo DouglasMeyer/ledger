@@ -186,6 +186,12 @@ private
       record.update!(command['data'])
       { records: [ record ] }
     end
+
+    def self.delete(command)
+      record = ::ProjectedEntry.find(command['id'])
+      record.destroy!
+      { records: [] }
+    end
   end
 
   module LedgerSummary_v1

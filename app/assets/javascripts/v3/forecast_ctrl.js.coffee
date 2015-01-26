@@ -123,3 +123,7 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
     $scope.$root.$emit 'status',
       text: 'saving'
       promise: promise
+
+  $scope.deleteEntry = (fEntry)->
+    promise = Model.ProjectedEntry.destroy(fEntry.projectedEntry).then ->
+      arrayRemove $scope.projectedEntries, fEntry.projectedEntry

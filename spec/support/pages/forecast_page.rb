@@ -4,7 +4,7 @@ class ForecastPage < BasePage
     element :account,     "select[ng-model$='.accountName']"
     element :amount,      "input[ng-model$='.amountCents']"
     element :description, "input[ng-model$='.description']"
-    element :frequency,   "select[ng-model='entry.frequency']"
+    element :frequency,   "select[ng-model$='.frequency']"
 
     def set_account(text)
       account.find(:xpath, "option[normalize-space(text())='#{text}']").select_option

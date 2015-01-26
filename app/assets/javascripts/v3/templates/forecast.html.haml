@@ -21,7 +21,7 @@
     %input(l-width="9"     l-margin="r1" ng-model="fEntry.projectedEntry.date" type="date")
     %select(l-width="8"    l-margin="r1" ng-model="fEntry.projectedEntry.accountName" ng-options="name for name in accountNames")
     %input(l-width="6"     l-margin="r1" t-align="right" l-currency ng-model="fEntry.projectedEntry.amountCents")
-    %input(l-flex-grow="1" l-margin="r1" disabled="disabled" ng-model="fEntry.projectedEntry.description")
+    %input(l-flex-grow="1" l-margin="r1" ng-model="fEntry.projectedEntry.description")
   .table__row(l-flex)
     %div(l-margin="r1 l3") Repeat
     %select(l-width="8"    l-margin="r1"
@@ -29,7 +29,8 @@
       ng-options="label as label for (label, freq) in frequencyOptions"
     )
     %input(l-width="9" l-margin="r1" ng-disabled="fEntry.frequency == 'Once'" placeholder="until" ng-model="fEntry.projectedEntry.until" type="date")
-    %div(l-width="9" l-flex="between")
+    %div(l-flex="between")
+      %button.button--remove( ng-show="!fEntry.saving && fEntry.projectedEntry.id" ng-click="deleteEntry(fEntry)") Delete
       %button(                ng-show="!fEntry.saving" ng-click="cancelEdit(fEntry, $event)") cancel
       %button.button--primary(ng-show="!fEntry.saving" ng-click="saveEdit(fEntry)") Save
       %span(                  ng-show=" fEntry.saving") saving...
