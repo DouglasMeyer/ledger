@@ -12,15 +12,15 @@
   %div(l-width="3") {{ entry.date | date:'EEE' }}
   %div(l-width="9"     l-margin="r1") {{ entry.date | date }}
   %div(l-width="8"     l-margin="r1") {{ entry.projectedEntry.accountName }}
-  %div(l-width="6"     l-margin="r1" l-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
+  %div(l-width="6"     l-margin="r1" t-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
   %div(l-flex-grow="1" l-margin="r1") {{ entry.projectedEntry.description }}
-  %div(l-width="18" l-align="right" ng-show="entry.isFirst") open
+  %div(l-width="18" t-align="right" ng-show="entry.isFirst") open
 
 %script(type="text/ng-template" id="v3/templates/projected_entry_edit.html")
   %div(l-width="3") {{ entry.projectedEntry.date | date:'EEE' }}
   %input(l-width="9"     l-margin="r1" ng-model="entry.projectedEntry.date" type="date")
   %select(l-width="8"    l-margin="r1" ng-model="entry.projectedEntry.accountName" ng-options="name for name in accountNames")
-  %input(l-width="6"     l-margin="r1" l-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
+  %input(l-width="6"     l-margin="r1" t-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
   %input(l-flex-grow="1" l-margin="r1" ng-model="entry.projectedEntry.description")
   %select(l-width="8"    l-margin="r1"
     ng-model="entry.frequency"

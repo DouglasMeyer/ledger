@@ -146,8 +146,8 @@ pre { margin: 0; }
   [l-margin~="b#{$i}"] { margin-bottom: #{$i}rem; }
   [l-width="#{$i}"] { width: #{$i}rem; }
 }
-[l-align="center"] { text-align: center; }
-[l-align="right"] { text-align: right; }
+[t-align="center"] { text-align: center; }
+[t-align="right"] { text-align: right; }
 [l-fixed="bottom"] {
   position: fixed;
   bottom: 0;
