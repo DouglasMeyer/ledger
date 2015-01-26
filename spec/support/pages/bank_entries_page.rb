@@ -28,8 +28,4 @@ class BankEntriesPage < BasePage
   sections :bank_entries, BankEntrySection, ".table__rows"
 
   elements :status, ".navigation__status .list__item"
-
-  def reload
-    page.execute_script('location.reload()')
-  end
 end

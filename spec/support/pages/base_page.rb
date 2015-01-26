@@ -12,4 +12,8 @@ class BasePage < SitePrism::Page
     end
     find(%Q|.page-actions > span[title="#{title}"]|)
   end
+
+  def reload
+    page.execute_script('location.reload()')
+  end
 end
