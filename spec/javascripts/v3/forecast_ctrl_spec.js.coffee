@@ -81,4 +81,8 @@ describe "ForecastCtrl", ->
     pEntry = @Model.ProjectedEntry.all[0]
     date = new Date(Date.now() + 1000*60*60*24*7)
     pEntry.date = date
-    expect(pEntry.rule.origOptions.dtstart.toDateString()).toEqual(date.toDateString())
+    expect(pEntry.rrule).toEqual(new RRule(
+      freq: RRule.DAILY
+      count: 1
+      dtstart: date
+    ).toString())

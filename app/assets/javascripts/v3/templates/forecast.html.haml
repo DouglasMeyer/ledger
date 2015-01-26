@@ -9,14 +9,14 @@
     )
 
 %script(type="text/ng-template" id="v3/templates/projected_entry_show.html")
-  %div(l-width="8"     l-margin="r1") {{ entry.date | date:'EEE dd-MM-yyyy' }}
+  %div(l-width="8"     l-margin="r1") {{ entry.projectedEntry.date | date:'EEE dd-MM-yyyy' }}
   %div(l-width="8"     l-margin="r1") {{ entry.projectedEntry.accountName }}
   %div(l-width="6"     l-margin="r1" l-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
   %div(l-flex-grow="1" l-margin="r1") {{ entry.projectedEntry.description }}
   %div(l-align="right" ng-show="entry.isFirst") open
 
 %script(type="text/ng-template" id="v3/templates/projected_entry_edit.html")
-  %input(l-width="8"     l-margin="r1" ng-model="entry.date" type="date")
+  %input(l-width="8"     l-margin="r1" ng-model="entry.projectedEntry.date" type="date")
   %select(ng-model="entry.projectedEntry.accountName" ng-options="name for name in accountNames")
   %input(l-width="6"     l-margin="r1" l-align="right" l-currency ng-model="entry.projectedEntry.amountCents")
   %input(l-flex-grow="1" l-margin="r1" ng-model="entry.projectedEntry.description")
