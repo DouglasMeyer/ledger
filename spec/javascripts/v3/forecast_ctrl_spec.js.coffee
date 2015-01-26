@@ -10,10 +10,11 @@ describe "ForecastCtrl", ->
 
   it 'creates forecastedEntries from projectedEntries', ->
     scope = @$rootScope.$new()
-    @Model.ProjectedEntry.all = [
-      rule: new RRule
-        freq: RRule.MONTHLY
-    ]
+    pEntry = @Model.ProjectedEntry.new()
+    pEntry.rrule = new RRule(
+      freq: RRule.MONTHLY
+    ).toString()
+    @Model.ProjectedEntry.all = [ pEntry ]
     controller = @$controller('ForecastCtrl', $scope: scope)
     scope.$digest()
 
@@ -69,20 +70,3 @@ describe "ForecastCtrl", ->
       count: 1
       dtstart: new Date
     ).toString()
-
-  it 'updates the rrule when setting date on projectedEntry', ->
-    scope = @$rootScope.$new()
-    @Model.ProjectedEntry.all = []
-    controller = @$controller('ForecastCtrl', $scope: scope)
-    scope.$digest()
-    scope.$root.pageActions[0].click()
-    scope.$digest()
-
-    pEntry = @Model.ProjectedEntry.all[0]
-    date = new Date(Date.now() + 1000*60*60*24*7)
-    pEntry.date = date
-    expect(pEntry.rrule).toEqual(new RRule(
-      freq: RRule.DAILY
-      count: 1
-      dtstart: date
-    ).toString())

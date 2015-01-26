@@ -72,9 +72,12 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
       @_allById ||= {}
       @all ||= []
 
+    new: ->
+      Object.create Model.Instance, @Instance
+
     get: (id)->
       unless @_allById[id]?
-        @_allById[id] = Object.create Model.Instance, @Instance
+        @_allById[id] = @new()
         @all.push(@_allById[id])
 
       @_allById[id]
@@ -145,6 +148,11 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
     ProjectedEntry: Object.create Model,
       name: value: 'ProjectedEntry'
       resource: value: 'ProjectedEntry_v1'
+
+      new: value: ->
+        pEntry = Model.new.call(this)
+        pEntry.rrule = ''
+        pEntry
 
       save:
         writable: true

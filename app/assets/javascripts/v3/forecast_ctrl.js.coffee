@@ -4,7 +4,7 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
     text: 'Add Projection'
     icon: 'plus'
     click: ->
-      newEntry = Object.create {}, Model.ProjectedEntry.Instance
+      newEntry = Model.ProjectedEntry.new()
       newEntry.rrule = new RRule(
         freq: RRule.DAILY
         count: 1
