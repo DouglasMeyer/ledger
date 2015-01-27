@@ -1,4 +1,4 @@
-# vim: filetype=ruby
+# vim: set filetype=ruby:
 
 source 'https://rubygems.org'
 ruby '2.1.3'
@@ -39,6 +39,8 @@ end
 group :development do
   gem 'net-netrc', require: false
   gem 'httparty', require: false
+  gem 'guard-livereload', require: false
+  gem "rack-livereload"
 end
 
 group :test do
