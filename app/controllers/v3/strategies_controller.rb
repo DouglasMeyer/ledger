@@ -32,7 +32,8 @@ module V3
       end
     end
 
-  private
+    private
+
     def load_strategy
       @strategy =
         Strategy.where(id: params[:id]).first ||

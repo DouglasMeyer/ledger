@@ -1,8 +1,7 @@
 require Rails.root + 'lib' + 'parse_statement'
 
 class BankImport < ActiveRecord::Base
-
-  def self.upload! file
+  def self.upload!(file)
     bank_entry_attrs, balance = ParseStatement.run(file)
 
     ActiveRecord::Base.transaction do
@@ -16,13 +15,4 @@ class BankImport < ActiveRecord::Base
       BankImport.create! balance_cents: balance.to_f * 100
     end
   end
-
-  def as_json(options={})
-    (options[:methods] ||= []).push(:class_name)
-    super(options)
-  end
-  def class_name
-    self.class.name
-  end
-
 end

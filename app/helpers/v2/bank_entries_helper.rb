@@ -1,6 +1,5 @@
 module V2
   module BankEntriesHelper
-
     def account_balance_without_bank_entry(account, bank_entry)
       ids = bank_entry.account_entries.pluck(:id)
       if ids.any?
@@ -21,14 +20,12 @@ module V2
 
       f.fields_for(:account_entries, account_entries){ |ae|
         ae.hidden_field :_destroy, value: true
-      } +
-      f.fields_for(:account_entries, account_entry){|ae|
+      } + f.fields_for(:account_entries, account_entry){|ae|
         account_balance = account_balance_without_bank_entry(account, f.object)
         content_tag :li, data: { account_balance: account_balance } do
           render partial: 'account', locals: { f: ae, account_balance: account_balance }
         end
       }
     end
-
   end
 end

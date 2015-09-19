@@ -19,11 +19,11 @@ module ParseStatement
 
     attr_reader :raw
     statement_attr :type,    'TRNTYPE'
-    statement_attr(:id,      'FITID'   ){ |string| string.to_i }
+    statement_attr(:id,      'FITID', &:to_i)
     statement_attr :name,    'NAME'
     statement_attr :memo,    'MEMO'
     statement_attr(:date,    'DTPOSTED'){ |string| DateTime.parse(string) }
-    statement_attr(:amount, 'TRNAMT'  ){ |string| BigDecimal.new(string) }
+    statement_attr(:amount, 'TRNAMT'){ |string| BigDecimal.new(string) }
 
     def initialize(raw)
       @raw = raw
@@ -34,7 +34,10 @@ module ParseStatement
     end
 
     def inspect
-      attrs = %w(type id name memo).inject({}){|a,e| a[e.to_sym] = send(e); a}
+      attrs = %w(type id name memo).inject({}) do |a, e|
+        a[e.to_sym] = send(e)
+        a
+      end
       attrs[:amount] = amount.to_f
       attrs[:date] = date.strftime("%D")
       "#<StatementEntry: #{attrs.inspect}>"
@@ -48,15 +51,15 @@ module ParseStatement
 
     transactions, balance = StatementEntry.parse(file)
 
-    transactions.sort_by!{|tr| tr.id }
+    transactions.sort_by!(&:id)
 
     transactions.map! do |t|
       {
-          external_id: t.id,
-                 date: t.date,
+        external_id: t.id,
+        date: t.date,
         amount_cents: t.amount_cents,
-                notes: "#{t.type}: #{t.memo}",
-          description: t.name
+        notes: "#{t.type}: #{t.memo}",
+        description: t.name
       }
     end
 

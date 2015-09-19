@@ -26,12 +26,12 @@ describe V2::AccountsController do
       }
 
       put :update,
-        accounts: {
-          accounts_attributes: {
-            0 => account1_attributes,
-            1 => account2_attributes
+          accounts: {
+            accounts_attributes: {
+              0 => account1_attributes,
+              1 => account2_attributes
+            }
           }
-        }
 
       expect(account1.reload.attributes).to include(account1_attributes)
       expect(account2.reload.attributes).to include(account2_attributes)
@@ -42,12 +42,12 @@ describe V2::AccountsController do
       account_to_keep = Account.make!
 
       put :update,
-        accounts: {
-          accounts_attributes: {
-            0 => { id: account_to_delete.id, _destroy: '1' },
-            1234 => { _destroy: '1', name: 'crazy' }
+          accounts: {
+            accounts_attributes: {
+              0 => { id: account_to_delete.id, _destroy: '1' },
+              1234 => { _destroy: '1', name: 'crazy' }
+            }
           }
-        }
 
       account_to_keep.reload
       expect(account_to_delete.reload.deleted_at).to_not be(nil)
@@ -57,11 +57,11 @@ describe V2::AccountsController do
     it "can create accounts" do
       account_attributes = { 'name' => 'Crazy', 'asset' => true }
       put :update,
-        accounts: {
-          accounts_attributes: {
-            1234 => account_attributes
+          accounts: {
+            accounts_attributes: {
+              1234 => account_attributes
+            }
           }
-        }
 
       expect(Account.where(name: 'Crazy').first.attributes).to include(account_attributes)
     end

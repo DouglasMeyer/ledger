@@ -26,14 +26,16 @@ module V2
     end
 
     def update
-      bank_entry.update_attributes! params.require(:bank_entry)
-                                          .permit(account_entries_attributes: [
-                                                    :id,
-                                                    :account_name,
-                                                    :account_id,
-                                                    :amount,
-                                                    :_destroy ]
-                                                 )
+      update_params = params
+                      .require(:bank_entry)
+                      .permit(account_entries_attributes: [
+                        :id,
+                        :account_name,
+                        :account_id,
+                        :amount,
+                        :_destroy
+                      ])
+      bank_entry.update_attributes! update_params
       if request.xhr?
         render bank_entry
       else
@@ -51,7 +53,8 @@ module V2
       render new_bank_entry
     end
 
-  private
+    private
+
     def bank_entry
       @bank_entry ||= BankEntry.find(params[:id])
     end

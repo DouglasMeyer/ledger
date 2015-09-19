@@ -171,7 +171,10 @@ describe ApiController do
         { resource: 'Account_v1', action: :create, reference: 'actual created', data: @account2_data }
       ].to_json
       @json_response = JSON.parse(response.body)
-      @response_references = @json_response['responses'].inject({}){|acc,n| acc[n['reference']] = n ; acc }
+      @response_references = @json_response['responses'].inject({}) do |acc, n|
+        acc[n['reference']] = n
+        acc
+      end
     end
 
     it "has a response of :multi_status" do

@@ -17,7 +17,7 @@ module ImportStatement
           transactions = data.scan(/<STMTTRN>.*?<.STMTTRN>/m).map do |x|
             StatementEntry.new(x)
           end
-          transactions.sort_by{|t| t.id }.reverse.each do |transaction|
+          transactions.sort_by(&:id).reverse_each do |transaction|
             transaction.balance = balance
             balance -= transaction.amount
           end
@@ -43,7 +43,7 @@ module ImportStatement
       transactions = data.scan(/<STMTTRN>.*?<.STMTTRN>/m).map do |x|
         StatementEntry.new(x)
       end
-      transactions.sort_by{|t| t.id }.reverse.each do |transaction|
+      transactions.sort_by(&:id).reverse_each do |transaction|
         transaction.balance = balance
         balance -= transaction.amount
       end
@@ -51,11 +51,11 @@ module ImportStatement
 
     attr_reader :raw
     statement_attr :type,    'TRNTYPE'
-    statement_attr(:id,      'FITID'   ){ |string| string.to_i }
+    statement_attr(:id,      'FITID', &:to_i)
     statement_attr :name,    'NAME'
     statement_attr :memo,    'MEMO'
     statement_attr(:date,    'DTPOSTED'){ |string| DateTime.parse(string) }
-    statement_attr(:amount, 'TRNAMT'  ){ |string| BigDecimal.new(string) }
+    statement_attr(:amount, 'TRNAMT'){ |string| BigDecimal.new(string) }
     attr_accessor :balance
 
     def initialize(raw)
@@ -67,7 +67,10 @@ module ImportStatement
     end
 
     def inspect
-      attrs = %w(type id name memo).inject({}){|a,e| a[e.to_sym] = send(e); a}
+      attrs = %w(type id name memo).inject({}) do |a, e|
+        a[e.to_sym] = send(e)
+        a
+      end
       attrs[:amount] = amount.to_f
       attrs[:balance] = balance.to_f
       attrs[:date] = date.strftime("%D")
@@ -80,7 +83,7 @@ module ImportStatement
     require 'pp'
     require 'date'
 
-    transactions = StatementEntry.parse(file).sort_by{|tr| tr.id }
+    transactions = StatementEntry.parse(file).sort_by(&:id)
     return unless transactions.any?
 
     transactions.each do |t|
@@ -93,14 +96,14 @@ module ImportStatement
       end
     end
 
-    missing = BigDecimal.new(transactions.last.balance.to_s)*100 - ::BankEntry.pluck(:amount_cents).sum
+    missing = BigDecimal.new(transactions.last.balance.to_s) * 100 - ::BankEntry.pluck(:amount_cents).sum
     unless missing.zero?
-      e = ::BankEntry.create! do |e|
-        e.date          = Date.today
+      ::BankEntry.create! do |e|
+        e.date         = Date.today
         e.amount_cents = missing.to_s
-        e.description   = "The bank says we have an extra $#{missing/100}"
+        e.description  = "The bank says we have an extra $#{missing / 100}"
+        puts e.description
       end
-      puts e.description
     end
   end
 end

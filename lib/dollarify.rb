@@ -10,6 +10,5 @@ module Dollarify
       val = val.gsub(/,/, '').to_f if val.is_a? String
       send("#{cents}=", (val * 100).round)
     end
-
   end
 end
