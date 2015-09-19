@@ -42,12 +42,12 @@ class ApiController < ApplicationController
       @responses << response
     end
 
-    def as_json(options={})
+    def as_json(options = {})
       { responses: responses, records: records }.as_json(options)
     end
 
     def any_errors?
-      @responses.any?{|r| r.has_key? :errors }
+      @responses.any?{ |r| r.has_key? :errors }
     end
   end
 
@@ -56,7 +56,7 @@ class ApiController < ApplicationController
 
     ActiveRecord::Base.transaction do
       JSON.parse(request.body.string).each do |command|
-        constant = self.class.const_get(command['resource']) rescue nil
+        constant = get_request_resource(command['resource'])
         if !constant.nil? && constant.respond_to?(command['action'])
           response = constant.send(command['action'], command)
           response['reference'] = command['reference'] if command.has_key?('reference')
@@ -71,20 +71,26 @@ class ApiController < ApplicationController
     render json: api_response, status: status
   end
 
-private
-
-  module Service
   private
 
-    def camelize obj
+  def get_request_resource(resource_name)
+    self.class.const_get(resource_name)
+  rescue
+    nil
+  end
+
+  module Service
+    private
+
+    def camelize(obj)
       obj.inject({}) do |acc, (key, val)|
-        newKey = key.gsub(/_\w/){|w| w[1].upcase }
+        new_key = key.gsub(/_\w/){ |w| w[1].upcase }
         if val.is_a? Array
-          acc[newKey] = val.map{|v| camelize v }
+          acc[new_key] = val.map{ |v| camelize v }
         elsif val.is_a? Hash
-          acc[newKey] = camelize val
+          acc[new_key] = camelize val
         else
-          acc[newKey] = val
+          acc[new_key] = val
         end
         acc
       end
@@ -114,13 +120,15 @@ private
 
     def self.delete(command)
       record = ::Account.find(command['id'])
-      record.update!(command['data'].merge({
+      record_attrs = command['data'].merge(
         deleted_at: Time.now
-      }))
+      )
+      record.update! record_attrs
       { records: [ record ] }
     end
 
-  private
+    private
+
     def self.query(records, query)
       query.each do |column, val|
         if column == 'id' && val.is_a?(Array)
@@ -140,14 +148,14 @@ private
     def self.read(command)
       if command['needsDistribution'] == true
         records = ::BankEntry
-          .needs_distribution
-          .with_balance
+                  .needs_distribution
+                  .with_balance
         { records: records }
       else
         records = ::BankEntry
-          .with_balance
-          .limit(command['limit'] || 25)
-          .offset(command['offset'] || 0)
+                  .with_balance
+                  .limit(command['limit'] || 25)
+                  .offset(command['offset'] || 0)
         account_entries = ::AccountEntry.where(bank_entry_id: records.pluck(:id))
         { records: records, associated: account_entries }
       end
@@ -163,7 +171,6 @@ private
       record.update!(command['data'])
       { records: [ record ], associated: record.accounts }
     end
-
   end
 
   module ProjectedEntry_v1
@@ -171,8 +178,8 @@ private
 
     def self.read(command)
       records = ::ProjectedEntry
-        .limit(command['limit'] || 25)
-        .offset(command['offset'] || 0)
+                .limit(command['limit'] || 25)
+                .offset(command['offset'] || 0)
       { records: records }
     end
 
@@ -195,10 +202,10 @@ private
   end
 
   module LedgerSummary_v1
-    def self.read(command)
+    def self.read(_command)
       latest_bank_import = ::BankImport
-        .order(created_at: :desc)
-        .first
+                           .order(created_at: :desc)
+                           .first
       {
         data: {
           latest_bank_import: latest_bank_import,

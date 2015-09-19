@@ -4,16 +4,22 @@ namespace :statement do
     @json_file ||= Rails.root + 'tmp' + 'new_bank_entries.json'
   end
 
+  def new_bank_entries
+    JSON.parse(File.read(json_file))
+  rescue
+    []
+  end
+
   desc 'Fetch statement from Harris'
-  task :fetch => :environment do
+  task fetch: :environment do
     require Rails.root + 'lib' + 'fetch_statement'
     FetchStatement.run
     Rake::Task['statement:parse'].invoke
   end
 
-  task :parse => :environment do
+  task parse: :environment do
     require Rails.root + 'lib' + 'parse_statement'
-    bank_entries = JSON.parse(File.read(json_file)) rescue []
+    bank_entries = new_bank_entries
 
     (Rails.root + 'tmp' + 'downloads').entries.each do |statement|
       statement = Rails.root + 'tmp' + 'downloads' + statement
@@ -25,22 +31,21 @@ namespace :statement do
   end
 
   desc 'Send statement data to production'
-  task :send => :environment do
+  task send: :environment do
     require 'httparty'
     require "net/netrc"
 
     netrc = Net::Netrc.locate('harrisbank.com')
     request = []
-    JSON.parse(File.read(json_file)).each do |bank_entry|
+    new_bank_entries.each do |bank_entry|
       request << { action: :create, type: :bank_entry, data: bank_entry }
     end
-    response = HTTParty.post "http://ledger.herokuapp.com/api.json", {
-      basic_auth: { username: netrc.login, password: netrc.password },
-      body: {
-        body: request.to_json,
-        rollbackAll: false
-      }
-    }
+    response = HTTParty.post "http://ledger.herokuapp.com/api.json",
+                             basic_auth: { username: netrc.login, password: netrc.password },
+                             body: {
+                               body: request.to_json,
+                               rollbackAll: false
+                             }
     json_response = JSON.parse(response.body)
     pp json_response
     return unless json_response.is_a?(Array)
@@ -56,7 +61,7 @@ namespace :statement do
   end
 
   desc 'Import statements from tmp/downloads directory'
-  task :import => :environment do
+  task import: :environment do
     JSON.parse(File.read(json_file)).each do |attributes|
       unless BankEntry.where(external_id: attributes['external_id']).any?
         BankEntry.create!(attributes)
@@ -67,4 +72,4 @@ namespace :statement do
 end
 
 desc 'Fetch, Import, and Send statement'
-task :statement => [ 'statement:fetch', 'statement:import', 'statement:send' ]
+task statement: [ 'statement:fetch', 'statement:import', 'statement:send' ]

@@ -28,17 +28,20 @@ class AccountEntry < ActiveRecord::Base
     ON aggrigate_account_entries.id = account_entries.id
   ENDSQL
 
-  scope :with_balance, ->{ join_aggrigate_account_entries
-                        .joins(:bank_entry)
-                        .order("bank_entries.date DESC, bank_entries.id DESC")
-                        .select("account_entries.*, aggrigate_account_entries.balance_cents") }
+  scope :with_balance, ->{
+    join_aggrigate_account_entries
+      .joins(:bank_entry)
+      .order("bank_entries.date DESC, bank_entries.id DESC")
+      .select("account_entries.*, aggrigate_account_entries.balance_cents")
+  }
 
   dollarify :amount_cents
 
-  def as_json(options={})
+  def as_json(options = {})
     (options[:methods] ||= []).push(:account_name, :class_name)
     super(options)
   end
+
   def class_name
     self.class.name
   end

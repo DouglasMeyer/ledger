@@ -21,7 +21,7 @@ describe 'bank entries view', type: :feature do
 
   it "displays an expense bank entry" do
     be = BankEntry.make!(
-      date: Date.new(2015,1,19),
+      date: Date.new(2015, 1, 19),
       amount_cents: -10_00
     )
     ae = AccountEntry.make!(bank_entry: be, amount_cents: -10_00)
@@ -34,7 +34,7 @@ describe 'bank entries view', type: :feature do
 
   it "displays an income bank entry" do
     be = BankEntry.make!(
-      date: Date.new(2015,1,19),
+      date: Date.new(2015, 1, 19),
       amount_cents: 10_00
     )
     ae = AccountEntry.make!(
@@ -50,12 +50,12 @@ describe 'bank entries view', type: :feature do
 
   it "displays a transfer bank entry" do
     be = BankEntry.make!(
-      date: Date.new(2015,1,19),
+      date: Date.new(2015, 1, 19),
       amount_cents: 0
     )
     AccountEntry.make!(bank_entry: be, amount_cents: -10_00)
     AccountEntry.make!(bank_entry: be, amount_cents:  10_00)
-    accounts = be.account_entries.map{|ae| ae.account.name }
+    accounts = be.account_entries.map{ |ae| ae.account.name }
     bank_entries_page.load
 
     bank_entries_page.wait_for_bank_entries

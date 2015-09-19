@@ -120,7 +120,7 @@ Style/DotPosition:
   Description: Checks the position of the dot in multi-line method calls.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#consistent-multi-line-chains
   Enabled: true
-  EnforcedStyle: trailing
+  EnforcedStyle: leading
   SupportedStyles:
   - leading
   - trailing
@@ -131,7 +131,7 @@ Style/EmptyLineBetweenDefs:
   AllowAdjacentOneLineDefs: false
 Style/EmptyLinesAroundBlockBody:
   Description: Keeps track of empty lines around block bodies.
-  Enabled: true
+  Enabled: false
   EnforcedStyle: no_empty_lines
   SupportedStyles:
   - empty_lines
@@ -365,7 +365,7 @@ Style/SingleLineMethods:
 Style/StringLiterals:
   Description: Checks if uses of quotes match the configured preference.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#consistent-string-literals
-  Enabled: true
+  Enabled: false
   EnforcedStyle: double_quotes
   SupportedStyles:
   - single_quotes
@@ -396,7 +396,7 @@ Style/SpaceAroundEqualsInParameterDefault:
   - no_space
 Style/SpaceBeforeBlockBraces:
   Description: Checks that the left block brace has or doesn't have space before it.
-  Enabled: true
+  Enabled: false
   EnforcedStyle: space
   SupportedStyles:
   - space
@@ -606,7 +606,7 @@ Style/SymbolArray:
   Enabled: false
 Style/ExtraSpacing:
   Description: Do not use unnecessary spacing.
-  Enabled: true
+  Enabled: false
 Style/AccessorMethodName:
   Description: Check the naming of accessor methods for get_/set_.
   Enabled: false
@@ -755,7 +755,7 @@ Style/Lambda:
 Style/LeadingCommentSpace:
   Description: Comments should start with a space.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#hash-space
-  Enabled: true
+  Enabled: false
 Style/LineEndConcatenation:
   Description: Use \ instead of + or << to concatenate two string literals at line
     end.
@@ -843,7 +843,7 @@ Style/SelfAssignment:
 Style/SingleSpaceBeforeFirstArg:
   Description: Checks that exactly one space is used between a method name and the
     first argument for method calls without parentheses.
-  Enabled: true
+  Enabled: false
 Style/SpaceAfterColon:
   Description: Use spaces after colons.
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#spaces-operators
@@ -887,7 +887,7 @@ Style/SpaceBeforeModifierKeyword:
 Style/SpaceInsideBrackets:
   Description: No spaces after [ or before ].
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-spaces-braces
-  Enabled: true
+  Enabled: false
 Style/SpaceInsideParens:
   Description: No spaces after ( or before ).
   StyleGuide: https://github.com/bbatsov/ruby-style-guide#no-spaces-braces
@@ -1062,4 +1062,8 @@ Lint/Void:
   Enabled: false
 Rails/Delegate:
   Description: Prefer delegate method for delegations.
+  Enabled: false
+
+Style/BlockDelimiters:
+  Description: Couldn't find this cop, but I'm trying to disable it
   Enabled: false
