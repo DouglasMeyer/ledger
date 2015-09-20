@@ -19,7 +19,12 @@ class ApiController < ApplicationController
           id         = record.id
 
           @records[class_name] ||= {}
-          @records[class_name][id] = record
+          if serializer = ActiveModel::Serializer.serializer_for(record)
+            object = serializer.new(record, root: false)
+            @records[class_name][id] = object
+          else
+            @records[class_name][id] = record
+          end
           { type: class_name, id: id }
         end
       end
@@ -181,6 +186,18 @@ class ApiController < ApplicationController
     def self.create(command)
       record = ::ProjectedEntry.create!(command['data'])
       { records: [ record ] }
+    end
+
+    def self.update(command)
+      record = ::ProjectedEntry.find(command['id'])
+      record.update!(command['data'])
+      { records: [ record ] }
+    end
+
+    def self.delete(command)
+      record = ::ProjectedEntry.find(command['id'])
+      record.destroy!
+      { records: [] }
     end
   end
 

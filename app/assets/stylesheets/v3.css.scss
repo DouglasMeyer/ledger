@@ -42,6 +42,12 @@ input, select, textarea, button, .button, [class^="button--"] {
                 0 1px 1px #ccc inset,
                 0 0 1px blue;
   }
+  &[disabled] {
+    background-color: transparent;
+    box-shadow: 0 0 2px #ddd inset,
+                0 1px 1px #ddd inset;
+    color: lighten($textColor, 25%);
+  }
 }
 input[type="file"] { border-bottom-width: 0; }
 button, .button, [class^="button--"] {
@@ -135,16 +141,19 @@ pre { margin: 0; }
 [l-flex~="wrap"] { flex-wrap: wrap; }
 [l-flex~="center"] { justify-content: center; }
 [l-flex~="between"] { justify-content: space-between; }
-@for $i from 1 through 5 {
+@for $i from 1 through 20 {
   [l-flex-grow="#{$i}"] { flex-grow: #{$i}; }
+
+  [l-margin~="h#{$i}"] { margin-right: #{$i}rem; margin-left: #{$i}rem; }
   [l-margin~="r#{$i}"] { margin-right: #{$i}rem; }
   [l-margin~="l#{$i}"] { margin-left: #{$i}rem; }
+  [l-margin~="v#{$i}"] { margin-top: #{$i}rem; margin-bottom: #{$i}rem; }
   [l-margin~="t#{$i}"] { margin-top: #{$i}rem; }
   [l-margin~="b#{$i}"] { margin-bottom: #{$i}rem; }
   [l-width="#{$i}"] { width: #{$i}rem; }
 }
-[l-align="center"] { text-align: center; }
-[l-align="right"] { text-align: right; }
+[t-align="center"] { text-align: center; }
+[t-align="right"] { text-align: right; }
 [l-fixed="bottom"] {
   position: fixed;
   bottom: 0;

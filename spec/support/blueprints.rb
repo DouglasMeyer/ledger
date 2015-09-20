@@ -28,6 +28,7 @@ end
 ProjectedEntry.blueprint do
   account { Account.make }
   amount_cents { (rand * 200_00).round / 100.0 - 100 }
+  rrule { "FREQ=WEEKLY;DTSTART=#{Time.now.monday.next_week.utc.iso8601.remove('-').remove(':')}" }
 end
 
 BankImport.blueprint do

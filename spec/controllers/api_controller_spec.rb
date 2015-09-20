@@ -15,8 +15,13 @@ describe ApiController do
   end
 
   def records_by_id(records)
+    serializer = ActiveModel::Serializer.serializer_for(records.first)
     records.inject({}) do |acc, r|
-      acc[r.id] = r
+      if serializer
+        acc[r.id] = serializer.new(r, root: false)
+      else
+        acc[r.id] = r
+      end
       acc
     end
   end
@@ -402,12 +407,12 @@ describe ApiController do
   end
 
   describe "ProjectedEntry_v1.create" do
-    it "creates bank_entry and associated account_entries" do
+    it "creates projected entry" do
       account = Account.make!
       data = {
-        account_id: account.id,
+        account_name: account.name,
         amount: '$100.34',
-        date: 5.days.from_now
+        rrule: 'FREQ=MONTHLY'
       }
 
       post :bulk, [
@@ -423,6 +428,57 @@ describe ApiController do
         }],
         records: {
           ProjectedEntry: records_by_id([ projected_entry ])
+        }
+      }.to_json)
+    end
+  end
+
+  describe "ProjectedEntry_v1.update" do
+    it "updates a projected entry" do
+      projected_entry = ProjectedEntry.make!
+
+      account = Account.make!
+
+      data = {
+        account_name: account.name,
+        amount: '$100.34',
+        rrule: 'FREQ=MONTHLY'
+      }
+
+      post :bulk, [
+        { resource: 'ProjectedEntry_v1', action: 'update', id: projected_entry.id, reference: 'update projected entry',
+          data: data }
+      ].to_json
+
+      projected_entry.reload
+      expect(projected_entry.account_name).to eq(account.name)
+      expect(response.body).to be_json_eql({
+        responses: [{
+          reference: 'update projected entry',
+          records: [{ type: 'ProjectedEntry', id: projected_entry.id }]
+        }],
+        records: {
+          ProjectedEntry: records_by_id([ projected_entry ])
+        }
+      }.to_json)
+    end
+  end
+
+  describe "ProjectedEntry_v1.delete" do
+    it "deletes a projected entry" do
+      projected_entry = ProjectedEntry.make!
+
+      post :bulk, [
+        { resource: 'ProjectedEntry_v1', action: 'delete', id: projected_entry.id, reference: 'delete projected entry' }
+      ].to_json
+
+      expect(Proc.new{ projected_entry.reload }).to raise_error ActiveRecord::RecordNotFound
+      expect(response.body).to be_json_eql({
+        responses: [{
+          reference: 'delete projected entry',
+          records: []
+        }],
+        records: {
         }
       }.to_json)
     end

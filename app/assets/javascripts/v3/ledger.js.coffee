@@ -2,6 +2,7 @@
 //= require angular-animate/angular-animate
 //= require angular-route/angular-route
 //= require angular-rails-templates
+//= require rrule/lib/rrule
 //= require_tree ./templates
 
 angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
@@ -34,6 +35,8 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       )
       .when('/forecast',
         templateUrl: 'v3/templates/forecast.html'
+        resolve:
+          data: (dataRefresh)-> dataRefresh()
       )
       .otherwise redirectTo: '/accounts'
 
@@ -61,6 +64,7 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       promises = []
       promises.push(refresh('Account'))
       promises.push(refresh('BankEntry'))
+      promises.push(refresh('ProjectedEntry'))
       promises.push(Model.BankEntry.read(needsDistribution: true).then (entries)->
         oldLength = entriesNeedingDistribution.length
         args = [0,oldLength].concat(entries)

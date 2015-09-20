@@ -7,7 +7,7 @@ module Dollarify
     end
 
     define_method "#{name}=" do |val|
-      val = val.gsub(/,/, '').to_f if val.is_a? String
+      val = val.delete(/,/).to_f if val.is_a? String
       send("#{cents}=", (val * 100).round)
     end
   end

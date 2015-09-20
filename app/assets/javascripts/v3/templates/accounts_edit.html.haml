@@ -8,7 +8,7 @@
     l-droppable
     l-droppable-over="dragOverAccountType($event, accountType == 'Asset')"
   )
-    %h2(l-align="center") {{accountType}}
+    %h2(t-align="center") {{accountType}}
     %div(class="m-category"
       ng-repeat="category in accounts | filter:{'asset': accountType == 'Asset'} | orderBy:'position' | pMap:'category' | unique"
       l-droppable
@@ -33,7 +33,7 @@
           l-draggable-end="drop($event)"
         ) =
         %input(l-margin="r1" ng-model="account.name")
-        %span(l-width="5" l-margin="r1" l-align="right" l-currency ng-model="account.balanceCents")
+        %span(l-width="5" l-margin="r1" t-align="right" l-currency ng-model="account.balanceCents")
         %input(l-width="1" type="checkbox" ng-model="account.isDeleted")
       %div
         %input(l-margin="l1 r1"
@@ -46,5 +46,5 @@
         ng-blur="addNewCategory($event, accountType == 'Asset')"
       )
 
-  %div(l-fixed="bottom" l-align="right")
+  %div(l-fixed="bottom" t-align="right")
     %button.button--primary(ng-click="save()") Save

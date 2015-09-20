@@ -4,4 +4,15 @@ class BasePage < SitePrism::Page
   end
 
   section :navigation, NavigationSection, '.navigation'
+
+  def page_action(title)
+    Capybara.using_wait_time Capybara.default_wait_time do
+      element_exists?(%|.page-actions > span[title="#{title}"]|)
+    end
+    find(%|.page-actions > span[title="#{title}"]|)
+  end
+
+  def reload
+    page.execute_script('location.reload()')
+  end
 end

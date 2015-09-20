@@ -1,10 +1,36 @@
-.table.l-margin-v1.l-width-full(ng-controller="ForecastCtrl")
-  .table__row( ng-cloak
-    ng-repeat="entry in entries | orderBy:['-date']"
+%div(l-margin="v1 l4 r3 b3" ng-controller="ForecastCtrl")
+  .table__rows( ng-cloak
+    ng-repeat="fEntry in forecastedEntries | orderBy:'date'"
+    ng-class="{'is-selected': fEntry.isEditing, 'is-clickable': fEntry.isFirst && !fEntry.isEditing}"
+    ng-click="startEdit(fEntry)"
   )
-    .table__cell {{ entry.date }}
-    .table__cell {{ entry.until_date }}
-    .table__cell {{ entry.account }}
-    .table__cell.l-text-r(ng-model="amountCents" l-currency)
-    .table__cell {{ entry.description }}
-    .table__cell {{ entry.rrule }}
+    %div(ng-include="'v3/templates/projected_entry_'+(fEntry.isEditing ? 'edit' : 'show')+'.html'")
+
+%script(type="text/ng-template" id="v3/templates/projected_entry_show.html")
+  .table__row(l-flex)
+    %div(l-width="3" ng-class="{'m-balance is-negative': fEntry.date < today}") {{ fEntry.date | date:'EEE' }}
+    %div(l-width="9" ng-class="{'m-balance is-negative': fEntry.date < today}"    l-margin="r1") {{ fEntry.date | date }}
+    %div(l-width="8"     l-margin="r1") {{ fEntry.projectedEntry.accountName }}
+    %div(l-width="6"     l-margin="r1" t-align="right" l-currency ng-model="fEntry.projectedEntry.amountCents")
+    %div(l-flex-grow="1" l-margin="r1") {{ fEntry.projectedEntry.description }}
+    %div(l-width="18" t-align="right" ng-show="fEntry.isFirst") open
+
+%script(type="text/ng-template" id="v3/templates/projected_entry_edit.html")
+  .table__row(l-flex)
+    %div(l-width="3") {{ fEntry.projectedEntry.date | date:'EEE' }}
+    %input(l-width="9"     l-margin="r1" ng-model="fEntry.projectedEntry.date" type="date")
+    %select(l-width="8"    l-margin="r1" ng-model="fEntry.projectedEntry.accountName" ng-options="name for name in accountNames")
+    %input(l-width="6"     l-margin="r1" t-align="right" l-currency ng-model="fEntry.projectedEntry.amountCents")
+    %input(l-flex-grow="1" l-margin="r1" ng-model="fEntry.projectedEntry.description")
+  .table__row(l-flex)
+    %div(l-margin="r1 l3") Repeat
+    %select(l-width="8"    l-margin="r1"
+      ng-model="fEntry.frequency"
+      ng-options="label as label for (label, freq) in frequencyOptions"
+    )
+    %input(l-width="9" l-margin="r1" ng-disabled="fEntry.frequency == 'Once'" placeholder="until" ng-model="fEntry.projectedEntry.until" type="date")
+    %div(l-flex="between")
+      %button.button--remove( ng-show="!fEntry.saving && fEntry.projectedEntry.id" ng-click="deleteEntry(fEntry)") Delete
+      %button(                ng-show="!fEntry.saving" ng-click="cancelEdit(fEntry, $event)") cancel
+      %button.button--primary(ng-show="!fEntry.saving" ng-click="saveEdit(fEntry)") Save
+      %span(                  ng-show=" fEntry.saving") saving...

@@ -72,9 +72,12 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
       @_allById ||= {}
       @all ||= []
 
+    new: ->
+      Object.create Model.Instance, @Instance
+
     get: (id)->
       unless @_allById[id]?
-        @_allById[id] = Object.create Model.Instance, @Instance
+        @_allById[id] = @new()
         @all.push(@_allById[id])
 
       @_allById[id]
@@ -145,6 +148,46 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
     ProjectedEntry: Object.create Model,
       name: value: 'ProjectedEntry'
       resource: value: 'ProjectedEntry_v1'
+
+      new: value: ->
+        pEntry = Model.new.call(this)
+        pEntry.rrule = ''
+        pEntry
+
+      save:
+        writable: true
+        value: (camelcaseAttrs, opts={})->
+          attrs = underscore(camelcaseAttrs)
+          delete attrs._rule
+          Model.save.call(this, attrs, opts)
+
+      Instance: value:
+        _rrule:
+          configurable: true
+          writable: true
+        rrule:
+          enumerable: true
+          configurable: true
+          get: -> @_rrule
+          set: (val)->
+            @_rrule = val
+            delete @_rule
+
+        rule: get: -> @_rule ||= RRule.fromString(@rrule)
+
+        date:
+          get: ->
+            @rule.origOptions.dtstart
+          set: (val)->
+            @rule.origOptions.dtstart = val
+            @rrule = @rule.toString()
+
+        until:
+          get: ->
+            @rule.origOptions.until
+          set: (val)->
+            @rule.origOptions.until = val
+            @rrule = @rule.toString()
 
     LedgerSummary: Object.create Model,
       name: value: 'LedgerSummary'
