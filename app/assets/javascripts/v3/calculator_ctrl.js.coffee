@@ -20,7 +20,7 @@ angular.module('ledger').controller 'CalculatorCtrl', ($scope, Model, $filter, $
       parsedInput = $parse(input)
       output = parsedInput(calcScope) * 100
       if isNaN(output)
-        throw 'something'
+        throw new Error('something')
       else
         unWatchExp = $scope.$watch ->
           $scope.output = parsedInput(calcScope) * 100
