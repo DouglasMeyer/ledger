@@ -1,6 +1,6 @@
 {
   "arrow_spacing": {
-    "level": "error"
+    "level": "ignore"
   },
   "camel_case_classes": {
     "level": "error"
@@ -34,7 +34,7 @@
     "value": "unix"
   },
   "max_line_length": {
-    "level": "error",
+    "level": "ignore",
     "value": 80
   },
   "missing_fat_arrows": {
