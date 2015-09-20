@@ -7,9 +7,9 @@ class BasePage < SitePrism::Page
 
   def page_action(title)
     Capybara.using_wait_time Capybara.default_wait_time do
-      element_exists?(%Q|.page-actions > span[title="#{title}"]|)
+      element_exists?(%|.page-actions > span[title="#{title}"]|)
     end
-    find(%Q|.page-actions > span[title="#{title}"]|)
+    find(%|.page-actions > span[title="#{title}"]|)
   end
 
   def reload
