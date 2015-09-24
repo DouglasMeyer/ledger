@@ -1,9 +1,8 @@
 Ledger::Application.routes.draw do
-  def self.version(version, default=false, &block)
+  def self.version(version, default = false, &block)
     namespace version, &block
     root to: redirect("/#{version}") if default
   end
-
 
   version "v2" do
     resources :accounts, only: [ :index, :show ] do
@@ -16,7 +15,7 @@ Ledger::Application.routes.draw do
     resources :strategies, only: [ :index, :show, :new, :create ]
     resources :bank_imports, only: [ :create ]
 
-    root :to => 'accounts#index'
+    root to: 'accounts#index'
   end
 
   version "v3", true do
@@ -30,7 +29,7 @@ Ledger::Application.routes.draw do
     resources :strategies, only: [ :index, :show, :new, :create ]
     resources :bank_imports, only: [ :create ]
 
-    root :to => 'pages#angular'
+    root to: 'pages#angular'
     if Rails.env.production?
       offline = Rack::Offline.configure cache: true do
         cache ActionController::Base.helpers.asset_path("normalize.css")

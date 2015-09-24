@@ -108,7 +108,7 @@ describe BankEntry do
     describe ".with_balance" do
       it "includes the balance" do
         bes = bank_entries
-        expect(BankEntry.with_balance.map{|be| [be.id, be.balance_cents]}).to eq([
+        expect(BankEntry.with_balance.map { |be| [be.id, be.balance_cents] }).to eq([
           [ bes[0].id, bes[0].amount_cents ],
           [ bes[1].id, bes[0].amount_cents + bes[1].amount_cents ],
           [ bes[2].id, bes[0].amount_cents + bes[1].amount_cents + bes[2].amount_cents ]

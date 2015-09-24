@@ -4,13 +4,12 @@ describe "show" do
 
   it "shows new strategies" do
     bank_entry = BankEntry.make!
-    strategy = Strategy.new
     account = Account.make!
 
     get "/v2/strategies/0",
-      bank_entry_id: bank_entry.id,
-      account_id: account.id,
-      entry_amount: '0.00'
+        bank_entry_id: bank_entry.id,
+        account_id: account.id,
+        entry_amount: '0.00'
 
     assert_select 'h3', account.name
     assert_select 'h3 + div', /No Strategy/ do
@@ -26,9 +25,9 @@ describe "show" do
     account = Account.make!
 
     get "/v2/strategies/#{strategy.id}",
-      bank_entry_id: bank_entry.id,
-      account_id: account.id,
-      entry_amount: '12.30'
+        bank_entry_id: bank_entry.id,
+        account_id: account.id,
+        entry_amount: '12.30'
 
     assert_select 'h3', account.name
     assert_select 'h3 + div', /Using Strategy/ do
@@ -46,9 +45,9 @@ describe "show" do
     strategy = Strategy.make! strategy_type: :fixed, variable: 12.3, notes: nil
     account = Account.make!
     get "/v2/strategies/#{strategy.id}",
-      bank_entry_id: bank_entry.id,
-      account_id: account.id,
-      entry_amount: '8.00'
+        bank_entry_id: bank_entry.id,
+        account_id: account.id,
+        entry_amount: '8.00'
 
     assert_select 'h3', account.name
     assert_select 'h3 + div', /Not using Strategy/ do

@@ -10,7 +10,7 @@ class Strategy < ActiveRecord::Base
     }
   end
 
-  def value(bank_entry=nil)
+  def value(bank_entry = nil)
     case strategy_type
     when 'fixed'
       variable.to_f
@@ -22,12 +22,12 @@ class Strategy < ActiveRecord::Base
     end
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     (options[:methods] ||= []).push(:class_name)
     super(options)
   end
+
   def class_name
     self.class.name
   end
-
 end

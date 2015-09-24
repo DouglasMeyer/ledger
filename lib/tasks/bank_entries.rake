@@ -1,10 +1,10 @@
 namespace :bank_entries do
 
   desc 'Import bank entries from budget export CSV'
-  task :import => :environment do
+  task import: :environment do
     def from_money(money)
       money = '0' if money.nil?
-      (money.gsub(/[^\d.-]/, '').to_f*100).to_i
+      (money.gsub(/[^\d.-]/, '').to_f * 100).to_i
     end
 
     require 'csv'

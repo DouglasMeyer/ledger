@@ -7,7 +7,7 @@ class BankEntry < ActiveRecord::Base
   has_many :accounts, through: :account_entries
 
   validates :external_id, uniqueness: true, allow_nil: true
-  validates :date, :amount_cents, :presence => true
+  validates :date, :amount_cents, presence: true
   validate :fields_from_bank_do_not_update
 
   scope :reverse_order, -> { order(:date, :id) }
@@ -62,15 +62,17 @@ class BankEntry < ActiveRecord::Base
     end
   end
 
-  def as_json(options={})
+  def as_json(options = {})
     (options[:methods] ||= []).push(:account_entries, :class_name)
     super(options)
   end
+
   def class_name
     self.class.name
   end
 
-private
+  private
+
   def fields_from_bank_do_not_update
     return if new_record?
     errors.add(:external_id, :immutable) if external_id_changed?
@@ -79,5 +81,4 @@ private
     errors.add(:description, :immutable) if description_changed?
     errors.add(:amount_cents, :immutable) if amount_cents_changed?
   end
-
 end

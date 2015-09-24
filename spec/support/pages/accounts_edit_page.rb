@@ -32,22 +32,21 @@ class AccountsEditPage < SitePrism::Page
 
   def add_category(account_type, category_name)
     add_category_input = if account_type == :asset
-      find('.m-accountType:nth-child(1) input[placeholder="add category"]')
-    else
-      find('.m-accountType:nth-child(2) input[placeholder="add category"]')
-    end
+                           find('.m-accountType:nth-child(1) input[placeholder="add category"]')
+                         else
+                           find('.m-accountType:nth-child(2) input[placeholder="add category"]')
+                         end
     add_category_input.set(category_name)
     add_category_input.trigger('blur')
   end
 
   def add_account(account_type, category_name, account_name)
     categories = (account_type == :asset ? asset_categories : liability_categories)
-    category = categories.detect { |category| category.name == category_name }
+    category = categories.detect { |c| c.name == category_name }
     if category
       category.add_account(account_name)
     else
       throw "category #{category_name.inspect} not one of #{categories.map(&:name).inspect}"
     end
   end
-
 end

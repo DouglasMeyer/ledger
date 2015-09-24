@@ -1,14 +1,14 @@
 namespace :accounts do
 
   desc 'Import accounts from budget export CSV'
-  task :import => :environment do
+  task import: :environment do
     def from_money(money)
-      money.gsub(/[^\d.-]/, '').to_f*100
+      money.gsub(/[^\d.-]/, '').to_f * 100
     end
 
     require 'csv'
     csv = CSV.parse(File.read('/home/douglas/.local/Dropbox/Katy-Doug/budget.csv'))
-# Account total... , _ , Category , Account , Balance, _ , Category , Account , Balance
+    # Account total... , _ , Category , Account , Balance, _ , Category , Account , Balance
     asset_category = ''
     liability_category = ''
     bank_entry = nil

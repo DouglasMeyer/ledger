@@ -1,12 +1,12 @@
 module V2
   class AccountsController < BaseController
-
     class Accounts
       extend ActiveModel::Naming
       include ActiveModel::Conversion
-      def initialize(attributes={})
+      def initialize(attributes = {})
         assign_attributes(attributes)
       end
+
       def id; ''; end
 
       attr_accessor :accounts
@@ -21,7 +21,7 @@ module V2
         attributes.each do |_, values|
           id = values.delete(:id)
           destroy = values.delete(:_destroy)
-          account = accounts.detect{|a| a.id.to_s == id } || Account.new
+          account = accounts.detect{ |a| a.id.to_s == id } || Account.new
           if destroy == '1'
             next if account.new_record?
             values = { deleted_at: Time.now }
@@ -29,7 +29,9 @@ module V2
           account.update_attributes! values
         end
       end
-    private
+
+      private
+
       def assign_attributes(attributes)
         attributes.each do |name, value|
           send("#{name}=", value)
@@ -55,7 +57,8 @@ module V2
       redirect_to action: :index
     end
 
-  private
+    private
+
     def accounts
       @accounts ||= Account.not_deleted.order(:position)
     end

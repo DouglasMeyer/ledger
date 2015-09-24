@@ -1,17 +1,21 @@
 require 'rails_helper'
 
 describe Account do
-  def add_ae(amount, month, day, from_bank=true)
-    AccountEntry.make! account: @account,
-                 amount_cents: amount * 100,
-                    bank_entry: BankEntry.make!(amount_cents: amount * 100,
-                                                        date: Date.new(2013, month, day),
-                                                 external_id: from_bank ? BankEntry.count : nil)
+  def add_ae(amount, month, day, from_bank = true)
+    AccountEntry.make!(
+      account: @account,
+      amount_cents: amount * 100,
+      bank_entry: BankEntry.make!(
+        amount_cents: amount * 100,
+        date: Date.new(2013, month, day),
+        external_id: from_bank ? BankEntry.count : nil
+      )
+    )
   end
 
   it "can't be deleted with a balance" do
     account = AccountEntry.make!(amount_cents: 20_00).account
-    expect{ account.update_attributes!(deleted_at: Time.now) }.to raise_error
+    expect { account.update_attributes!(deleted_at: Time.now) }.to raise_error
   end
 
   describe "average_spent" do
