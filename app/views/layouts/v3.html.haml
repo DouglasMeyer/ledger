@@ -36,6 +36,7 @@
         = link_to v3_root_path(anchor: '/entries'),              'ng-click' => 'showNav=false', class: 'entries navigation__page' do
           Entries
           %span.count(ng-show="distributionCount != 0") {{ distributionCount }}
+        = link_to "Strategies", v3_strategies_path, class: 'strategies navigation__page'
         = link_to "Forecast", v3_root_path(anchor: '/forecast'), 'ng-click' => 'showNav=false', class: 'navigation__page'
 
         .bank_import(tabindex="0")

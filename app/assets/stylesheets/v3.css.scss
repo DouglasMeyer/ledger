@@ -309,8 +309,9 @@ form .actions { clear: both; }
 // Layout
 body { padding-top: 2.2rem; }
 .navigation {
+  $navigation_pages: 4;
   $base_width: 1em + // left-padding
-              10em * 3 + // 3 .navigation__page's
+              10em * $navigation_pages + // .navigation__page's
               20em; // .bank_import and .page-actions
 
   font-size: 1.1rem;
@@ -361,7 +362,7 @@ body { padding-top: 2.2rem; }
     }
 
     @media (max-width: $base_width) {
-      width: 33%;
+      width: 100% / $navigation_pages;
 
       &:last-of-type {
         border-right: none;
