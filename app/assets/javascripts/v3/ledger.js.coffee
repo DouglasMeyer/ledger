@@ -73,13 +73,12 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       promises.push(Model.LedgerSummary.read().then (summary)->
         angular.copy summary, ledgerSummary
       )
-      promiseEverything = $q.all(promises)
 
       $rootScope.$emit 'status',
         text: 'loading'
-        promise: promiseEverything
+        promise: $q.all(promises)
 
-      promiseEverything
+      undefined
 
   .value 'entriesNeedingDistribution', []
 
