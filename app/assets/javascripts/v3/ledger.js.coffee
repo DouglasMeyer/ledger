@@ -84,7 +84,11 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
 
   .value 'ledgerSummary', {}
 
-  .run ($rootScope, $window, $q, appCache)->
+  .run ($rootScope, $window, $q, appCache, $http)->
+
+    # So rails knows we are doing XHR requests.
+    $http.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+
     deferred = undefined
     appCache
       .on 'downloading', ->
