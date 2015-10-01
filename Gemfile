@@ -6,6 +6,7 @@ ruby '2.1.3'
 gem 'rails', '4.1.6'
 
 gem 'active_model_serializers'
+gem 'activerecord-session_store'
 gem 'angular-rails-templates'
 gem 'autoprefixer-rails'
 gem 'bourbon'
