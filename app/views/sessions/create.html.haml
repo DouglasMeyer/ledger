@@ -1,0 +1,9 @@
+%h3 Signed-in as
+%h2= auth_user
+
+:javascript
+  if (window.opener) {
+    window.close();
+  } else {
+    window.location = "#{location}";
+  }

@@ -51,6 +51,11 @@ angular.module('ledger').factory 'Model', ($http, $filter, $timeout, $q)->
 
     $http
       .post('/api', JSON.stringify(sentRequests) )
+      .catch (err)->
+        if err.status == 401
+          popup = window.open("/auth/google_oauth2", 'authPopup', "menubar=no,toolbar=no,status=no,toolbar=no,width=600,height=450")
+          new Promise (resolve)-> popup.onbeforeunload = resolve
+          .then -> $http.post('/api', JSON.stringify(sentRequests))
       .then ({ data: { records, responses }})->
         for type, recordsById of records
           models[type].load(data for id, data of recordsById)

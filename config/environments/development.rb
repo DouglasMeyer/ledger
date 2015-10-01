@@ -1,5 +1,6 @@
 Ledger::Application.configure do
-  config.middleware.use(Rack::LiveReload,
+  config.middleware.use(
+    Rack::LiveReload,
     live_reload_port: 35734
   )
 

@@ -43,5 +43,8 @@ Ledger::Application.routes.draw do
     end
   end
 
+  match "/auth/:provider/callback" => "sessions#create", via: [ :get, :post ]
+  get "/sign_out" => "sessions#destroy"
+
   post '/api' => 'api#bulk'
 end
