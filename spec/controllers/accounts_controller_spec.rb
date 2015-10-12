@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe V2::AccountsController do
+  before do
+    session[:auth_user] = :yes
+  end
 
   describe "GET index" do
     it "loads accounts" do

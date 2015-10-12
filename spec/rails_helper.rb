@@ -44,5 +44,31 @@ RSpec.configure do |config|
     Capybara.reset_sessions!
   end
 
+  def mock_auth
+    OmniAuth.config.test_mode = true
+    OmniAuth.config.mock_auth[:developer] = OmniAuth::AuthHash.new(
+      provider: 'developer',
+      info: { name: 'feature tester' }
+    )
+    yield
+  ensure
+    OmniAuth.config.mock_auth[:developer] = nil
+  end
+
+  config.around(:each, type: :feature) do |example|
+    mock_auth do
+      visit "/auth/developer"
+      example.run
+    end
+  end
+
+  config.around(:each, type: :request) do |example|
+    mock_auth do
+      get "/auth/developer"
+      follow_redirect!
+      example.run
+    end
+  end
+
   config.infer_spec_type_from_file_location!
 end

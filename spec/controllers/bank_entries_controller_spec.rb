@@ -2,6 +2,10 @@ require 'rails_helper'
 
 describe V2::BankEntriesController do
 
+  before do
+    session[:auth_user] = :yes
+  end
+
   describe "GET index" do
     it "loads account_names" do
       Account.make! name: 'Last'

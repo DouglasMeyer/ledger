@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe "show" do
+describe "show", type: :request do
 
   it "shows new strategies" do
     bank_entry = BankEntry.make!

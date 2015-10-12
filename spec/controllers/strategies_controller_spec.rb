@@ -2,6 +2,10 @@ require 'rails_helper'
 
 describe V2::StrategiesController do
 
+  before do
+    session[:auth_user] = :yes
+  end
+
   describe "GET index" do
     before do
       @account2 = Account.make! position: 3
