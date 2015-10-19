@@ -1,11 +1,11 @@
-Ledger::Application.configure do
+Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
   config.cache_classes = true
 
   # Eager load code on boot. This eager loads most of Rails and
-  # your application in memory, allowing both thread web servers
+  # your application in memory, allowing both threaded web servers
   # and those relying on copy on write to perform better.
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
@@ -23,17 +23,16 @@ Ledger::Application.configure do
   config.serve_static_assets = false
 
   # Compress JavaScripts and CSS.
-  config.assets.js_compressor = Uglifier.new(mangle: false)
+  config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
 
-  # Whether to fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = true #FIXME: I couldn't get assets to precompile
+  # Do not fallback to assets pipeline if a precompiled asset is missed.
+  config.assets.compile = true #FIXME: I couldn't get assets to precompile with the default: false
 
   # Generate digests for assets URLs.
   config.assets.digest = true
 
-  # Version of your assets, change this if you want to expire all your assets.
-  config.assets.version = '1.0'
+  # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = "X-Sendfile" # for apache
@@ -66,7 +65,7 @@ Ledger::Application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
-  # the I18n.default_locale when a translation can not be found).
+  # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
   # Send deprecation notices to registered listeners.
@@ -79,4 +78,7 @@ Ledger::Application.configure do
   config.log_formatter = ::Logger::Formatter.new
 
   config.middleware.use('PartyFoul::Middleware')
+
+  # Do not dump schema after migrations.
+  config.active_record.dump_schema_after_migration = false
 end
