@@ -52,7 +52,7 @@
                 %span.m-balance(ng-model="bankDelta" l-currency)
                 &nbsp;than ledger
             = form_tag v3_bank_imports_path, multipart: true do
-              = file_field_tag :upload
+              = file_field_tag :upload, onchange: 'this.form.submit()'
 
       .navigation__status.list( ng-cloak
         ng-controller="StatusCtrl"

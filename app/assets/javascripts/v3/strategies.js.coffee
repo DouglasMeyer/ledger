@@ -8,7 +8,6 @@ class window.StrategyView
   showStrategy: (control, event)->
     view = this
     #accountEntry = $(control).closest('li')
-    console.log @el[0]
     strategyId = @el.data('strategy-id') || 0
     accountId  = @el.data('account-id')
     el = jQuery('<div class="strategy-view">Loading ...</div>')
