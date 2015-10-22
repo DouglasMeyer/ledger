@@ -33,7 +33,7 @@ Rails.application.configure do
   config.assets.debug = true
 
   config.test_rails_js.tests_paths += %w(/**/tests/**/*.coffee)
-  config.test_rails_js.global_assets.stylesheets += %w(test_it v2)
+  config.test_rails_js.global_assets.stylesheets += %w(test_it)
 
   # Adds additional error checking when serving assets at runtime.
   # Checks for improperly declared sprockets dependencies.
