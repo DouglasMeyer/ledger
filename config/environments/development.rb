@@ -32,6 +32,10 @@ Rails.application.configure do
   # number of complex assets.
   config.assets.debug = true
 
+  # Asset digests allow you to set far-future HTTP expiration dates on all assets,
+  # yet still be able to expire them through the digest params.
+  config.assets.digest = true
+
   config.test_rails_js.tests_paths += %w(/**/tests/**/*.coffee)
   config.test_rails_js.global_assets.stylesheets += %w(test_it)
 
