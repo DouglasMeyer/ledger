@@ -29,7 +29,6 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'selenium-webdriver'
   gem 'site_prism'
-  gem 'teaspoon'
   gem 'test_rails_js', github: 'DouglasMeyer/test_rails_js'
 end
 

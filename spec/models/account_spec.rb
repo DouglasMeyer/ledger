@@ -15,7 +15,7 @@ describe Account do
 
   it "can't be deleted with a balance" do
     account = AccountEntry.make!(amount_cents: 20_00).account
-    expect { account.update_attributes!(deleted_at: Time.now) }.to raise_error
+    expect { account.update_attributes!(deleted_at: Time.now) }.to raise_error ActiveRecord::RecordInvalid
   end
 
   describe "average_spent" do
