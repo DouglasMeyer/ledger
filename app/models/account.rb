@@ -26,8 +26,8 @@ class Account < ActiveRecord::Base
     return nil if months.zero?
     spent = entries
             .joins(:bank_entry)
-            .where("bank_entries.external_id IS NOT NULL")
-            .where("bank_entries.amount_cents < 0")
+            .where('bank_entries.external_id IS NOT NULL')
+            .where('bank_entries.amount_cents < 0')
             .pluck(:amount_cents).sum / 100.0
     spent * average_over / months
   end

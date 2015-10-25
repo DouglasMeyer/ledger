@@ -22,7 +22,7 @@ describe ApiController do
     end
   end
 
-  describe "reading a collection" do
+  describe 'reading a collection' do
     before do
       Account.make!
       Account.make!
@@ -33,7 +33,7 @@ describe ApiController do
       ].to_json
     end
 
-    it "responds with the collection" do
+    it 'responds with the collection' do
       expect(response.body).to be_json_eql({
         responses: [
           { records: response_records(Account.all) }
@@ -44,7 +44,7 @@ describe ApiController do
       }.to_json)
     end
   end
-  describe "reading a collection with a query" do
+  describe 'reading a collection with a query' do
     before do
       Account.make!
       @account = Account.make!
@@ -55,7 +55,7 @@ describe ApiController do
       ].to_json
     end
 
-    it "responds with the collection matching the query" do
+    it 'responds with the collection matching the query' do
       expect(response.body).to be_json_eql({
         responses: [
           { records: response_records(Account.where(id: @account.id)) }
@@ -66,8 +66,8 @@ describe ApiController do
       }.to_json)
     end
   end
-  describe "reading a collection with an invalid query" do
-    it "raises a InvalidQuery exception" do
+  describe 'reading a collection with an invalid query' do
+    it 'raises a InvalidQuery exception' do
       expect(lambda {
         post :bulk, [
           { resource: 'Account_v1', action: :read, query: { blas: 'true' } }
@@ -75,8 +75,8 @@ describe ApiController do
       }).to raise_error(ApiController::InvalidQuery, '{"blas"=>"true"} is not a valid query.')
     end
   end
-  describe "reading a collection with pagination" do
-    it "works" do
+  describe 'reading a collection with pagination' do
+    it 'works' do
       @account1 = Account.make!
       @account2 = Account.make!
 
@@ -97,7 +97,7 @@ describe ApiController do
     end
   end
 
-  describe "creating a record" do
+  describe 'creating a record' do
     before do
       post :bulk, [
         { resource: 'Account_v1', action: :create, reference: 'the new record',
@@ -106,10 +106,10 @@ describe ApiController do
       ].to_json
     end
 
-    it "creates the record" do
+    it 'creates the record' do
       expect(Account.where(name: 'New Account').first.asset).to eq(true)
     end
-    it "responds with the new record and reference" do
+    it 'responds with the new record and reference' do
       expect(response.body).to be_json_eql({
         responses: [
           {
@@ -124,7 +124,7 @@ describe ApiController do
     end
   end
 
-  describe "updating a record" do
+  describe 'updating a record' do
     let(:account){ Account.make! asset: false }
     before do
       post :bulk, [
@@ -134,11 +134,11 @@ describe ApiController do
       ].to_json
     end
 
-    it "updates the record" do
+    it 'updates the record' do
       expect(account.reload.name).to eq('New Account Name')
       expect(account.reload.asset).to eq(true)
     end
-    it "responds with the updated record and reference" do
+    it 'responds with the updated record and reference' do
       expect(response.body).to be_json_eql({
         responses: [
           {
@@ -153,8 +153,8 @@ describe ApiController do
     end
   end
 
-  describe "attempting to perform an impossible action" do
-    it "raises a ImpossibleAction exception" do
+  describe 'attempting to perform an impossible action' do
+    it 'raises a ImpossibleAction exception' do
       expect(lambda {
         post :bulk, [
           { resource: 'Something', action: :something }
@@ -163,7 +163,7 @@ describe ApiController do
     end
   end
 
-  describe "failing to create a record" do
+  describe 'failing to create a record' do
     before do
       @account1_data = { 'asset' => true }
       @account2_data = { 'name' => 'New Account', 'asset' => true }
@@ -177,20 +177,20 @@ describe ApiController do
       end
     end
 
-    it "has a response of :multi_status" do
+    it 'has a response of :multi_status' do
       expect(response.status).to eq(207)
     end
-    it "creates only 1 record" do
+    it 'creates only 1 record' do
       expect(Account.count).to eq(1)
     end
-    it "responds with invalid record" do
+    it 'responds with invalid record' do
       expect(@response_references['failed creation']).to eq({
         reference: 'failed creation',
         data: @blank_account.merge(@account1_data),
         errors: { 'name' => ["can't be blank"] }
       }.stringify_keys)
     end
-    it "responds with the created record" do
+    it 'responds with the created record' do
       expect(@response_references['actual created']).to eq({
         reference: 'actual created',
         records: response_records([ Account.first ])
@@ -198,8 +198,8 @@ describe ApiController do
     end
   end
 
-  describe "BankEntry_v1.read" do
-    it "responds with collection" do
+  describe 'BankEntry_v1.read' do
+    it 'responds with collection' do
       BankEntry.make!
       AccountEntry.make!
       AccountEntry.make!
@@ -218,7 +218,7 @@ describe ApiController do
       }.to_json)
     end
 
-    it "paginates the response" do
+    it 'paginates the response' do
       AccountEntry.make!
       BankEntry.make!
       AccountEntry.make!
@@ -250,7 +250,7 @@ describe ApiController do
       }.to_json)
     end
 
-    it "responds with entries needing distribution" do
+    it 'responds with entries needing distribution' do
       needs_distribution = []
       needs_distribution << BankEntry.make!
       BankEntry.make! amount_cents: 0
@@ -273,8 +273,8 @@ describe ApiController do
     end
   end
 
-  describe "BankEntry_v1.update" do
-    it "updated bank_entry and associated account_entries" do
+  describe 'BankEntry_v1.update' do
+    it 'updated bank_entry and associated account_entries' do
       bank_entry = AccountEntry.make!.bank_entry
       data = bank_entry.as_json
       data.delete('class_name')
@@ -303,7 +303,7 @@ describe ApiController do
       }.to_json)
     end
 
-    it "removes account_entries with _destroy attribute" do
+    it 'removes account_entries with _destroy attribute' do
       bank_entry = AccountEntry.make!.bank_entry
       data = bank_entry.as_json
       data.delete('class_name')
@@ -320,8 +320,8 @@ describe ApiController do
     end
   end
 
-  describe "BankEntry_v1.create" do
-    it "creates bank_entry and associated account_entries" do
+  describe 'BankEntry_v1.create' do
+    it 'creates bank_entry and associated account_entries' do
       Account.make! name: 'Benevolence'
       Account.make! name: 'Fun Money'
       data = {
@@ -352,8 +352,8 @@ describe ApiController do
     end
   end
 
-  describe "ProjectedEntry_v1.read" do
-    it "responds with collection" do
+  describe 'ProjectedEntry_v1.read' do
+    it 'responds with collection' do
       ProjectedEntry.make!
       ProjectedEntry.make!
 
@@ -370,7 +370,7 @@ describe ApiController do
       }.to_json)
     end
 
-    it "paginates the response" do
+    it 'paginates the response' do
       ProjectedEntry.make!
       ProjectedEntry.make!
       ProjectedEntry.make!
@@ -401,8 +401,8 @@ describe ApiController do
     end
   end
 
-  describe "ProjectedEntry_v1.create" do
-    it "creates projected entry" do
+  describe 'ProjectedEntry_v1.create' do
+    it 'creates projected entry' do
       account = Account.make!
       data = {
         account_name: account.name,
@@ -428,8 +428,8 @@ describe ApiController do
     end
   end
 
-  describe "ProjectedEntry_v1.update" do
-    it "updates a projected entry" do
+  describe 'ProjectedEntry_v1.update' do
+    it 'updates a projected entry' do
       projected_entry = ProjectedEntry.make!
 
       account = Account.make!
@@ -459,8 +459,8 @@ describe ApiController do
     end
   end
 
-  describe "ProjectedEntry_v1.delete" do
-    it "deletes a projected entry" do
+  describe 'ProjectedEntry_v1.delete' do
+    it 'deletes a projected entry' do
       projected_entry = ProjectedEntry.make!
 
       post :bulk, [
@@ -479,8 +479,8 @@ describe ApiController do
     end
   end
 
-  describe "Account_v1.delete" do
-    it "sets the deleted_at column" do
+  describe 'Account_v1.delete' do
+    it 'sets the deleted_at column' do
       account = Account.make!
 
       data = { id: account.id }
@@ -491,7 +491,7 @@ describe ApiController do
       expect(account.reload.deleted_at).to_not be_nil
     end
 
-    it "updates the record" do
+    it 'updates the record' do
       account = Account.make!
 
       data = {
@@ -506,8 +506,8 @@ describe ApiController do
     end
   end
 
-  describe "LedgerSummary_v1.read" do
-    it "responds with collection" do
+  describe 'LedgerSummary_v1.read' do
+    it 'responds with collection' do
       BankImport.make!
       latest_bank_import = BankImport.make!
       BankEntry.make!(amount_cents:  1_00)

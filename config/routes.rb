@@ -4,7 +4,7 @@ Rails.application.routes.draw do
     root to: redirect("/#{version}") if default
   end
 
-  version "v3", true do
+  version 'v3', true do
     resources :accounts, only: :show do
       collection do
         get :edit
@@ -18,19 +18,19 @@ Rails.application.routes.draw do
     root to: 'pages#angular'
     if Rails.env.production?
       offline = Rack::Offline.configure cache: true do
-        cache ActionController::Base.helpers.asset_path("normalize.css")
-        cache ActionController::Base.helpers.asset_path("v3.css")
-        cache ActionController::Base.helpers.asset_path("v3.js")
-        cache ActionController::Base.helpers.asset_path("icomoon.ttf")
-        cache "/v3"
-        network "/api"
+        cache ActionController::Base.helpers.asset_path('normalize.css')
+        cache ActionController::Base.helpers.asset_path('v3.css')
+        cache ActionController::Base.helpers.asset_path('v3.js')
+        cache ActionController::Base.helpers.asset_path('icomoon.ttf')
+        cache '/v3'
+        network '/api'
       end
       get '/application.manifest' => offline, as: :manifest
     end
   end
 
-  match "/auth/:provider/callback" => "sessions#create", via: [ :get, :post ]
-  get "/sign_out" => "sessions#destroy"
+  match '/auth/:provider/callback' => 'sessions#create', via: [ :get, :post ]
+  get '/sign_out' => 'sessions#destroy'
 
   post '/api' => 'api#bulk'
 end

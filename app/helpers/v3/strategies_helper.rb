@@ -12,7 +12,7 @@ module V3
     end
 
     def strategy_dot(strategy, bank_entry, options = {})
-      class_name = "strategy-dot"
+      class_name = 'strategy-dot'
       text = ''
       using = true
       if strategy && !strategy.new_record?
@@ -21,13 +21,13 @@ module V3
       end
       if options[:text]
         if strategy.new_record?
-          text = "No Strategy"
+          text = 'No Strategy'
         else
           text = "#{using ? 'Using' : 'Not using'} Strategy"
         end
       end
       # &middot; &bull;
-      content_tag(:span, "&middot;".html_safe, class: class_name) + text
+      content_tag(:span, '&middot;'.html_safe, class: class_name) + text
     end
   end
 end

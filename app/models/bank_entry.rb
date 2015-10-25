@@ -1,7 +1,7 @@
 class BankEntry < ActiveRecord::Base
   attr_accessor :bank_balance_cents
 
-  default_scope { order("bank_entries.date DESC, bank_entries.id DESC") }
+  default_scope { order('bank_entries.date DESC, bank_entries.id DESC') }
   has_many :account_entries, dependent: :restrict_with_error
   accepts_nested_attributes_for :account_entries, allow_destroy: true
   has_many :accounts, through: :account_entries
@@ -25,7 +25,7 @@ class BankEntry < ActiveRecord::Base
   ENDSQL
   scope :with_balance, -> do
     query = join_aggrigate_bank_entries
-    query.select_values = ["bank_entries.*", "aggrigate_bank_entries.balance_cents"]
+    query.select_values = ['bank_entries.*', 'aggrigate_bank_entries.balance_cents']
     query
   end
 
@@ -45,7 +45,7 @@ class BankEntry < ActiveRecord::Base
       bank_entries.amount_cents != 0 )
   ENDSQL
 
-  scope :from_bank, -> { where("external_id IS NOT NULL") }
+  scope :from_bank, -> { where('external_id IS NOT NULL') }
   def from_bank?
     external_id.present?
   end

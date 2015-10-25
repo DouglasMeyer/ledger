@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe AccountEntry do
-  describe ".join_aggrigate_account_entries" do
-    it "includes balance_cents" do
+  describe '.join_aggrigate_account_entries' do
+    it 'includes balance_cents' do
       account = Account.make!
       ae1 = AccountEntry.make! account: account, amount_cents: 1
       ae2 = AccountEntry.make! amount_cents: 9

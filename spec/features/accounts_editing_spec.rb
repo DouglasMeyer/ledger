@@ -4,7 +4,7 @@ describe 'accounts editing view', type: :feature do
   let(:accounts_edit_page){ AccountsEditPage.new }
   let(:accounts_page){ AccountsPage.new }
 
-  it "shows accounts ordered by position" do
+  it 'shows accounts ordered by position' do
     Account.make!(asset: true, name: 'asset 2', category: 'save', position: 2)
     Account.make!(asset: true, name: 'asset 1', category: 'save', position: 1)
 
@@ -27,7 +27,7 @@ describe 'accounts editing view', type: :feature do
     expect(liabilities).to eq('bills' => [ 'liability 1', 'liability 2' ])
   end
 
-  it "can create categories and accounts" do
+  it 'can create categories and accounts' do
     accounts_edit_page.load
 
     accounts_edit_page.add_category :asset, 'asset category'

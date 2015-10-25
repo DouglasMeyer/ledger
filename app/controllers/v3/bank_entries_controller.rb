@@ -9,7 +9,7 @@ module V3
     def edit
       bank_entry # populate @bank_entry
       @accounts = Account.not_deleted.order(:position)
-      @distribute_as_income = bank_entry.account_entries.where("account_entries.strategy_id IS NOT NULL").any?
+      @distribute_as_income = bank_entry.account_entries.where('account_entries.strategy_id IS NOT NULL').any?
     end
 
     def update

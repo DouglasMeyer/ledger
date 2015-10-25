@@ -3,7 +3,7 @@ module V3
     def account_balance_without_bank_entry(account, bank_entry)
       ids = bank_entry.account_entries.pluck(:id)
       if ids.any?
-        account_entries = account.entries.where("id NOT IN (?)", ids)
+        account_entries = account.entries.where('id NOT IN (?)', ids)
       else
         account_entries = account.entries
       end

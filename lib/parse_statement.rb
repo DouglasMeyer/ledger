@@ -38,7 +38,7 @@ module ParseStatement
         a[e.to_sym] = send(e)
       end
       attrs[:amount] = amount.to_f
-      attrs[:date] = date.strftime("%D")
+      attrs[:date] = date.strftime('%D')
       "#<StatementEntry: #{attrs.inspect}>"
     end
   end

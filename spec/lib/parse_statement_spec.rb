@@ -61,8 +61,8 @@ NEWFILEUID:NONE
     ParseStatement.run(string)
   end
 
-  describe "an empty run" do
-    it "returns no transaction" do
+  describe 'an empty run' do
+    it 'returns no transaction' do
       bank_entry_attrs, balance = run_parse
 
       expect(bank_entry_attrs).to eq([])
