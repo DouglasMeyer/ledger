@@ -13,13 +13,7 @@ class BankEntriesPage < BasePage
     element :cancel_button, "button", text: 'cancel'
     element :saving_message, "span",  text: 'saving...'
 
-    def click
-      root_element.click
-    end
-
-    def text
-      root_element.text
-    end
+    delegate :click, :text, to: :root_element
   end
 
   set_url '/v3#/entries'

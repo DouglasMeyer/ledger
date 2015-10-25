@@ -22,9 +22,7 @@ class ForecastPage < BasePage
       root_element.find('button', text: 'cancel').click
     end
 
-    def click
-      root_element.click
-    end
+    delegate :click, to: :root_element
   end
 
   set_url '/v3#/forecast'

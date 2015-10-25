@@ -4,7 +4,7 @@ module AccountName
     account && account.name
   end
   def account_name= name
-    self.account = Account.where(:name => name).first
+    self.account = Account.find_by(name: name)
   end
 
 end
