@@ -62,7 +62,7 @@ class ApiController < ApplicationController
           response['reference'] = command['reference'] if command.key?('reference')
           api_response << response
         else
-          raise ImpossibleAction.new "#{command['resource']}.#{command['action']} isn't an accepted resource/action"
+          fail ImpossibleAction, "#{command['resource']}.#{command['action']} isn't an accepted resource/action"
         end
       end
     end
@@ -133,7 +133,7 @@ class ApiController < ApplicationController
         if column == 'id' && val.is_a?(Array)
           records = records.where(id: val)
         else
-          raise InvalidQuery.new "#{{ column => val }.inspect} is not a valid query."
+          fail InvalidQuery, "#{{ column => val }.inspect} is not a valid query."
         end
       end
 

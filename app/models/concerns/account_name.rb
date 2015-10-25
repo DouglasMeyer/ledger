@@ -3,7 +3,7 @@ module AccountName
     account && account.name
   end
 
-  def account_name= name
+  def account_name=(name)
     self.account = Account.find_by(name: name)
   end
 end
