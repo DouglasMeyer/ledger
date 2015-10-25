@@ -39,5 +39,4 @@ describe 'accounts editing view', type: :feature do
     expect(accounts_page.asset_lines.map(&:name)).to eq(['asset category', 'asset category account', 'asset account for asset category'])
     expect(accounts_page).to have_liability_lines(count: 0)
   end
-
 end

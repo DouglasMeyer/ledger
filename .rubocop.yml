@@ -11,3 +11,12 @@ AllCops:
     - 'db/schema.rb'
     - 'node_modules/**/*'
     - 'bin/*'
+
+Style/AlignParameters:
+  Enabled: false
+Style/SpaceInsideBrackets:
+  Enabled: false
+Style/ExtraSpacing:
+  Enabled: false
+Style/SingleSpaceBeforeFirstArg:
+  Enabled: false

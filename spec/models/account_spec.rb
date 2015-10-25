@@ -52,5 +52,4 @@ describe Account do
       expect(@account.average_spent(0.5)).to be_within(6).of(-175)
     end
   end
-
 end
