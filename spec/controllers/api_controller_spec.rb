@@ -467,7 +467,7 @@ describe ApiController do
         { resource: 'ProjectedEntry_v1', action: 'delete', id: projected_entry.id, reference: 'delete projected entry' }
       ].to_json
 
-      expect(Proc.new{ projected_entry.reload }).to raise_error ActiveRecord::RecordNotFound
+      expect(proc{ projected_entry.reload }).to raise_error ActiveRecord::RecordNotFound
       expect(response.body).to be_json_eql({
         responses: [{
           reference: 'delete projected entry',

@@ -12,6 +12,10 @@ AllCops:
     - 'node_modules/**/*'
     - 'bin/*'
 
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%': '|'
+
 Style/AlignParameters:
   Enabled: false
 Style/SpaceInsideBrackets:
