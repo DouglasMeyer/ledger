@@ -17,14 +17,12 @@ describe 'accounts editing view', type: :feature do
     expect(accounts_edit_page.asset_categories.count).to eq(1)
     expect(accounts_edit_page.liability_categories.count).to eq(1)
 
-    assets = accounts_edit_page.asset_categories.inject({}) do |acc, category|
+    assets = accounts_edit_page.asset_categories.each_with_object({}) do |category, acc|
       acc[category.name] = category.accounts.map(&:name)
-      acc
     end
     expect(assets).to eq('save' => [ 'asset 1', 'asset 2' ])
-    liabilities = accounts_edit_page.liability_categories.inject({}) do |acc, category|
+    liabilities = accounts_edit_page.liability_categories.each_with_object({}) do |category, acc|
       acc[category.name] = category.accounts.map(&:name)
-      acc
     end
     expect(liabilities).to eq('bills' => [ 'liability 1', 'liability 2' ])
   end

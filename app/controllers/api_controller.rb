@@ -47,7 +47,7 @@ class ApiController < ApplicationController
     end
 
     def any_errors?
-      @responses.any?{ |r| r.has_key? :errors }
+      @responses.any?{ |r| r.key? :errors }
     end
   end
 
@@ -59,7 +59,7 @@ class ApiController < ApplicationController
         constant = get_request_resource(command['resource'])
         if !constant.nil? && constant.respond_to?(command['action'])
           response = constant.send(command['action'], command)
-          response['reference'] = command['reference'] if command.has_key?('reference')
+          response['reference'] = command['reference'] if command.key?('reference')
           api_response << response
         else
           raise ImpossibleAction.new "#{command['resource']}.#{command['action']} isn't an accepted resource/action"
@@ -83,7 +83,7 @@ class ApiController < ApplicationController
     private
 
     def camelize(obj)
-      obj.inject({}) do |acc, (key, val)|
+      obj.each_with_object({}) do |(key, val), acc|
         new_key = key.gsub(/_\w/){ |w| w[1].upcase }
         if val.is_a? Array
           acc[new_key] = val.map{ |v| camelize v }
@@ -92,7 +92,6 @@ class ApiController < ApplicationController
         else
           acc[new_key] = val
         end
-        acc
       end
     end
   end

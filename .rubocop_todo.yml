@@ -97,11 +97,6 @@ Rails/TimeZone:
     - 'lib/parse_statement.rb'
     - 'spec/models/account_spec.rb'
 
-# Offense count: 2
-Style/AccessorMethodName:
-  Exclude:
-    - 'spec/support/pages/forecast_page.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -127,25 +122,10 @@ Style/ClassAndModuleCamelCase:
   Exclude:
     - 'app/controllers/api_controller.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/DeprecatedHashMethods:
-  Exclude:
-    - 'app/controllers/api_controller.rb'
-
 # Offense count: 38
 # Configuration parameters: Exclude.
 Style/Documentation:
   Enabled: false
-
-# Offense count: 7
-Style/EachWithObject:
-  Exclude:
-    - 'app/controllers/api_controller.rb'
-    - 'lib/import_statement.rb'
-    - 'lib/parse_statement.rb'
-    - 'spec/controllers/api_controller_spec.rb'
-    - 'spec/features/accounts_editing_spec.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.

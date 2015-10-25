@@ -17,13 +17,8 @@ describe ApiController do
 
   def records_by_id(records)
     serializer = ActiveModel::Serializer.serializer_for(records.first)
-    records.inject({}) do |acc, r|
-      if serializer
-        acc[r.id] = serializer.new(r, root: false)
-      else
-        acc[r.id] = r
-      end
-      acc
+    records.each_with_object({}) do |r, acc|
+      acc[r.id] = serializer ? serializer.new(r, root: false) : r
     end
   end
 
@@ -177,9 +172,8 @@ describe ApiController do
         { resource: 'Account_v1', action: :create, reference: 'actual created', data: @account2_data }
       ].to_json
       @json_response = JSON.parse(response.body)
-      @response_references = @json_response['responses'].inject({}) do |acc, n|
+      @response_references = @json_response['responses'].each_with_object({}) do |n, acc|
         acc[n['reference']] = n
-        acc
       end
     end
 

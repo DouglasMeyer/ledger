@@ -34,9 +34,8 @@ module ParseStatement
     end
 
     def inspect
-      attrs = %w(type id name memo).inject({}) do |a, e|
+      attrs = %w(type id name memo).each_with_object({}) do |e, a|
         a[e.to_sym] = send(e)
-        a
       end
       attrs[:amount] = amount.to_f
       attrs[:date] = date.strftime("%D")
