@@ -30,7 +30,6 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'selenium-webdriver'
   gem 'site_prism'
-  gem 'test_rails_js', github: 'DouglasMeyer/test_rails_js'
 end
 
 group :development do
