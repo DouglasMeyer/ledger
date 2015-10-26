@@ -3,8 +3,9 @@ require 'rails_helper'
 describe ApiController do
   before do
     @blank_account = {
-      class_name: 'Account', id: nil, created_at: nil, updated_at: nil, deleted_at: nil,
-      name: nil, position: nil, category: nil, strategy_id: nil, balance_cents: 0
+      class_name: 'Account', id: nil, created_at: nil, updated_at: nil,
+      deleted_at: nil, name: nil, position: nil, category: nil,
+      strategy_id: nil, balance_cents: 0
     }.stringify_keys
     session[:auth_user] = :yes
   end
@@ -51,7 +52,10 @@ describe ApiController do
       Account.make!
 
       post :bulk, [
-        { resource: 'Account_v1', action: :read, query: { id: [ @account.id ] } }
+        {
+          resource: 'Account_v1',
+          action: :read,
+          query: { id: [ @account.id ] } }
       ].to_json
     end
 
@@ -68,11 +72,14 @@ describe ApiController do
   end
   describe 'reading a collection with an invalid query' do
     it 'raises a InvalidQuery exception' do
-      expect(lambda {
+      expect(lambda do
         post :bulk, [
           { resource: 'Account_v1', action: :read, query: { blas: 'true' } }
         ].to_json
-      }).to raise_error(ApiController::InvalidQuery, '{"blas"=>"true"} is not a valid query.')
+      end).to raise_error(
+        ApiController::InvalidQuery,
+        '{"blas"=>"true"} is not a valid query.'
+      )
     end
   end
   describe 'reading a collection with pagination' do
@@ -125,10 +132,14 @@ describe ApiController do
   end
 
   describe 'updating a record' do
-    let(:account){ Account.make! asset: false }
+    let(:account) { Account.make! asset: false }
     before do
       post :bulk, [
-        { resource: 'Account_v1', action: :update, id: account.id, reference: 'updating the record',
+        {
+          resource: 'Account_v1',
+          action: :update,
+          id: account.id,
+          reference: 'updating the record',
           data: { name: 'New Account Name', asset: 'true' }
         }
       ].to_json
@@ -155,11 +166,14 @@ describe ApiController do
 
   describe 'attempting to perform an impossible action' do
     it 'raises a ImpossibleAction exception' do
-      expect(lambda {
+      expect(lambda do
         post :bulk, [
           { resource: 'Something', action: :something }
         ].to_json
-      }).to raise_error(ApiController::ImpossibleAction, "Something.something isn't an accepted resource/action")
+      end).to raise_error(
+        ApiController::ImpossibleAction,
+        "Something.something isn't an accepted resource/action"
+      )
     end
   end
 
@@ -168,13 +182,24 @@ describe ApiController do
       @account1_data = { 'asset' => true }
       @account2_data = { 'name' => 'New Account', 'asset' => true }
       post :bulk, [
-        { resource: 'Account_v1', action: :create, reference: 'failed creation', data: @account1_data },
-        { resource: 'Account_v1', action: :create, reference: 'actual created', data: @account2_data }
+        {
+          resource: 'Account_v1',
+          action: :create,
+          reference: 'failed creation',
+          data: @account1_data
+        },
+        {
+          resource: 'Account_v1',
+          action: :create,
+          reference: 'actual created',
+          data: @account2_data
+        }
       ].to_json
       @json_response = JSON.parse(response.body)
-      @response_references = @json_response['responses'].each_with_object({}) do |n, acc|
-        acc[n['reference']] = n
-      end
+      @response_references = @json_response['responses']
+                             .each_with_object({}) do |n, acc|
+                               acc[n['reference']] = n
+                             end
     end
 
     it 'has a response of :multi_status' do
@@ -260,14 +285,22 @@ describe ApiController do
         { resource: 'BankEntry_v1', action: :read, needsDistribution: true }
       ].to_json
       expect(JSON.parse(response.body)['records']['BankEntry']).to eq(
-        JSON.parse(records_by_id(BankEntry.with_balance.find(needs_distribution.map(&:id))).to_json)
+        JSON.parse(records_by_id(
+          BankEntry
+          .with_balance
+          .find(needs_distribution.map(&:id))
+        ).to_json)
       )
       expect(response.body).to be_json_eql({
         responses: [{
           records: response_records(needs_distribution.reverse)
         }],
         records: {
-          BankEntry: records_by_id(BankEntry.with_balance.find(needs_distribution.map(&:id)))
+          BankEntry: records_by_id(
+            BankEntry
+            .with_balance
+            .find(needs_distribution.map(&:id))
+          )
         }
       }.to_json)
     end
@@ -279,14 +312,21 @@ describe ApiController do
       data = bank_entry.as_json
       data.delete('class_name')
       data.delete('account_entries')
-      data['account_entries_attributes'] = bank_entry.account_entries.map(&:as_json)
+      data['account_entries_attributes'] = bank_entry
+                                           .account_entries
+                                           .map(&:as_json)
       data['account_entries_attributes'][0].delete('class_name')
 
       data['notes'] = 'New Note'
 
       post :bulk, [
-        { resource: 'BankEntry_v1', action: 'update', reference: 'update bank entry',
-          id: bank_entry.id, data: data }
+        {
+          resource: 'BankEntry_v1',
+          action: 'update',
+          reference: 'update bank entry',
+          id: bank_entry.id,
+          data: data
+        }
       ].to_json
 
       bank_entry.reload
@@ -309,10 +349,18 @@ describe ApiController do
       data.delete('class_name')
       data.delete('account_entries')
 
-      data['account_entries_attributes'] = [ { _destroy: true, id: bank_entry.account_entries.first.id } ]
+      data['account_entries_attributes'] = [ {
+        _destroy: true,
+        id: bank_entry.account_entries.first.id
+      } ]
 
       post :bulk, [
-        { resource: 'BankEntry_v1', action: 'update', id: bank_entry.id, data: data }
+        {
+          resource: 'BankEntry_v1',
+          action: 'update',
+          id: bank_entry.id,
+          data: data
+        }
       ].to_json
 
       bank_entry.reload
@@ -334,8 +382,12 @@ describe ApiController do
       }
 
       post :bulk, [
-        { resource: 'BankEntry_v1', action: 'create', reference: 'create bank entry',
-          data: data }
+        {
+          resource: 'BankEntry_v1',
+          action: 'create',
+          reference: 'create bank entry',
+          data: data
+        }
       ].to_json
 
       bank_entry = BankEntry.last
@@ -411,8 +463,12 @@ describe ApiController do
       }
 
       post :bulk, [
-        { resource: 'ProjectedEntry_v1', action: 'create', reference: 'create projected entry',
-          data: data }
+        {
+          resource: 'ProjectedEntry_v1',
+          action: 'create',
+          reference: 'create projected entry',
+          data: data
+        }
       ].to_json
 
       projected_entry = ProjectedEntry.last
@@ -441,8 +497,13 @@ describe ApiController do
       }
 
       post :bulk, [
-        { resource: 'ProjectedEntry_v1', action: 'update', id: projected_entry.id, reference: 'update projected entry',
-          data: data }
+        {
+          resource: 'ProjectedEntry_v1',
+          action: 'update',
+          id: projected_entry.id,
+          reference: 'update projected entry',
+          data: data
+        }
       ].to_json
 
       projected_entry.reload
@@ -464,10 +525,16 @@ describe ApiController do
       projected_entry = ProjectedEntry.make!
 
       post :bulk, [
-        { resource: 'ProjectedEntry_v1', action: 'delete', id: projected_entry.id, reference: 'delete projected entry' }
+        {
+          resource: 'ProjectedEntry_v1',
+          action: 'delete',
+          id: projected_entry.id,
+          reference: 'delete projected entry'
+        }
       ].to_json
 
-      expect(proc{ projected_entry.reload }).to raise_error ActiveRecord::RecordNotFound
+      expect(proc { projected_entry.reload })
+        .to raise_error ActiveRecord::RecordNotFound
       expect(response.body).to be_json_eql({
         responses: [{
           reference: 'delete projected entry',
@@ -485,7 +552,13 @@ describe ApiController do
 
       data = { id: account.id }
       post :bulk, [
-        { resource: 'Account_v1', action: 'delete', id: account.id, refrence: 'delete account', data: data }
+        {
+          resource: 'Account_v1',
+          action: 'delete',
+          id: account.id,
+          refrence: 'delete account',
+          data: data
+        }
       ].to_json
 
       expect(account.reload.deleted_at).to_not be_nil
@@ -499,7 +572,13 @@ describe ApiController do
         position: 12
       }
       post :bulk, [
-        { resource: 'Account_v1', action: 'delete', id: account.id, refrence: 'delete account', data: data }
+        {
+          resource: 'Account_v1',
+          action: 'delete',
+          id: account.id,
+          refrence: 'delete account',
+          data: data
+        }
       ].to_json
 
       expect(account.reload.position).to eq(12)

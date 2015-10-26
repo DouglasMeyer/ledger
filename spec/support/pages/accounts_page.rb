@@ -11,8 +11,10 @@ class AccountsPage < SitePrism::Page
   end
 
   set_url '/v3#/accounts'
-  set_url_matcher /\/v3#\/accounts$/
+  set_url_matcher %r{/v3#/accounts$}
 
-  sections :asset_lines,     AccountTypeLine, "[ng-controller='AccountsCtrl'] > *:nth-child(1) .m-line"
-  sections :liability_lines, AccountTypeLine, "[ng-controller='AccountsCtrl'] > *:nth-child(2) .m-line"
+  sections :asset_lines,     AccountTypeLine,
+    "[ng-controller='AccountsCtrl'] > *:nth-child(1) .m-line"
+  sections :liability_lines, AccountTypeLine,
+    "[ng-controller='AccountsCtrl'] > *:nth-child(2) .m-line"
 end

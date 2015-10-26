@@ -1,6 +1,6 @@
 module Dollarify
   def dollarify(cents)
-    name = cents.to_s.remove /_cents$/
+    name = cents.to_s.remove(/_cents$/)
 
     define_method name do
       send(cents) / 100.0 if cents

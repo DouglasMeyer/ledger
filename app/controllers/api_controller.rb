@@ -12,14 +12,17 @@ class ApiController < ApplicationController
       @records = {}
     end
 
-    def <<(response) # { records: records, associated: records, errors: errors, data: data }
-      if records = response.delete(:records)
+    # { records: records, associated: records, errors: errors, data: data }
+    def <<(response)
+      records = response.delete(:records)
+      if records
         response[:records] = records.map do |record|
           class_name = record.class.name
           id         = record.id
 
           @records[class_name] ||= {}
-          if serializer = ActiveModel::Serializer.serializer_for(record)
+          serializer = ActiveModel::Serializer.serializer_for(record)
+          if serializer
             object = serializer.new(record, root: false)
             @records[class_name][id] = object
           else
@@ -29,14 +32,12 @@ class ApiController < ApplicationController
         end
       end
 
-      if records = response.delete(:associated)
-        records.each do |record|
-          class_name = record.class.name
-          id         = record.id
+      (response.delete(:associated) || []).each do |record|
+        class_name = record.class.name
+        id         = record.id
 
-          @records[class_name] ||= {}
-          @records[class_name][id] = record
-        end
+        @records[class_name] ||= {}
+        @records[class_name][id] = record
       end
 
       @responses << response
@@ -47,7 +48,7 @@ class ApiController < ApplicationController
     end
 
     def any_errors?
-      @responses.any?{ |r| r.key? :errors }
+      @responses.any? { |r| r.key? :errors }
     end
   end
 
@@ -59,10 +60,14 @@ class ApiController < ApplicationController
         constant = get_request_resource(command['resource'])
         if !constant.nil? && constant.respond_to?(command['action'])
           response = constant.send(command['action'], command)
-          response['reference'] = command['reference'] if command.key?('reference')
+          if command.key?('reference')
+            response['reference'] = command['reference']
+          end
           api_response << response
         else
-          fail ImpossibleAction, "#{command['resource']}.#{command['action']} isn't an accepted resource/action"
+          fail ImpossibleAction,
+               "#{command['resource']}.#{command['action']} " \
+               "isn't an accepted resource/action"
         end
       end
     end
@@ -84,9 +89,9 @@ class ApiController < ApplicationController
 
     def camelize(obj)
       obj.each_with_object({}) do |(key, val), acc|
-        new_key = key.gsub(/_\w/){ |w| w[1].upcase }
+        new_key = key.gsub(/_\w/) { |w| w[1].upcase }
         if val.is_a? Array
-          acc[new_key] = val.map{ |v| camelize v }
+          acc[new_key] = val.map { |v| camelize v }
         elsif val.is_a? Hash
           acc[new_key] = camelize val
         else
@@ -120,7 +125,7 @@ class ApiController < ApplicationController
     def self.delete(command)
       record = ::Account.find(command['id'])
       record_attrs = command['data'].merge(
-        deleted_at: Time.now
+        deleted_at: Time.zone.now
       )
       record.update! record_attrs
       { records: [ record ] }
@@ -133,7 +138,8 @@ class ApiController < ApplicationController
         if column == 'id' && val.is_a?(Array)
           records = records.where(id: val)
         else
-          fail InvalidQuery, "#{{ column => val }.inspect} is not a valid query."
+          fail InvalidQuery,
+               "#{{ column => val }.inspect} is not a valid query."
         end
       end
 
@@ -155,7 +161,9 @@ class ApiController < ApplicationController
                   .with_balance
                   .limit(command['limit'] || 25)
                   .offset(command['offset'] || 0)
-        account_entries = ::AccountEntry.where(bank_entry_id: records.pluck(:id))
+        account_entries = ::AccountEntry.where(
+          bank_entry_id: records.pluck(:id)
+        )
         { records: records, associated: account_entries }
       end
     end

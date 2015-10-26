@@ -1,5 +1,6 @@
 class SelectElement < SitePrism::Section
   def set(text)
-    root_element.find(:xpath, "option[normalize-space(text())='#{text}']").select_option
+    xpath = "option[normalize-space(text())='#{text}']"
+    root_element.find(:xpath, xpath).select_option
   end
 end

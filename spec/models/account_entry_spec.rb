@@ -9,7 +9,12 @@ describe AccountEntry do
       ae3 = AccountEntry.make! account: account, amount_cents: 10
       ae4 = AccountEntry.make! account: account, amount_cents: 30
 
-      expect(AccountEntry.join_aggrigate_account_entries.pluck('account_entries.id, aggrigate_account_entries.balance_cents').sort).to eq([
+      account_entries_with_balance =
+        AccountEntry
+        .join_aggrigate_account_entries
+        .pluck('account_entries.id, aggrigate_account_entries.balance_cents')
+        .sort
+      expect(account_entries_with_balance).to eq([
         [ ae1.id, ae1.amount_cents ],
         [ ae2.id, ae2.amount_cents ],
         [ ae3.id, ae1.amount_cents + ae3.amount_cents ],

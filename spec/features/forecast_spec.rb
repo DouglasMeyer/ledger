@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'forecast view', type: :feature do
-  let(:forecast_page){ ForecastPage.new }
+  let(:forecast_page) { ForecastPage.new }
 
   it 'shows projected entries' do
     ProjectedEntry.make!
@@ -15,7 +15,7 @@ describe 'forecast view', type: :feature do
   end
 
   describe 'creating' do
-    let!(:account_name){ Account.make!.name }
+    let!(:account_name) { Account.make!.name }
 
     before do
       forecast_page.load
@@ -25,7 +25,7 @@ describe 'forecast view', type: :feature do
 
     it 'creates' do
       forecast_page.projected_entries.first.tap do |pe|
-        pe.date.set Date.today.to_s
+        pe.date.set Time.zone.today.to_s
         pe.account.set account_name
         pe.amount.set '56.78'
         pe.description.set 'something'
@@ -38,7 +38,7 @@ describe 'forecast view', type: :feature do
 
     it 'is cancelable' do
       forecast_page.projected_entries.first.tap do |pe|
-        pe.date.set Date.today.to_s
+        pe.date.set Time.zone.today.to_s
         pe.account.set account_name
         pe.amount.set '56.78'
         pe.cancel
@@ -49,7 +49,7 @@ describe 'forecast view', type: :feature do
   end
 
   describe 'editing' do
-    let!(:account_name){ Account.make!.name }
+    let!(:account_name) { Account.make!.name }
 
     before do
       ProjectedEntry.make!
@@ -60,7 +60,7 @@ describe 'forecast view', type: :feature do
 
     it 'edits' do
       forecast_page.projected_entries.first.tap do |pe|
-        pe.date.set Date.today.to_s
+        pe.date.set Time.zone.today.to_s
         pe.account.set account_name
         pe.amount.set '56.78'
         pe.description.set 'something'

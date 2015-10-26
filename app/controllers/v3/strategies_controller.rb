@@ -1,6 +1,6 @@
 module V3
   class StrategiesController < BaseController
-    before_filter :load_strategy
+    before_action :load_strategy
 
     def index
       @accounts = Account.not_deleted.order(:position)
@@ -37,7 +37,9 @@ module V3
     def load_strategy
       @strategy =
         Strategy.where(id: params[:id]).first ||
-        Strategy.new(params.permit(strategy: [ :strategy_type, :variable, :amount, :notes ])[:strategy])
+        Strategy.new(params.permit(strategy: [
+          :strategy_type, :variable, :amount, :notes
+        ])[:strategy])
     end
   end
 end

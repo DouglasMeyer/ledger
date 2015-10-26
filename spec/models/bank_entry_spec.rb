@@ -27,7 +27,9 @@ describe BankEntry do
       be = BankEntry.make!(external_id: 1)
       be.external_id = nil
       expect(be).to_not be_valid
-      expect(be.errors[:external_id]).to eq([I18n.t('errors.messages.immutable')])
+      expect(be.errors[:external_id]).to eq([
+        I18n.t('errors.messages.immutable')
+      ])
     end
 
     it 'prevents changes to date' do
@@ -41,14 +43,18 @@ describe BankEntry do
       be = BankEntry.make!(external_id: 1)
       be.description = 'Something new'
       expect(be).to_not be_valid
-      expect(be.errors[:description]).to eq([I18n.t('errors.messages.immutable')])
+      expect(be.errors[:description]).to eq([
+        I18n.t('errors.messages.immutable')
+      ])
     end
 
     it 'prevents changes to amount_cents' do
       be = BankEntry.make!(external_id: 1)
       be.amount_cents = 123_45
       expect(be).to_not be_valid
-      expect(be.errors[:amount_cents]).to eq([I18n.t('errors.messages.immutable')])
+      expect(be.errors[:amount_cents]).to eq([
+        I18n.t('errors.messages.immutable')
+      ])
     end
 
     it 'allows changes when not from_bank?' do
@@ -66,7 +72,10 @@ describe BankEntry do
       AccountEntry.make! bank_entry: be, amount_cents: 10_12
       AccountEntry.make! bank_entry: be, amount_cents:  8_15
 
-      be = BankEntry.join_aggrigate_account_entries.select('aggrigate_account_entries.amount_cents').find(be.id)
+      be = BankEntry
+           .join_aggrigate_account_entries
+           .select('aggrigate_account_entries.amount_cents')
+           .find(be.id)
       expect(be.amount_cents).to eq(10_12 + 8_15)
     end
 
@@ -98,20 +107,34 @@ describe BankEntry do
 
     it 'includes balance_cents' do
       bes = bank_entries
-      expect(BankEntry.join_aggrigate_bank_entries.pluck('bank_entries.id, aggrigate_bank_entries.balance_cents')).to eq([
+      bank_entry_balance_cents =
+        BankEntry
+        .join_aggrigate_bank_entries
+        .pluck('bank_entries.id, aggrigate_bank_entries.balance_cents')
+      expect(bank_entry_balance_cents).to eq([
         [ bes[0].id, bes[0].amount_cents ],
-        [ bes[1].id, bes[0].amount_cents + bes[1].amount_cents ],
-        [ bes[2].id, bes[0].amount_cents + bes[1].amount_cents + bes[2].amount_cents ]
+        [ bes[1].id, bes[0].amount_cents +
+                     bes[1].amount_cents ],
+        [ bes[2].id, bes[0].amount_cents +
+                     bes[1].amount_cents +
+                     bes[2].amount_cents ]
       ])
     end
 
     describe '.with_balance' do
       it 'includes the balance' do
         bes = bank_entries
-        expect(BankEntry.with_balance.map { |be| [be.id, be.balance_cents] }).to eq([
+        bank_entry_balance_cents =
+          BankEntry
+          .with_balance
+          .pluck('bank_entries.id, aggrigate_bank_entries.balance_cents')
+        expect(bank_entry_balance_cents).to eq([
           [ bes[0].id, bes[0].amount_cents ],
-          [ bes[1].id, bes[0].amount_cents + bes[1].amount_cents ],
-          [ bes[2].id, bes[0].amount_cents + bes[1].amount_cents + bes[2].amount_cents ]
+          [ bes[1].id, bes[0].amount_cents +
+                       bes[1].amount_cents ],
+          [ bes[2].id, bes[0].amount_cents +
+                       bes[1].amount_cents +
+                       bes[2].amount_cents ]
         ])
       end
     end

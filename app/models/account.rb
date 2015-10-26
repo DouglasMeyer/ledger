@@ -44,6 +44,7 @@ class Account < ActiveRecord::Base
   private
 
   def zero_balance_when_deleting
-    errors.add(:balance_cents, :not_zero) unless balance_cents.zero? || deleted_at.blank?
+    return if deleted_at.blank? || balance_cents.zero?
+    errors.add(:balance_cents, :not_zero)
   end
 end

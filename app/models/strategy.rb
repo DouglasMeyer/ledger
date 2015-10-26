@@ -17,7 +17,7 @@ class Strategy < ActiveRecord::Base
     when 'percent_of_income'
       (bank_entry.amount_cents * (variable.to_f / 100)).round / 100.0
     when 'amount_per_month'
-      #FIXME: I'm assuming income is twice a month
+      # FIXME: I'm assuming income is twice a month
       variable.to_f / 2
     end
   end

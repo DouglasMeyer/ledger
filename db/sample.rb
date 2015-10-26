@@ -38,8 +38,17 @@ Account.create! [
   { category: 'Utilities', name: 'Trash', asset: false }
 ]
 
-BankImport.create! balance_cents: 1_450_00, created_at: 10.days.ago, updated_at: 10.days.ago
-be = BankEntry.create! date: 10.days.ago, amount_cents: 2_000_00, description: 'Income', external_id: 1
+BankImport.create!(
+  balance_cents: 1_450_00,
+  created_at: 10.days.ago,
+  updated_at: 10.days.ago
+)
+be = BankEntry.create!(
+  date: 10.days.ago,
+  amount_cents: 2_000_00,
+  description: 'Income',
+  external_id: 1
+)
 be.account_entries.create! account_name: 'Tithe',        amount: '200'
 be.account_entries.create! account_name: 'Missions',     amount: '200'
 be.account_entries.create! account_name: 'Benevolence',  amount: '20'
@@ -75,19 +84,52 @@ be.account_entries.create! account_name: 'Gym',          amount: '25'
 be.account_entries.create! account_name: 'New Kitchen',  amount: '65'
 be.account_entries.create! account_name: 'New Computer', amount: '40'
 
-be = BankEntry.create! date: 10.days.ago, amount_cents: -500_00, description: 'Mortgage', external_id: 2
+be = BankEntry.create!(
+  date: 10.days.ago,
+  amount_cents: -500_00,
+  description: 'Mortgage',
+  external_id: 2
+)
 be.account_entries.create! account_name: 'Mortgage', amount: '-500'
 
-be = BankEntry.create! date: 10.days.ago, amount_cents: -50_00, description: 'Honda', external_id: 3
+be = BankEntry.create!(
+  date: 10.days.ago,
+  amount_cents: -50_00,
+  description: 'Honda',
+  external_id: 3
+)
 be.account_entries.create! account_name: 'Car', amount: '-50'
 
-BankImport.create! balance_cents: 1_314_00_00, created_at: 4.days.ago, updated_at: 4.days.ago
-be = BankEntry.create! date: 6.days.ago, amount_cents: -80_00, description: 'Local Shoppe', external_id: 4
+BankImport.create!(
+  balance_cents: 1_314_00_00,
+  created_at: 4.days.ago,
+  updated_at: 4.days.ago
+)
+be = BankEntry.create!(
+  date: 6.days.ago,
+  amount_cents: -80_00,
+  description: 'Local Shoppe',
+  external_id: 4
+)
 be.account_entries.create! account_name: 'Grocery', amount: '-60'
 be.account_entries.create! account_name: 'His Blow', amount: '-20'
 
-be = BankEntry.create! date: 5.days.ago, amount_cents: -56_00, description: 'Gas King', external_id: 5
+be = BankEntry.create!(
+  date: 5.days.ago,
+  amount_cents: -56_00,
+  description: 'Gas King',
+  external_id: 5
+)
 be.account_entries.create! account_name: 'Gas', amount: '-56'
 
-BankImport.create! balance_cents: 1_299_00, created_at: 1.day.ago, updated_at: 1.day.ago
-BankEntry.create! date: 2.days.ago, amount_cents: -15_00, description: 'Local Shoppe', external_id: 6
+BankImport.create!(
+  balance_cents: 1_299_00,
+  created_at: 1.day.ago,
+  updated_at: 1.day.ago
+)
+BankEntry.create!(
+  date: 2.days.ago,
+  amount_cents: -15_00,
+  description: 'Local Shoppe',
+  external_id: 6
+)

@@ -16,6 +16,13 @@ Style/PercentLiteralDelimiters:
   PreferredDelimiters:
     '%': '|'
 
+Metrics/LineLength:
+  Exclude:
+    - 'Rakefile'
+    - 'config/application.rb'
+    - 'config/environments/*.rb'
+    - 'config/initializers/*.rb'
+
 Style/AlignParameters:
   Enabled: false
 Style/SpaceInsideBrackets:
@@ -25,4 +32,8 @@ Style/ExtraSpacing:
 Style/SingleSpaceBeforeFirstArg:
   Enabled: false
 Style/NumericLiterals:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/SpaceInsideParens:
   Enabled: false

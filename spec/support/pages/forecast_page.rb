@@ -18,7 +18,7 @@ class ForecastPage < BasePage
   end
 
   set_url '/v3#/forecast'
-  set_url_matcher /\/v3#\/forecast$/
+  set_url_matcher %r{/v3#/forecast$}
 
   sections :projected_entries, ProjectedEntrySection, '.table__rows'
 end
