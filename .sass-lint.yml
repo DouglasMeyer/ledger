@@ -8,23 +8,23 @@ linters:
     enabled: false
     convention: zero
   ColorKeyword:
-    enabled: true
+    enabled: false #true
     severity: warning
   ColorVariable:
-    enabled: true
+    enabled: false #true
   Comment:
     enabled: true
   DebugStatement:
     enabled: true
   DeclarationOrder:
-    enabled: true
+    enabled: false #true
   DuplicateProperty:
     enabled: true
   ElsePlacement:
     enabled: true
     style: same_line
   EmptyLineBetweenBlocks:
-    enabled: true
+    enabled: false #true
     ignore_single_line_blocks: true
   EmptyRule:
     enabled: true
@@ -35,16 +35,16 @@ linters:
     enabled: false
     style: short
   HexNotation:
-    enabled: true
+    enabled: false #true
     style: lowercase
   HexValidation:
     enabled: true
   IdSelector:
     enabled: true
   ImportantRule:
-    enabled: true
+    enabled: false #true
   ImportPath:
-    enabled: true
+    enabled: false #true
     leading_underscore: false
     filename_extension: false
   Indentation:
@@ -56,14 +56,14 @@ linters:
     enabled: true
     style: include_zero
   MergeableSelector:
-    enabled: true
+    enabled: false #true
     force_nesting: true
   NameFormat:
-    enabled: true
+    enabled: false #true
     allow_leading_underscore: true
     convention: hyphenated_lowercase
   NestingDepth:
-    enabled: true
+    enabled: false #true
     max_depth: 4
     severity: warning
   PlaceholderInExtend:
@@ -71,9 +71,9 @@ linters:
   PropertyCount:
     enabled: true
     include_nested: false
-    max_properties: 10
+    max_properties: 12 #10
   PropertySortOrder:
-    enabled: true
+    enabled: false #true
     ignore_unspecified: false
     severity: warning
     separate_groups: false
@@ -81,30 +81,30 @@ linters:
     enabled: true
     extra_properties: []
   QualifyingElement:
-    enabled: true
+    enabled: false #true
     allow_element_with_attribute: false
     allow_element_with_class: false
     allow_element_with_id: false
     severity: warning
   SelectorDepth:
-    enabled: true
+    enabled: false #true
     max_depth: 2
     severity: warning
   SelectorFormat:
-    enabled: true
+    enabled: false #true
     convention: hyphenated_lowercase
   Shorthand:
     enabled: true
     severity: warning
   SingleLinePerProperty:
-    enabled: true
+    enabled: false #true
     allow_single_line_rule_sets: true
   SingleLinePerSelector:
-    enabled: true
+    enabled: false #true
   SpaceAfterComma:
     enabled: true
   SpaceAfterPropertyColon:
-    enabled: true
+    enabled: false #true
     style: one_space
   SpaceAfterPropertyName:
     enabled: true
@@ -116,16 +116,16 @@ linters:
     enabled: true
     spaces: 0
   StringQuotes:
-    enabled: true
+    enabled: false #true
     style: double_quotes
   TrailingSemicolon:
-    enabled: true
+    enabled: false #true
   TrailingZero:
     enabled: false
   UnnecessaryMantissa:
     enabled: true
   UnnecessaryParentReference:
-    enabled: true
+    enabled: false #true
   UrlFormat:
     enabled: true
   UrlQuotes:
@@ -143,3 +143,6 @@ linters:
     severity: warning
   Compass::PropertyWithMixin:
     enabled: false
+
+  SpaceAroundOperator:
+    enabled: false #true?
