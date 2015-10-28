@@ -6,7 +6,11 @@ angular.module('ledger').controller 'EntriesCtrl', ($scope, Model)->
     icon: 'plus'
     click: ->
       today = (new Date).toJSON().slice(0,10)
-      $scope.entries.unshift({ date: today, amountCents: 0, accountEntries: [{}] })
+      $scope.entries.unshift({
+        date: today,
+        amountCents: 0,
+        accountEntries: [{}]
+      })
   } ]
 
   $scope.loadMore = ->

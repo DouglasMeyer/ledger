@@ -1,11 +1,13 @@
 angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
 
+# coffeelint: disable=max_line_length
   $scope.accounts = Model.Account.all
   $scope.$watchCollection 'accounts | filter:{isDeleted:false} | pMap:"name" | orderBy', (accountNames)->
     $scope.accountNames = accountNames
 
   watchAEs = undefined
   amountRemainingCentsExpression = 'entry.amountCents - (entry.accountEntries | map:"amountCents" | sum)'
+# coffeelint: enable=max_line_length
 
   reset = ->
     $scope.isOpen = false
@@ -27,13 +29,19 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
     return if $scope.isOpen
     $scope.isOpen = true
     $scope.stashedEntry = angular.copy($scope.entry)
-    watchAEs = $scope.$watch amountRemainingCentsExpression, (amountRemainingCents)->
+    watchAEs = $scope
+    .$watch amountRemainingCentsExpression, (amountRemainingCents)->
       if amountRemainingCents
-        if !$scope.form.amount? || $scope.form.amount.$dirty || $scope.form.account.$modelValue
+        if (
+          !$scope.form.amount? ||
+          $scope.form.amount.$dirty ||
+          $scope.form.account.$modelValue
+        )
           newAE = amountCents: amountRemainingCents
           $scope.entry.accountEntries.push( newAE )
         else
-          lastAE = $scope.entry.accountEntries[$scope.entry.accountEntries.length-1]
+          lastIndex = $scope.entry.accountEntries.length - 1
+          lastAE = $scope.entry.accountEntries[lastIndex]
           lastAE.amountCents += amountRemainingCents
 
   $scope.close = (e)->

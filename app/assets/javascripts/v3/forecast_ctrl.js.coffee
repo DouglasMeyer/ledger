@@ -18,8 +18,10 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
   } ]
 
   $scope.accounts = Model.Account.all
+# coffeelint: disable=max_line_length
   $scope.$watchCollection 'accounts | filter:{isDeleted:false} | pMap:"name" | orderBy', (accountNames)->
     $scope.accountNames = accountNames
+# coffeelint: enable=max_line_length
 
   $scope.projectedEntries = Model.ProjectedEntry.all
   $scope.forecastedEntries = []
@@ -52,7 +54,8 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
     })
 
   createForecastedEntries = (pEntry)->
-    $scope.forecastedEntries = $scope.forecastedEntries.filter (forecatedEntry)->
+    $scope.forecastedEntries = $scope.forecastedEntries
+    .filter (forecatedEntry)->
       forecatedEntry.projectedEntry != pEntry
 
     dates = pEntry.rule.between($scope.today, endDate)
@@ -71,7 +74,8 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
   $scope.$watchCollection 'projectedEntries', (newPEntries, oldPEntries)->
     for pEntry in oldPEntries
       unless pEntry in newPEntries
-        $scope.forecastedEntries = $scope.forecastedEntries.filter (forecatedEntry)->
+        $scope.forecastedEntries = $scope.forecastedEntries
+        .filter (forecatedEntry)->
           forecatedEntry.projectedEntry != pEntry
 
     for projectedEntry in newPEntries
@@ -114,8 +118,11 @@ angular.module('ledger').controller 'ForecastCtrl', ($scope, Model)->
   $scope.saveEdit = (fEntry)->
     delete fEntry.isEditing
     fEntry.saving = true
-    promise = Model.ProjectedEntry.save(fEntry.projectedEntry).then (projectedEntries)->
-      if fEntry.projectedEntry != projectedEntries[0] # you just created a ProjectedEntry
+    promise = Model.ProjectedEntry
+    .save(fEntry.projectedEntry)
+    .then (projectedEntries)->
+      if fEntry.projectedEntry != projectedEntries[0]
+        # you just created a ProjectedEntry
         arrayRemove $scope.projectedEntries, fEntry.projectedEntry
       else
         delete fEntry.saving

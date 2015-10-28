@@ -12,5 +12,8 @@ angular.module('ledger').controller 'AccountsCtrl', ($scope, Model, $window)->
     $scope.liabilityCategories = []
     for account in accounts
       category = account.category
-      categories = if account.asset then $scope.assetCategories else $scope.liabilityCategories
+      if account.asset
+        categories = $scope.assetCategories
+      else
+        categories = $scope.liabilityCategories
       categories.push(category) unless category in categories

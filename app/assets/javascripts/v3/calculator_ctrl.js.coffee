@@ -1,4 +1,5 @@
-angular.module('ledger').controller 'CalculatorCtrl', ($scope, Model, $filter, $parse)->
+angular.module('ledger')
+.controller 'CalculatorCtrl', ($scope, Model, $filter, $parse)->
   underscore = $filter('underscore')
 
   calcScope = {}
@@ -6,7 +7,8 @@ angular.module('ledger').controller 'CalculatorCtrl', ($scope, Model, $filter, $
   $scope.$watch 'accounts | map:"balanceCents" | join', ->
     calcScope = {}
     return unless $scope.accounts
-    calcScope[underscore(account.name)] = account.balanceCents / 100 for account in $scope.accounts
+    for account in $scope.accounts
+      calcScope[underscore(account.name)] = account.balanceCents / 100
 
   $scope.toggle = ->
     $scope.showCalc = !$scope.showCalc

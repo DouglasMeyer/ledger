@@ -1,4 +1,5 @@
-angular.module('ledger').controller 'AccountsEditCtrl', ($scope, Model, $window, $q)->
+angular.module('ledger')
+.controller 'AccountsEditCtrl', ($scope, Model, $window, $q)->
   $scope.accounts = Model.Account.all
 
   sortAccounts = ->
@@ -103,12 +104,21 @@ angular.module('ledger').controller 'AccountsEditCtrl', ($scope, Model, $window,
     e.preventDefault()
     e.originalEvent.dataTransfer.dropEffect = 'move'
     if dCategory.name != category
-      dCategoryAccounts = $scope.accounts.filter((a)-> a.asset == dCategory.asset && a.category == dCategory.name).sort((a,b)-> a.position - b.position)
-      tCategoryAccounts = $scope.accounts.filter((a)-> a.asset == asset && a.category == category).sort((a,b)-> a.position - b.position)
+# coffeelint: disable=max_line_length
+      dCategoryAccounts = $scope.accounts
+        .filter((a)-> a.asset == dCategory.asset && a.category == dCategory.name)
+        .sort((a,b)-> a.position - b.position)
+# coffeelint: enable=max_line_length
+      tCategoryAccounts = $scope.accounts
+        .filter((a)-> a.asset == asset && a.category == category)
+        .sort((a,b)-> a.position - b.position)
 
       a.asset = asset for a in dCategoryAccounts
       dCategory.asset = asset
-      start = if tCategoryAccounts[0].position < dCategoryAccounts[0].position then tCategoryAccounts[0].position - 1 else tCategoryAccounts[0].position
+      if tCategoryAccounts[0].position < dCategoryAccounts[0].position
+        start = tCategoryAccounts[0].position - 1
+      else
+        start = tCategoryAccounts[0].position
       dCategoryAccounts.forEach (a, index)->
         a.position = start + (index+1) * 0.001
       sortAccounts()
@@ -119,7 +129,11 @@ angular.module('ledger').controller 'AccountsEditCtrl', ($scope, Model, $window,
     e.preventDefault()
     e.originalEvent.dataTransfer.dropEffect = 'move'
     if dCategory.asset != asset
-      dCategoryAccounts = $scope.accounts.filter((a)-> a.asset == dCategory.asset && a.category == dCategory.name).sort((a,b)-> a.position - b.position)
+# coffeelint: disable=max_line_length
+      dCategoryAccounts = $scope.accounts
+        .filter((a)-> a.asset == dCategory.asset && a.category == dCategory.name)
+        .sort((a,b)-> a.position - b.position)
+# coffeelint: enable=max_line_length
 
       a.asset = asset for a in dCategoryAccounts
       dCategory.asset = asset
