@@ -25,12 +25,12 @@ Rails.application.routes.draw do
         cache "/v3"
         network "/api"
       end
-      get '/application.manifest' => offline, as: :manifest
+      get "/application.manifest" => offline, as: :manifest
     end
   end
 
-  match "/auth/:provider/callback" => "sessions#create", via: [ :get, :post ]
-  get "/sign_out" => "sessions#destroy"
+  match "/auth/:provider/callback" => 'sessions#create', via: [ :get, :post ]
+  get "/sign_out" => 'sessions#destroy'
 
-  post '/api' => 'api#bulk'
+  post "/api" => 'api#bulk'
 end

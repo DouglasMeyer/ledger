@@ -10,7 +10,10 @@ module ParseStatement
 
     def self.parse(file)
       data = file.read
-      balance = data.scan(/<LEDGERBAL>.*?<.LEDGERBAL>/m)[0].scan(/<BALAMT>(.*)/)[0][0].strip
+      balance = data
+                .scan(/<LEDGERBAL>.*?<.LEDGERBAL>/m)[0]
+                .scan(/<BALAMT>(.*)/)[0][0]
+                .strip
       transactions = data.scan(/<STMTTRN>.*?<.STMTTRN>/m).map do |x|
         StatementEntry.new(x)
       end
@@ -18,12 +21,12 @@ module ParseStatement
     end
 
     attr_reader :raw
-    statement_attr :type,    'TRNTYPE'
-    statement_attr(:id,      'FITID', &:to_i)
-    statement_attr :name,    'NAME'
-    statement_attr :memo,    'MEMO'
-    statement_attr(:date,    'DTPOSTED'){ |string| DateTime.parse(string) }
-    statement_attr(:amount, 'TRNAMT'){ |string| BigDecimal.new(string) }
+    statement_attr(:type,   "TRNTYPE")
+    statement_attr(:id,     "FITID", &:to_i)
+    statement_attr(:name,   "NAME")
+    statement_attr(:memo,   "MEMO")
+    statement_attr(:date,   "DTPOSTED") { |string| DateTime.parse(string) }
+    statement_attr(:amount, "TRNAMT") { |string| BigDecimal.new(string) }
 
     def initialize(raw)
       @raw = raw
@@ -34,9 +37,8 @@ module ParseStatement
     end
 
     def inspect
-      attrs = %w(type id name memo).inject({}) do |a, e|
+      attrs = %w(type id name memo).each_with_object({}) do |e, a|
         a[e.to_sym] = send(e)
-        a
       end
       attrs[:amount] = amount.to_f
       attrs[:date] = date.strftime("%D")
@@ -45,9 +47,9 @@ module ParseStatement
   end
 
   def self.run(file)
-    require 'pathname'
-    require 'pp'
-    require 'date'
+    require "pathname"
+    require "pp"
+    require "date"
 
     transactions, balance = StatementEntry.parse(file)
 

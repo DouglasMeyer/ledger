@@ -1,6 +1,6 @@
 module V3
   class BankEntriesController < BaseController
-    before_filter :load_account_names
+    before_action :load_account_names
 
     def show
       render bank_entry
@@ -9,7 +9,10 @@ module V3
     def edit
       bank_entry # populate @bank_entry
       @accounts = Account.not_deleted.order(:position)
-      @distribute_as_income = bank_entry.account_entries.where("account_entries.strategy_id IS NOT NULL").any?
+      @distribute_as_income = bank_entry
+                              .account_entries
+                              .where("account_entries.strategy_id IS NOT NULL")
+                              .any?
     end
 
     def update
@@ -26,17 +29,25 @@ module V3
       if request.xhr?
         render bank_entry
       else
-        redirect_to v3_root_path(anchor: '/entries')
+        redirect_to v3_root_path(anchor: "/entries")
       end
     end
 
     def create
-      new_bank_entry.assign_attributes params.require(:bank_entry).permit(:date, :description)
+      new_bank_entry.assign_attributes(
+        params
+          .require(:bank_entry)
+          .permit(:date, :description)
+      )
       new_bank_entry.save!
 
-      new_bank_entry.update_attributes!(params.require(:bank_entry).permit(account_entries_attributes: [
-        :account_name, :amount, :_destroy
-      ]))
+      new_bank_entry.update_attributes!(
+        params
+          .require(:bank_entry)
+          .permit(account_entries_attributes: [
+            :account_name, :amount, :_destroy
+          ])
+      )
       render new_bank_entry
     end
 
@@ -49,7 +60,7 @@ module V3
     def new_bank_entry
       @new_bank_entry ||= BankEntry.new do |be|
         be.amount_cents = 0
-        be.date = Date.today
+        be.date = Time.zone.today
       end
     end
 

@@ -7,23 +7,18 @@ class BankEntriesPage < BasePage
   end
 
   class BankEntrySection < SitePrism::Section
-    sections :account_entries, AccountEntrySection, ".table__row[ng-repeat='accountEntry in entry.accountEntries']"
-    element :close_button,  "button", text: 'close'
-    element :save_button,   "button", text: 'save'
-    element :cancel_button, "button", text: 'cancel'
-    element :saving_message, "span",  text: 'saving...'
+    sections :account_entries, AccountEntrySection,
+      ".table__row[ng-repeat='accountEntry in entry.accountEntries']"
+    element :close_button,  "button", text: "close"
+    element :save_button,   "button", text: "save"
+    element :cancel_button, "button", text: "cancel"
+    element :saving_message, "span",  text: "saving..."
 
-    def click
-      root_element.click
-    end
-
-    def text
-      root_element.text
-    end
+    delegate :click, :text, to: :root_element
   end
 
   set_url '/v3#/entries'
-  set_url_matcher /\/v3#\/entries$/
+  set_url_matcher %r{/v3#/entries$}
 
   sections :bank_entries, BankEntrySection, ".table__rows"
 

@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe ParseStatement do
-
   def run_parse(_transactions = [], balance = 10_000.00)
     string = StringIO.new <<-END
 OFXHEADER:100

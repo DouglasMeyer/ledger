@@ -1,0 +1,148 @@
+scss_files: "**/*.scss"
+linters:
+  BangFormat:
+    enabled: true
+    space_before_bang: true
+    space_after_bang: false
+  BorderZero:
+    enabled: false
+    convention: zero
+  ColorKeyword:
+    enabled: false #true
+    severity: warning
+  ColorVariable:
+    enabled: false #true
+  Comment:
+    enabled: true
+  DebugStatement:
+    enabled: true
+  DeclarationOrder:
+    enabled: false #true
+  DuplicateProperty:
+    enabled: true
+  ElsePlacement:
+    enabled: true
+    style: same_line
+  EmptyLineBetweenBlocks:
+    enabled: false #true
+    ignore_single_line_blocks: true
+  EmptyRule:
+    enabled: true
+  FinalNewline:
+    enabled: true
+    present: true
+  HexLength:
+    enabled: false
+    style: short
+  HexNotation:
+    enabled: false #true
+    style: lowercase
+  HexValidation:
+    enabled: true
+  IdSelector:
+    enabled: true
+  ImportantRule:
+    enabled: false #true
+  ImportPath:
+    enabled: false #true
+    leading_underscore: false
+    filename_extension: false
+  Indentation:
+    enabled: true
+    allow_non_nested_indentation: false
+    character: space
+    width: 2
+  LeadingZero:
+    enabled: true
+    style: include_zero
+  MergeableSelector:
+    enabled: false #true
+    force_nesting: true
+  NameFormat:
+    enabled: false #true
+    allow_leading_underscore: true
+    convention: hyphenated_lowercase
+  NestingDepth:
+    enabled: false #true
+    max_depth: 4
+    severity: warning
+  PlaceholderInExtend:
+    enabled: false
+  PropertyCount:
+    enabled: true
+    include_nested: false
+    max_properties: 12 #10
+  PropertySortOrder:
+    enabled: false #true
+    ignore_unspecified: false
+    severity: warning
+    separate_groups: false
+  PropertySpelling:
+    enabled: true
+    extra_properties: []
+  QualifyingElement:
+    enabled: false #true
+    allow_element_with_attribute: false
+    allow_element_with_class: false
+    allow_element_with_id: false
+    severity: warning
+  SelectorDepth:
+    enabled: false #true
+    max_depth: 2
+    severity: warning
+  SelectorFormat:
+    enabled: false #true
+    convention: hyphenated_lowercase
+  Shorthand:
+    enabled: true
+    severity: warning
+  SingleLinePerProperty:
+    enabled: false #true
+    allow_single_line_rule_sets: true
+  SingleLinePerSelector:
+    enabled: false #true
+  SpaceAfterComma:
+    enabled: true
+  SpaceAfterPropertyColon:
+    enabled: false #true
+    style: one_space
+  SpaceAfterPropertyName:
+    enabled: true
+  SpaceBeforeBrace:
+    enabled: true
+    style: space
+    allow_single_line_padding: false
+  SpaceBetweenParens:
+    enabled: true
+    spaces: 0
+  StringQuotes:
+    enabled: false #true
+    style: double_quotes
+  TrailingSemicolon:
+    enabled: false #true
+  TrailingZero:
+    enabled: false
+  UnnecessaryMantissa:
+    enabled: true
+  UnnecessaryParentReference:
+    enabled: false #true
+  UrlFormat:
+    enabled: true
+  UrlQuotes:
+    enabled: true
+  VariableForProperty:
+    enabled: false
+    properties: []
+  VendorPrefixes:
+    enabled: true
+    identifier_list: bourbon
+    include: []
+    exclude: []
+  ZeroUnit:
+    enabled: true
+    severity: warning
+  Compass::PropertyWithMixin:
+    enabled: false
+
+  SpaceAroundOperator:
+    enabled: false #true?

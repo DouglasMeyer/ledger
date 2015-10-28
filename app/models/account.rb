@@ -2,12 +2,12 @@ class Account < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validate :zero_balance_when_deleting
 
-  has_many :entries, class_name: 'AccountEntry'
+  has_many :entries, class_name: "AccountEntry"
   belongs_to :strategy
   has_many :bank_entries, through: :entries
   has_many :account_entries
 
-  scope :not_deleted, -> { where('deleted_at IS NULL') }
+  scope :not_deleted, -> { where("deleted_at IS NULL") }
   scope :assets,      -> { where(asset: true) }
   scope :liabilities, -> { where(asset: false) }
 
@@ -44,6 +44,7 @@ class Account < ActiveRecord::Base
   private
 
   def zero_balance_when_deleting
-    errors.add(:balance_cents, :not_zero) unless balance_cents.zero? || deleted_at.blank?
+    return if deleted_at.blank? || balance_cents.zero?
+    errors.add(:balance_cents, :not_zero)
   end
 end

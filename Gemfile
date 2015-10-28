@@ -31,6 +31,8 @@ group :development, :test do
   gem 'selenium-webdriver'
   gem 'site_prism'
   gem 'test_rails_js', github: 'DouglasMeyer/test_rails_js'
+  gem "teaspoon-jasmine"
+  gem 'scss_lint', require: false
 end
 
 group :development do

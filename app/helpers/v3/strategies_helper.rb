@@ -2,18 +2,18 @@ module V3
   module StrategiesHelper
     def strategy_title(strategy)
       case strategy.strategy_type
-      when 'fixed'
+      when "fixed"
         "Fixed $#{strategy.variable}"
-      when 'percent_of_income'
+      when "percent_of_income"
         "#{strategy.variable}% of Income"
-      when 'amount_per_month'
+      when "amount_per_month"
         "$#{strategy.variable} per Month"
       end
     end
 
     def strategy_dot(strategy, bank_entry, options = {})
       class_name = "strategy-dot"
-      text = ''
+      text = ""
       using = true
       if strategy && !strategy.new_record?
         using = (options[:amount].to_f == strategy.value(bank_entry))

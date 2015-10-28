@@ -1,9 +1,9 @@
-//= require angular/angular
-//= require angular-animate/angular-animate
-//= require angular-route/angular-route
-//= require angular-rails-templates
-//= require rrule/lib/rrule
-//= require_tree ./templates
+#= require angular/angular
+#= require angular-animate/angular-animate
+#= require angular-route/angular-route
+#= require angular-rails-templates
+#= require rrule/lib/rrule
+#= require_tree ./templates
 
 angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
 
@@ -40,14 +40,17 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       )
       .otherwise redirectTo: '/accounts'
 
-  .factory 'dataRefresh', (Model, $window, $rootScope, $q, entriesNeedingDistribution, ledgerSummary)->
+  .factory 'dataRefresh', (
+    Model, $window, $rootScope, $q, entriesNeedingDistribution, ledgerSummary
+  )->
     cachedModels = {}
     storage = $window.localStorage
 
     refresh = (name)->
       unless Model[name].all.length
         try
-          cachedModels[name] = Model[name].load(angular.fromJson(storage.getItem("Model.#{name}.all")))
+          cachedModels[name] = Model[name]
+          .load(angular.fromJson(storage.getItem("Model.#{name}.all")))
           Model[name].all.isFromLocalStorage = true
       Model[name].promise = Model[name].read()
       Model[name].promise.then (all)->
@@ -65,10 +68,11 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       promises.push(refresh('Account'))
       promises.push(refresh('BankEntry'))
       promises.push(refresh('ProjectedEntry'))
-      promises.push(Model.BankEntry.read(needsDistribution: true).then (entries)->
+      promises.push(Model.BankEntry
+      .read(needsDistribution: true).then (entries)->
         oldLength = entriesNeedingDistribution.length
         args = [0,oldLength].concat(entries)
-        entriesNeedingDistribution.splice.apply(entriesNeedingDistribution, args)
+        Array.splice.apply(entriesNeedingDistribution, args)
       )
       promises.push(Model.LedgerSummary.read().then (summary)->
         angular.copy summary, ledgerSummary
@@ -87,7 +91,7 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
   .run ($rootScope, $window, $q, appCache, $http)->
 
     # So rails knows we are doing XHR requests.
-    $http.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
+    $http.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest"
 
     deferred = undefined
     appCache
@@ -130,7 +134,10 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
 
   .filter 'underscore', ->
     (input)->
-      input.replace(/([a-z])([A-Z])/g, (_,a,b)-> "#{a}_#{b}").replace(/\W+/g, '_').toLowerCase()
+      input
+      .replace(/([a-z])([A-Z])/g, (_,a,b)-> "#{a}_#{b}")
+      .replace(/\W+/g, '_')
+      .toLowerCase()
 
   .directive 'lCurrency', ($filter)->
     numberFilter = $filter('number')

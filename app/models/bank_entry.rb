@@ -11,7 +11,7 @@ class BankEntry < ActiveRecord::Base
   validate :fields_from_bank_do_not_update
 
   scope :reverse_order, -> { order(:date, :id) }
-  scope :join_aggrigate_bank_entries, ->{ joins(<<-ENDSQL) }
+  scope :join_aggrigate_bank_entries, -> { joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
       SELECT SUM(bank_entries.amount_cents) AS balance_cents,
              other_bes.id
@@ -23,11 +23,14 @@ class BankEntry < ActiveRecord::Base
     ) AS aggrigate_bank_entries
     ON aggrigate_bank_entries.id = bank_entries.id
   ENDSQL
-  scope :with_balance, -> do
+  scope :with_balance, lambda {
     query = join_aggrigate_bank_entries
-    query.select_values = ["bank_entries.*", "aggrigate_bank_entries.balance_cents"]
+    query.select_values = [
+      "bank_entries.*",
+      "aggrigate_bank_entries.balance_cents"
+    ]
     query
-  end
+  }
 
   scope :join_aggrigate_account_entries, -> { joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
@@ -39,11 +42,13 @@ class BankEntry < ActiveRecord::Base
     ON aggrigate_account_entries.bank_entry_id = bank_entries.id
   ENDSQL
 
-  scope :needs_distribution, -> { join_aggrigate_account_entries.where(<<-ENDSQL) }
-    bank_entries.amount_cents != aggrigate_account_entries.amount_cents OR
-    ( aggrigate_account_entries.amount_cents IS NULL AND
-      bank_entries.amount_cents != 0 )
-  ENDSQL
+  scope :needs_distribution, lambda {
+    join_aggrigate_account_entries.where(<<-ENDSQL)
+      bank_entries.amount_cents != aggrigate_account_entries.amount_cents OR
+      ( aggrigate_account_entries.amount_cents IS NULL AND
+        bank_entries.amount_cents != 0 )
+    ENDSQL
+  }
 
   scope :from_bank, -> { where("external_id IS NOT NULL") }
   def from_bank?

@@ -1,2 +1,6 @@
 ruby:
   config_file: .rubocop.yml
+coffeescript:
+  config_file: .coffeelint.json
+scss:
+  config_file: .sass-lint.yml

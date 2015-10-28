@@ -1,4 +1,5 @@
 inherit_from: .rubocop_todo.yml
+inherit_from: .hound_ruby.yml
 
 AllCops:
   RunRailsCops: true
@@ -10,3 +11,30 @@ AllCops:
     - 'db/migrate/**/*'
     - 'db/schema.rb'
     - 'node_modules/**/*'
+    - 'bin/*'
+
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    '%': '|'
+
+Metrics/LineLength:
+  Exclude:
+    - 'Rakefile'
+    - 'config/application.rb'
+    - 'config/environments/*.rb'
+    - 'config/initializers/*.rb'
+
+Style/AlignParameters:
+  Enabled: false
+Style/SpaceInsideBrackets:
+  Enabled: false
+Style/ExtraSpacing:
+  Enabled: false
+Style/SingleSpaceBeforeFirstArg:
+  Enabled: false
+Style/NumericLiterals:
+  Enabled: false
+Style/Documentation:
+  Enabled: false
+Style/SpaceInsideParens:
+  Enabled: false

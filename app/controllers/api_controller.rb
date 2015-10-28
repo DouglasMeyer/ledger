@@ -12,14 +12,17 @@ class ApiController < ApplicationController
       @records = {}
     end
 
-    def <<(response) # { records: records, associated: records, errors: errors, data: data }
-      if records = response.delete(:records)
+    # { records: records, associated: records, errors: errors, data: data }
+    def <<(response)
+      records = response.delete(:records)
+      if records
         response[:records] = records.map do |record|
           class_name = record.class.name
           id         = record.id
 
           @records[class_name] ||= {}
-          if serializer = ActiveModel::Serializer.serializer_for(record)
+          serializer = ActiveModel::Serializer.serializer_for(record)
+          if serializer
             object = serializer.new(record, root: false)
             @records[class_name][id] = object
           else
@@ -29,14 +32,12 @@ class ApiController < ApplicationController
         end
       end
 
-      if records = response.delete(:associated)
-        records.each do |record|
-          class_name = record.class.name
-          id         = record.id
+      (response.delete(:associated) || []).each do |record|
+        class_name = record.class.name
+        id         = record.id
 
-          @records[class_name] ||= {}
-          @records[class_name][id] = record
-        end
+        @records[class_name] ||= {}
+        @records[class_name][id] = record
       end
 
       @responses << response
@@ -47,7 +48,7 @@ class ApiController < ApplicationController
     end
 
     def any_errors?
-      @responses.any?{ |r| r.has_key? :errors }
+      @responses.any? { |r| r.key? :errors }
     end
   end
 
@@ -56,13 +57,17 @@ class ApiController < ApplicationController
 
     ActiveRecord::Base.transaction do
       JSON.parse(request.body.string).each do |command|
-        constant = get_request_resource(command['resource'])
-        if !constant.nil? && constant.respond_to?(command['action'])
-          response = constant.send(command['action'], command)
-          response['reference'] = command['reference'] if command.has_key?('reference')
+        constant = get_request_resource(command["resource"])
+        if !constant.nil? && constant.respond_to?(command["action"])
+          response = constant.send(command["action"], command)
+          if command.key?("reference")
+            response["reference"] = command["reference"]
+          end
           api_response << response
         else
-          raise ImpossibleAction.new "#{command['resource']}.#{command['action']} isn't an accepted resource/action"
+          fail ImpossibleAction,
+               "#{command['resource']}.#{command['action']} " \
+               "isn't an accepted resource/action"
         end
       end
     end
@@ -83,16 +88,15 @@ class ApiController < ApplicationController
     private
 
     def camelize(obj)
-      obj.inject({}) do |acc, (key, val)|
-        new_key = key.gsub(/_\w/){ |w| w[1].upcase }
+      obj.each_with_object({}) do |(key, val), acc|
+        new_key = key.gsub(/_\w/) { |w| w[1].upcase }
         if val.is_a? Array
-          acc[new_key] = val.map{ |v| camelize v }
+          acc[new_key] = val.map { |v| camelize v }
         elsif val.is_a? Hash
           acc[new_key] = camelize val
         else
           acc[new_key] = val
         end
-        acc
       end
     end
   end
@@ -100,28 +104,28 @@ class ApiController < ApplicationController
   module Account_v1
     def self.read(command)
       records = ::Account.all
-      records = records.limit(command['limit']) if command['limit']
-      records = records.offset(command['offset']) if command['offset']
-      records = query(records, command['query']) if command['query']
+      records = records.limit(command["limit"]) if command["limit"]
+      records = records.offset(command["offset"]) if command["offset"]
+      records = query(records, command["query"]) if command["query"]
       { records: records }
     end
 
     def self.create(command)
-      { records: [ ::Account.create!(command['data']) ] }
+      { records: [ ::Account.create!(command["data"]) ] }
     rescue ActiveRecord::RecordInvalid => e
       { errors: e.record.errors, data: e.record }
     end
 
     def self.update(command)
-      record = ::Account.find(command['id'])
-      record.update!(command['data'])
+      record = ::Account.find(command["id"])
+      record.update!(command["data"])
       { records: [ record ] }
     end
 
     def self.delete(command)
-      record = ::Account.find(command['id'])
-      record_attrs = command['data'].merge(
-        deleted_at: Time.now
+      record = ::Account.find(command["id"])
+      record_attrs = command["data"].merge(
+        deleted_at: Time.zone.now
       )
       record.update! record_attrs
       { records: [ record ] }
@@ -131,10 +135,11 @@ class ApiController < ApplicationController
 
     def self.query(records, query)
       query.each do |column, val|
-        if column == 'id' && val.is_a?(Array)
+        if column == "id" && val.is_a?(Array)
           records = records.where(id: val)
         else
-          raise InvalidQuery.new "#{{ column => val }.inspect} is not a valid query."
+          fail InvalidQuery,
+               "#{{ column => val }.inspect} is not a valid query."
         end
       end
 
@@ -146,7 +151,7 @@ class ApiController < ApplicationController
     extend Service
 
     def self.read(command)
-      if command['needsDistribution'] == true
+      if command["needsDistribution"] == true
         records = ::BankEntry
                   .needs_distribution
                   .with_balance
@@ -154,21 +159,23 @@ class ApiController < ApplicationController
       else
         records = ::BankEntry
                   .with_balance
-                  .limit(command['limit'] || 25)
-                  .offset(command['offset'] || 0)
-        account_entries = ::AccountEntry.where(bank_entry_id: records.pluck(:id))
+                  .limit(command["limit"] || 25)
+                  .offset(command["offset"] || 0)
+        account_entries = ::AccountEntry.where(
+          bank_entry_id: records.pluck(:id)
+        )
         { records: records, associated: account_entries }
       end
     end
 
     def self.create(command)
-      record = ::BankEntry.create!(command['data'])
+      record = ::BankEntry.create!(command["data"])
       { records: [ record ], associated: record.accounts }
     end
 
     def self.update(command)
-      record = ::BankEntry.find(command['id'])
-      record.update!(command['data'])
+      record = ::BankEntry.find(command["id"])
+      record.update!(command["data"])
       { records: [ record ], associated: record.accounts }
     end
   end
@@ -178,24 +185,24 @@ class ApiController < ApplicationController
 
     def self.read(command)
       records = ::ProjectedEntry
-                .limit(command['limit'] || 25)
-                .offset(command['offset'] || 0)
+                .limit(command["limit"] || 25)
+                .offset(command["offset"] || 0)
       { records: records }
     end
 
     def self.create(command)
-      record = ::ProjectedEntry.create!(command['data'])
+      record = ::ProjectedEntry.create!(command["data"])
       { records: [ record ] }
     end
 
     def self.update(command)
-      record = ::ProjectedEntry.find(command['id'])
-      record.update!(command['data'])
+      record = ::ProjectedEntry.find(command["id"])
+      record.update!(command["data"])
       { records: [ record ] }
     end
 
     def self.delete(command)
-      record = ::ProjectedEntry.find(command['id'])
+      record = ::ProjectedEntry.find(command["id"])
       record.destroy!
       { records: [] }
     end

@@ -1,4 +1,4 @@
-require Rails.root + 'lib' + 'parse_statement'
+require Rails.root + "lib" + "parse_statement"
 
 class BankImport < ActiveRecord::Base
   def self.upload!(file)
@@ -6,7 +6,6 @@ class BankImport < ActiveRecord::Base
 
     ActiveRecord::Base.transaction do
       bank_entry_attrs.compact.each do |be_attrs|
-        #pp be_attrs
         unless BankEntry.where(external_id: be_attrs[:external_id].to_s).any?
           BankEntry.create! be_attrs
         end

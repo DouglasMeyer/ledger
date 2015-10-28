@@ -6,6 +6,7 @@ angular.module('ledger').service 'appCache', ($window, $rootScope)->
       $rootScope.$apply callback
 
   on: (event, callback)->
-    $window.applicationCache.addEventListener(event, callback, false) unless eventCallbacks[event]
+    unless eventCallbacks[event]
+      $window.applicationCache.addEventListener(event, callback, false)
     (eventCallbacks[event] ||= []).push callback
     this
