@@ -7,7 +7,7 @@ class AccountsEditPage < SitePrism::Page
 
   class CategorySection < SitePrism::Section
     def name
-      root_element.find('h4 > input').value
+      root_element.find("h4 > input").value
     end
 
     sections :accounts, AccountSection, '[ng-repeat^="account in accounts"]'
@@ -22,9 +22,9 @@ class AccountsEditPage < SitePrism::Page
   set_url_matcher %r{/v3#/accounts/edit$}
 
   sections :asset_categories,     CategorySection,
-    '.m-accountType:nth-child(1) .m-category'
+    ".m-accountType:nth-child(1) .m-category"
   sections :liability_categories, CategorySection,
-    '.m-accountType:nth-child(2) .m-category'
+    ".m-accountType:nth-child(2) .m-category"
 
   ### Actions
 
@@ -38,7 +38,7 @@ class AccountsEditPage < SitePrism::Page
       ' input[placeholder="add category"]'
     ).instance_eval do
       set category_name
-      trigger 'blur'
+      trigger "blur"
     end
   end
 

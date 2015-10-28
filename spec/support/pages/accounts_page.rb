@@ -1,7 +1,7 @@
 class AccountsPage < SitePrism::Page
   class AccountTypeLine < SitePrism::Section
     def name
-      account_name = root_element.all('a')
+      account_name = root_element.all("a")
       if account_name.any?
         account_name.first.text
       else

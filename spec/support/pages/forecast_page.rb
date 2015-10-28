@@ -7,11 +7,11 @@ class ForecastPage < BasePage
     section :frequency,   SelectElement, "select[ng-model$='.frequency']"
 
     def save
-      root_element.find('button', text: 'Save').click
+      root_element.find("button", text: "Save").click
     end
 
     def cancel
-      root_element.find('button', text: 'cancel').click
+      root_element.find("button", text: "cancel").click
     end
 
     delegate :click, to: :root_element
@@ -20,5 +20,5 @@ class ForecastPage < BasePage
   set_url '/v3#/forecast'
   set_url_matcher %r{/v3#/forecast$}
 
-  sections :projected_entries, ProjectedEntrySection, '.table__rows'
+  sections :projected_entries, ProjectedEntrySection, ".table__rows"
 end

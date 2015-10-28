@@ -3,7 +3,7 @@ module V3
     def account_balance_without_bank_entry(account, bank_entry)
       ids = bank_entry.account_entries.pluck(:id)
       if ids.any?
-        account_entries = account.entries.where('id NOT IN (?)', ids)
+        account_entries = account.entries.where("id NOT IN (?)", ids)
       else
         account_entries = account.entries
       end
@@ -28,7 +28,7 @@ module V3
       end + f.fields_for(:account_entries, account_entry) do |ae|
         account_balance = account_balance_without_bank_entry(account, f.object)
         content_tag :li, data: { account_balance: account_balance } do
-          render partial: 'account', locals: {
+          render partial: "account", locals: {
             f: ae,
             account_balance: account_balance
           }

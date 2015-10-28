@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe Account do
   def add_ae(amount, month, day, from_bank = true)
@@ -20,8 +20,8 @@ describe Account do
     end.to raise_error ActiveRecord::RecordInvalid
   end
 
-  describe 'average_spent' do
-    it 'is calculated from spending' do
+  describe "average_spent" do
+    it "is calculated from spending" do
       @account = Account.make!
       add_ae(-100, 1,  1)
       add_ae( -50, 1, 10)
@@ -37,7 +37,7 @@ describe Account do
       expect(@account.average_spent).to be_within(5).of(-350)
     end
 
-    it 'is nil for no spending' do
+    it "is nil for no spending" do
       @account = Account.make!
       add_ae( 999, 2,  1)
       add_ae(-999, 2,  1, false)
@@ -45,7 +45,7 @@ describe Account do
       expect(@account.average_spent).to be_nil
     end
 
-    it 'returns the amount as dollars per x' do
+    it "returns the amount as dollars per x" do
       @account = Account.make!
       add_ae(-100, 1,  1)
       add_ae( -50, 1, 10)

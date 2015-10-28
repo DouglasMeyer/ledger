@@ -32,8 +32,8 @@ class AccountEntry < ActiveRecord::Base
   scope :with_balance, lambda {
     join_aggrigate_account_entries
       .joins(:bank_entry)
-      .order('bank_entries.date DESC, bank_entries.id DESC')
-      .select('account_entries.*, aggrigate_account_entries.balance_cents')
+      .order("bank_entries.date DESC, bank_entries.id DESC")
+      .select("account_entries.*, aggrigate_account_entries.balance_cents")
   }
 
   dollarify :amount_cents

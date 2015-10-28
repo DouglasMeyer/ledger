@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
       head :unauthorized
       false
     else
-      redirect_to '/auth/google_oauth2'
+      redirect_to "/auth/google_oauth2"
     end
   end
 end

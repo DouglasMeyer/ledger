@@ -1,4 +1,4 @@
-require Rails.root + 'lib' + 'parse_statement'
+require Rails.root + "lib" + "parse_statement"
 
 class BankImport < ActiveRecord::Base
   def self.upload!(file)

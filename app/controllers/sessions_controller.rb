@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
   skip_before_action :authenticate
 
   def create
-    auth = request.env['omniauth.auth']
+    auth = request.env["omniauth.auth"]
     action = AuthenticateFromProvider.new(auth)
     session[:auth_user] = action.result
     if action.success?

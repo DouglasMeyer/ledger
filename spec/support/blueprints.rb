@@ -1,4 +1,4 @@
-require 'machinist/active_record'
+require "machinist/active_record"
 
 # Account
 Account.blueprint do
@@ -42,7 +42,7 @@ ProjectedEntry.blueprint do
   account { Account.make }
   amount_cents { (rand * 200_00).round / 100.0 - 100 }
   rrule do
-    next_monday = Time.now.monday.next_week.utc.iso8601.remove('-').remove(':')
+    next_monday = Time.now.monday.next_week.utc.iso8601.remove("-").remove(":")
     "FREQ=WEEKLY;DTSTART=#{next_monday}"
   end
 end

@@ -2,12 +2,12 @@ class Account < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
   validate :zero_balance_when_deleting
 
-  has_many :entries, class_name: 'AccountEntry'
+  has_many :entries, class_name: "AccountEntry"
   belongs_to :strategy
   has_many :bank_entries, through: :entries
   has_many :account_entries
 
-  scope :not_deleted, -> { where('deleted_at IS NULL') }
+  scope :not_deleted, -> { where("deleted_at IS NULL") }
   scope :assets,      -> { where(asset: true) }
   scope :liabilities, -> { where(asset: false) }
 
@@ -26,8 +26,8 @@ class Account < ActiveRecord::Base
     return nil if months.zero?
     spent = entries
             .joins(:bank_entry)
-            .where('bank_entries.external_id IS NOT NULL')
-            .where('bank_entries.amount_cents < 0')
+            .where("bank_entries.external_id IS NOT NULL")
+            .where("bank_entries.amount_cents < 0")
             .pluck(:amount_cents).sum / 100.0
     spent * average_over / months
   end

@@ -1,8 +1,8 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe AccountEntry do
-  describe '.join_aggrigate_account_entries' do
-    it 'includes balance_cents' do
+  describe ".join_aggrigate_account_entries" do
+    it "includes balance_cents" do
       account = Account.make!
       ae1 = AccountEntry.make! account: account, amount_cents: 1
       ae2 = AccountEntry.make! amount_cents: 9
@@ -12,7 +12,7 @@ describe AccountEntry do
       account_entries_with_balance =
         AccountEntry
         .join_aggrigate_account_entries
-        .pluck('account_entries.id, aggrigate_account_entries.balance_cents')
+        .pluck("account_entries.id, aggrigate_account_entries.balance_cents")
         .sort
       expect(account_entries_with_balance).to eq([
         [ ae1.id, ae1.amount_cents ],

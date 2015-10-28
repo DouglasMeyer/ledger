@@ -1,10 +1,10 @@
-ENV['RAILS_ENV'] ||= 'test'
-require 'spec_helper'
-require File.expand_path('../../config/environment', __FILE__)
-require 'rspec/rails'
-require 'capybara/rspec'
-require 'capybara-screenshot/rspec'
-require 'capybara/rails'
+ENV["RAILS_ENV"] ||= "test"
+require "spec_helper"
+require File.expand_path("../../config/environment", __FILE__)
+require "rspec/rails"
+require "capybara/rspec"
+require "capybara-screenshot/rspec"
+require "capybara/rails"
 
 Capybara::Screenshot.prune_strategy = :keep_last_run
 
@@ -14,8 +14,8 @@ Capybara::Screenshot.prune_strategy = :keep_last_run
 # run as spec files by default. This means that files in spec/support that end
 # in _spec.rb will both be required and run as specs, causing the specs to be
 # run twice. It is recommended that you do not name files matching this glob to
-require_relative 'support/pages/base_page'
-Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
+require_relative "support/pages/base_page"
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
@@ -47,8 +47,8 @@ RSpec.configure do |config|
   def mock_auth
     OmniAuth.config.test_mode = true
     OmniAuth.config.mock_auth[:developer] = OmniAuth::AuthHash.new(
-      provider: 'developer',
-      info: { name: 'feature tester' }
+      provider: "developer",
+      info: { name: "feature tester" }
     )
     yield
   ensure
@@ -57,14 +57,14 @@ RSpec.configure do |config|
 
   config.around(:each, type: :feature) do |example|
     mock_auth do
-      visit '/auth/developer'
+      visit "/auth/developer"
       example.run
     end
   end
 
   config.around(:each, type: :request) do |example|
     mock_auth do
-      get '/auth/developer'
+      get "/auth/developer"
       follow_redirect!
       example.run
     end

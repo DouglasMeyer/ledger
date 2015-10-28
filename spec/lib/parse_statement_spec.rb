@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe ParseStatement do
   def run_parse(_transactions = [], balance = 10_000.00)
@@ -60,8 +60,8 @@ NEWFILEUID:NONE
     ParseStatement.run(string)
   end
 
-  describe 'an empty run' do
-    it 'returns no transaction' do
+  describe "an empty run" do
+    it "returns no transaction" do
       bank_entry_attrs, balance = run_parse
 
       expect(bank_entry_attrs).to eq([])

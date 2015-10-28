@@ -57,11 +57,11 @@ class ApiController < ApplicationController
 
     ActiveRecord::Base.transaction do
       JSON.parse(request.body.string).each do |command|
-        constant = get_request_resource(command['resource'])
-        if !constant.nil? && constant.respond_to?(command['action'])
-          response = constant.send(command['action'], command)
-          if command.key?('reference')
-            response['reference'] = command['reference']
+        constant = get_request_resource(command["resource"])
+        if !constant.nil? && constant.respond_to?(command["action"])
+          response = constant.send(command["action"], command)
+          if command.key?("reference")
+            response["reference"] = command["reference"]
           end
           api_response << response
         else
@@ -104,27 +104,27 @@ class ApiController < ApplicationController
   module Account_v1
     def self.read(command)
       records = ::Account.all
-      records = records.limit(command['limit']) if command['limit']
-      records = records.offset(command['offset']) if command['offset']
-      records = query(records, command['query']) if command['query']
+      records = records.limit(command["limit"]) if command["limit"]
+      records = records.offset(command["offset"]) if command["offset"]
+      records = query(records, command["query"]) if command["query"]
       { records: records }
     end
 
     def self.create(command)
-      { records: [ ::Account.create!(command['data']) ] }
+      { records: [ ::Account.create!(command["data"]) ] }
     rescue ActiveRecord::RecordInvalid => e
       { errors: e.record.errors, data: e.record }
     end
 
     def self.update(command)
-      record = ::Account.find(command['id'])
-      record.update!(command['data'])
+      record = ::Account.find(command["id"])
+      record.update!(command["data"])
       { records: [ record ] }
     end
 
     def self.delete(command)
-      record = ::Account.find(command['id'])
-      record_attrs = command['data'].merge(
+      record = ::Account.find(command["id"])
+      record_attrs = command["data"].merge(
         deleted_at: Time.zone.now
       )
       record.update! record_attrs
@@ -135,7 +135,7 @@ class ApiController < ApplicationController
 
     def self.query(records, query)
       query.each do |column, val|
-        if column == 'id' && val.is_a?(Array)
+        if column == "id" && val.is_a?(Array)
           records = records.where(id: val)
         else
           fail InvalidQuery,
@@ -151,7 +151,7 @@ class ApiController < ApplicationController
     extend Service
 
     def self.read(command)
-      if command['needsDistribution'] == true
+      if command["needsDistribution"] == true
         records = ::BankEntry
                   .needs_distribution
                   .with_balance
@@ -159,8 +159,8 @@ class ApiController < ApplicationController
       else
         records = ::BankEntry
                   .with_balance
-                  .limit(command['limit'] || 25)
-                  .offset(command['offset'] || 0)
+                  .limit(command["limit"] || 25)
+                  .offset(command["offset"] || 0)
         account_entries = ::AccountEntry.where(
           bank_entry_id: records.pluck(:id)
         )
@@ -169,13 +169,13 @@ class ApiController < ApplicationController
     end
 
     def self.create(command)
-      record = ::BankEntry.create!(command['data'])
+      record = ::BankEntry.create!(command["data"])
       { records: [ record ], associated: record.accounts }
     end
 
     def self.update(command)
-      record = ::BankEntry.find(command['id'])
-      record.update!(command['data'])
+      record = ::BankEntry.find(command["id"])
+      record.update!(command["data"])
       { records: [ record ], associated: record.accounts }
     end
   end
@@ -185,24 +185,24 @@ class ApiController < ApplicationController
 
     def self.read(command)
       records = ::ProjectedEntry
-                .limit(command['limit'] || 25)
-                .offset(command['offset'] || 0)
+                .limit(command["limit"] || 25)
+                .offset(command["offset"] || 0)
       { records: records }
     end
 
     def self.create(command)
-      record = ::ProjectedEntry.create!(command['data'])
+      record = ::ProjectedEntry.create!(command["data"])
       { records: [ record ] }
     end
 
     def self.update(command)
-      record = ::ProjectedEntry.find(command['id'])
-      record.update!(command['data'])
+      record = ::ProjectedEntry.find(command["id"])
+      record.update!(command["data"])
       { records: [ record ] }
     end
 
     def self.delete(command)
-      record = ::ProjectedEntry.find(command['id'])
+      record = ::ProjectedEntry.find(command["id"])
       record.destroy!
       { records: [] }
     end

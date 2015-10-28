@@ -1,25 +1,25 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'bank entries view', type: :feature do
+describe "bank entries view", type: :feature do
   let(:bank_entries_page) { BankEntriesPage.new }
 
-  it 'loads bank entries' do
+  it "loads bank entries" do
     30.times { BankEntry.make! amount_cents: 0 }
     bank_entries_page.load
 
     expect(bank_entries_page).to have_bank_entries(count: 25)
   end
 
-  describe 'a bank entry that needs distribution' do
-    it 'is reflected in the entry counter' do
+  describe "a bank entry that needs distribution" do
+    it "is reflected in the entry counter" do
       30.times { BankEntry.make! amount_cents: 10 }
       bank_entries_page.load
 
-      expect(bank_entries_page.navigation).to have_entry_counter(text: '30')
+      expect(bank_entries_page.navigation).to have_entry_counter(text: "30")
     end
   end
 
-  it 'displays an expense bank entry' do
+  it "displays an expense bank entry" do
     be = BankEntry.make!(
       date: Date.new(2015, 1, 19),
       amount_cents: -10_00
@@ -33,7 +33,7 @@ describe 'bank entries view', type: :feature do
       .to eq("2015-01-19 $-10.00 from #{account}")
   end
 
-  it 'displays an income bank entry' do
+  it "displays an income bank entry" do
     be = BankEntry.make!(
       date: Date.new(2015, 1, 19),
       amount_cents: 10_00
@@ -50,7 +50,7 @@ describe 'bank entries view', type: :feature do
       .to eq("2015-01-19 $10.00 to #{account}")
   end
 
-  it 'displays a transfer bank entry' do
+  it "displays a transfer bank entry" do
     be = BankEntry.make!(
       date: Date.new(2015, 1, 19),
       amount_cents: 0
