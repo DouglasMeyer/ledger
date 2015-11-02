@@ -1,11 +1,4 @@
 GIT
-  remote: git://github.com/DouglasMeyer/test_rails_js.git
-  revision: f339be3dd1b5305dba6bf82b588e612f01d916c6
-  specs:
-    test_rails_js (0.1.2)
-      rails (> 3.1.0)
-
-GIT
   remote: git://github.com/kikonen/ngannotate-rails.git
   revision: ea4aef984cd96025d6b6a2626d9886a513c5dc79
   specs:
@@ -124,7 +117,7 @@ GEM
       multi_json (~> 1.8)
     haml (4.0.7)
       tilt
-    hashie (3.4.2)
+    hashie (3.4.3)
     hike (1.2.3)
     http_parser.rb (0.6.0)
     httparty (0.13.7)
@@ -323,7 +316,6 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   selenium-webdriver
   site_prism
-  test_rails_js!
   uglifier (>= 1.3.0)
 
 BUNDLED WITH
