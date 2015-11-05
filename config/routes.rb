@@ -16,17 +16,14 @@ Rails.application.routes.draw do
     resources :bank_imports, only: [ :create ]
 
     root to: 'pages#angular'
-    if Rails.env.production?
-      offline = Rack::Offline.configure cache: true do
-        cache ActionController::Base.helpers.asset_path("normalize.css")
-        cache ActionController::Base.helpers.asset_path("v3.css")
-        cache ActionController::Base.helpers.asset_path("v3.js")
-        cache ActionController::Base.helpers.asset_path("icomoon.ttf")
-        cache "/v3"
-        network "/api"
+    offline = Rack::Offline.configure cache: true do
+      %w( normalize.css v3.css v3.js icomoon.ttf ).each do |asset|
+        cache ActionController::Base.helpers.asset_path(asset)
       end
-      get '/application.manifest' => offline, as: :manifest
+      cache "/v3"
+      network "/api"
     end
+    get '/application.manifest' => offline, as: :manifest
   end
 
   match "/auth/:provider/callback" => "sessions#create", via: [ :get, :post ]
