@@ -17,11 +17,12 @@ Rails.application.routes.draw do
 
     root to: 'pages#angular'
     offline = Rack::Offline.configure cache: true do
-      %w( normalize.css v3.css v3.js icomoon.ttf ).each do |asset|
+      %w( normalize.css v3.css v3.js icomoon.ttf icomoon.woff favicon.ico ).each do |asset|
         cache ActionController::Base.helpers.asset_path(asset)
       end
       cache "/v3"
       network "/api"
+      network "*"
     end
     get '/application.manifest' => offline, as: :manifest
   end
