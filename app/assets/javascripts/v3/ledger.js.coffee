@@ -2,10 +2,19 @@
 //= require angular-animate/angular-animate
 //= require angular-route/angular-route
 //= require angular-rails-templates
+//= require react
+//= require redux
+//= require react-redux
+//= require ngReact
 //= require rrule/lib/rrule
 //= require_tree ./templates
+//= require ./actions
+//= require ./store
+//= require_self
+//= require ./components/accounts
 
-angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
+
+angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates', 'react'])
 
   .config ($routeProvider, $provide)->
 
@@ -19,9 +28,7 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
     # routes
     $routeProvider
       .when('/accounts',
-        templateUrl: 'v3/templates/accounts.html'
-        resolve:
-          data: (dataRefresh)-> dataRefresh()
+        template: '<react-component name="AccountsComponent" />'
       )
       .when('/accounts/edit',
         templateUrl: 'v3/templates/accounts_edit.html'
