@@ -1,5 +1,5 @@
 !!! 5
-%html(manifest="#{v3_manifest_path if Rails.env.production?}")
+%html(manifest="#{v3_manifest_path if @do_manifest}")
   %head
     %title Ledger
     = stylesheet_link_tag    "normalize", "v3", :media => "all"
