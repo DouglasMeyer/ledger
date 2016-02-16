@@ -1,18 +1,27 @@
-require 'spec_helper'
-require_relative '../../app/actions/authenticate_from_provider'
+require 'rails_helper'
+# require_relative '../../app/actions/authenticate_from_provider'
 
 describe AuthenticateFromProvider do
-  let(:developer_auth) { { 'provider' => 'developer' } }
-  let(:doug_auth) do
-    { 'provider' => 'google_oauth2', 'info' => {
-      'email' => 'douglasyman@gmail.com'
-    } }
+  let(:developer_auth) do
+    ActionController::Parameters.new(
+      'provider' => 'developer', 'info' => {}
+    )
   end
-  let(:katy_auth) do
-    { 'provider' => 'google_oauth2', 'info' => {
-      'email' => 'kmeyer08@gmail.com',
-      'name' => 'Katy Meyer'
-    } }
+  let(:invalid_auth) do
+    ActionController::Parameters.new(
+      'provider' => 'x', 'info' => {}
+    )
+  end
+  let(:doug_auth) do
+    ActionController::Parameters.new(
+      'provider' => 'google_oauth2', 'info' => {
+        'email' => 'douglasyman@gmail.com',
+        'name' => 'Douglas Meyer'
+      }
+    )
+  end
+  let(:doug_user) do
+    User.create!(provider: doug_auth['provider'], email: doug_auth['info']['email'])
   end
 
   describe '#success?' do
@@ -20,26 +29,30 @@ describe AuthenticateFromProvider do
       expect(AuthenticateFromProvider.new(developer_auth).success?).to be true
     end
 
-    it 'is true when uid belongs to Doug' do
+    it 'is true when a User exists for provider/email' do
+      doug_user
       expect(AuthenticateFromProvider.new(doug_auth).success?).to be true
     end
 
-    it 'is true when uid belongs to Katy' do
-      expect(AuthenticateFromProvider.new(katy_auth).success?).to be true
-    end
-
     it 'is false for auth that does not match' do
-      expect(AuthenticateFromProvider.new({}).success?).to be false
+      expect(AuthenticateFromProvider.new(invalid_auth).success?).to be false
     end
   end
 
   describe '#result' do
-    it 'is the name when successful' do
-      expect(AuthenticateFromProvider.new(katy_auth).result).to eq 'Katy Meyer'
+    it 'is the user when successful' do
+      doug_user
+      expect(AuthenticateFromProvider.new(doug_auth).result).to eq doug_user
+    end
+
+    it 'updates user with name' do
+      doug_user
+      AuthenticateFromProvider.new(doug_auth).result
+      expect(doug_user.reload.name).to eq 'Douglas Meyer'
     end
 
     it 'is nil when unsuccessful' do
-      expect(AuthenticateFromProvider.new({}).result).to be nil
+      expect(AuthenticateFromProvider.new(invalid_auth).result).to be nil
     end
   end
 end
