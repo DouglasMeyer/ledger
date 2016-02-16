@@ -38,6 +38,7 @@ group :development do
   gem 'httparty', require: false
   gem 'guard-livereload', require: false
   gem "rack-livereload"
+  gem 'rubocop', require: false
 end
 
 group :test do
