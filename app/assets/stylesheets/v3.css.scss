@@ -290,7 +290,6 @@ $bank-entry-width: 45em;
     &:last-child { border-bottom: none; }
 
     .date, .description, .distribute, .amount, .account {
-      z-index: 100;
       input, select { width: 100%; }
     }
     .distribute {

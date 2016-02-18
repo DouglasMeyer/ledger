@@ -20,8 +20,14 @@
   .table__cell--account
     %select( ng-if="isEditable()"
       name="account"
-      ng-model="accountEntry.accountName"
-      ng-options="name for name in accountNames")
+      ng-model="accountEntry.accountName")
+      %option( ng-repeat="name in accountNames"
+        ng-selected="accountEntry.accountName == name"
+        value="{{name}}") {{name}}
+      %optgroup( label="Deleted"
+        ng-if="accountEntry.accountName && accountNames.indexOf(accountEntry.accountName) == -1")
+        %option( value="{{accountEntry.accountName}}"
+          selected ) {{accountEntry.accountName}}
     %span( ng-if="!isEditable()" ) {{accountEntry.accountName}}
 .table__row
   .table__cell.l-text-r
