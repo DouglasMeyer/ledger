@@ -21,7 +21,12 @@ class AccountEntry < ActiveRecord::Base
         ON other_aes.account_id = account_entries.account_id
       LEFT JOIN bank_entries AS other_bes
         ON other_bes.id = other_aes.bank_entry_id
-      WHERE bank_entries.id <= other_bes.id
+        WHERE
+          bank_entries.date < other_bes.date OR
+          (
+            bank_entries.date = other_bes.date AND
+            bank_entries.id <= other_bes.id
+          )
       GROUP BY
         other_aes.id
     ) AS aggrigate_account_entries
