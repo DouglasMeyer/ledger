@@ -5,6 +5,7 @@ describe 'bank entries view', type: :feature do
 
   it "loads bank entries" do
     30.times { BankEntry.make! amount_cents: 0 }
+    bank_entries_page.load # ensure cache is up-to-date
     bank_entries_page.load
 
     expect(bank_entries_page).to have_bank_entries(count: 25)
