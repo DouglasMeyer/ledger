@@ -3,7 +3,8 @@
 
 describe "ForecastCtrl", ->
   beforeEach module 'ledger'
-  beforeEach inject (@$controller, @$rootScope, @Model, @$q)->
+  beforeEach inject (@$controller, @$rootScope, @Model, $q)->
+    @$q = $q
     @deferredSave = $q.defer()
     spyOn(@Model.ProjectedEntry, 'save').andCallFake => @deferredSave.promise
 
@@ -26,17 +27,20 @@ describe "ForecastCtrl", ->
     nextNextMonth.setMonth now.getMonth()+2
     projectedEntry = @Model.ProjectedEntry.all[0]
 
-    expect(scope.forecastedEntries[0].date.toDateString()).toEqual now.toDateString()
-    expect(scope.forecastedEntries[0].projectedEntry).toBe projectedEntry
-    expect(scope.forecastedEntries[0].isFirst).toBe true
+    forecastedEntry = scope.forecastedEntries[0]
+    expect(forecastedEntry.date.toDateString()).toEqual now.toDateString()
+    expect(forecastedEntry.projectedEntry).toBe projectedEntry
+    expect(forecastedEntry.isFirst).toBe true
 
-    expect(scope.forecastedEntries[1].date.toDateString()).toEqual nextMonth.toDateString()
-    expect(scope.forecastedEntries[1].projectedEntry).toBe projectedEntry
-    expect(scope.forecastedEntries[1].isFirst).toBe false
+    forecastedEntry = scope.forecastedEntries[1]
+    expect(forecastedEntry.date.toDateString()).toEqual nextMonth.toDateString()
+    expect(forecastedEntry.projectedEntry).toBe projectedEntry
+    expect(forecastedEntry.isFirst).toBe false
 
-    expect(scope.forecastedEntries[2].date.toDateString()).toEqual nextNextMonth.toDateString()
-    expect(scope.forecastedEntries[2].projectedEntry).toBe projectedEntry
-    expect(scope.forecastedEntries[2].isFirst).toBe false
+    forecastedEntry = scope.forecastedEntries[2]
+    expect(forecastedEntry.date.toDateString()).toEqual nextNextMonth.toDateString()
+    expect(forecastedEntry.projectedEntry).toBe projectedEntry
+    expect(forecastedEntry.isFirst).toBe false
 
   it 'shows projected entries that ended in the past', ->
     scope = @$rootScope.$new()
@@ -69,7 +73,10 @@ describe "ForecastCtrl", ->
 
     expect(scope.projectedEntries.length).toEqual 1
     rrule = new RRule( freq: RRule.WEEKLY )
-    weekCount = rrule.between(new Date(Date.now()-1000*60), new Date(Date.now()+1000*60*60*24*30*2.5)).length
+    weekCount = rrule.between(
+      new Date(Date.now()-1000*60),
+      new Date(Date.now()+1000*60*60*24*30*2.5)
+    ).length
     expect(scope.forecastedEntries.length).toEqual weekCount
 
   it 'persists on save', ->

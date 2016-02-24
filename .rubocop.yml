@@ -3,6 +3,14 @@ inherit_from: .rubocop_todo.yml
 Rails:
   Enabled: true
 
+Styles/LeadingCommentSpace:
+  Exclude:
+    - 'spec/teaspoon_env.rb'
+
+Style/FileName:
+  Exclude:
+    - 'Gemfile'
+
 AllCops:
   Include:
     - '**/Rakefile'

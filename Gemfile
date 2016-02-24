@@ -1,5 +1,3 @@
-# vim: set filetype=ruby:
-
 source 'https://rubygems.org'
 ruby '2.2.4'
 
@@ -26,10 +24,11 @@ group :development, :test do
   gem 'capybara-webkit'
   gem 'database_cleaner'
   gem 'pry'
+  gem 'pry-byebug'
   gem 'rspec-rails'
   gem 'selenium-webdriver'
   gem 'site_prism'
-  gem 'test_rails_js', github: 'DouglasMeyer/test_rails_js'
+  gem 'teaspoon-jasmine'
 end
 
 group :development do
