@@ -28,14 +28,8 @@ function receiveAccounts(accounts){
 function fetchAccounts(){
   return dispatch => {
     dispatch(requestAccounts());
-    var init = {
-      method: 'post',
-      body: JSON.stringify([{ action: 'read', resource: 'Account_v1' }]),
-      headers: new Headers()
-    };
-    init.headers.append('X-Requested-With', 'XMLHttpRequest');
-    return fetch('/api', init)
-      .then(req => req.json())
+    var data = JSON.stringify([{ action: 'read', resource: 'Account_v1' }])
+    jQuery.post('/api', data)
       .then(json => json.responses[0].records.map(obj => json.records[obj.type][obj.id]))
       .then(records =>{ dispatch(receiveAccounts(records)); })
   }
