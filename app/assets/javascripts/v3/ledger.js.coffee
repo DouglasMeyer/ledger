@@ -14,6 +14,10 @@
 //= require ./components/accounts
 
 
+window.formatCurrency = (cents)->
+  dollars = cents / 100
+  dollars.toLocaleString('en-US', {style:'currency', currency: 'USD'})
+
 angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates', 'react'])
 
   .config ($routeProvider, $provide)->
