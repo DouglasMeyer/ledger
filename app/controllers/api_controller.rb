@@ -103,7 +103,12 @@ class ApiController < ApplicationController
       records = records.limit(command['limit']) if command['limit']
       records = records.offset(command['offset']) if command['offset']
       records = query(records, command['query']) if command['query']
-      { records: records }
+      associated = []
+      if command['include'] && command['include'].include?('account_entries.with_balance')
+        associated = ::AccountEntry.where(account_id: records.select(:id)).with_balance
+        associated += ::BankEntry.where(id: associated.pluck(:bank_entry_id))
+      end
+      { records: records, associated: associated }
     end
 
     def self.create(command)

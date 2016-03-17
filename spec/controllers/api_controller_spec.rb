@@ -537,4 +537,29 @@ describe ApiController do
       }.to_json)
     end
   end
+
+  describe "Account_v1.read" do
+    it "responds with account_entries.with_balance" do
+      account = Account.make!
+      AccountEntry.make! account: account, amount_cents: 100
+      AccountEntry.make! account: account, amount_cents: 10
+      AccountEntry.make! account: account, amount_cents: 1
+
+      post :bulk, [
+        { resource: 'Account_v1', action: 'read', reference: 'ae.with_balance', include: ['account_entries.with_balance'] }
+      ].to_json
+
+      expect(response.body).to be_json_eql({
+        responses: [{
+          reference: 'ae.with_balance',
+          records: [{ type: 'Account', id: account.id }]
+        }],
+        records: {
+          Account: records_by_id([ account ]),
+          AccountEntry: records_by_id(AccountEntry.with_balance),
+          BankEntry: records_by_id(BankEntry.all)
+        }
+      }.to_json)
+    end
+  end
 end

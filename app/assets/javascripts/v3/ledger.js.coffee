@@ -12,11 +12,16 @@
 //= require ./store
 //= require_self
 //= require ./components/accounts
+//= require ./components/account
 
 
 window.formatCurrency = (cents)->
   dollars = cents / 100
   dollars.toLocaleString('en-US', {style:'currency', currency: 'USD'})
+
+if !Object.values
+  Object.values = (o)->
+    Object.keys(o).map (k)->o[k]
 
 angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates', 'react'])
 
@@ -31,6 +36,11 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates', 'react'])
 
     # routes
     $routeProvider
+      .when('/accounts/:id',
+        template: '<react-component name="AccountComponent" props="params" />',
+        controller: ($scope, params)-> $scope.params = params
+        resolve: params: '$routeParams'
+      )
       .when('/accounts',
         template: '<react-component name="AccountsComponent" />'
       )

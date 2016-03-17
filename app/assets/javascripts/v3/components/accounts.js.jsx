@@ -17,7 +17,7 @@
     var account = props.account;
     return (
       <div key={ account.id } className="m-line" is l-flex="between">
-        <a href={ "/v3/accounts/" + account.id }>{ account.name }</a>
+        <a href={ "/v3#/accounts/" + account.id }>{ account.name }</a>
         <span is class={ 'm-balance' + (account.balance_cents < 0 ? ' is-negative' : '') } l-width="5" l-margin="r1" t-align="right">
           { formatCurrency(account.balance_cents) }
         </span>
@@ -33,7 +33,7 @@
           .map(category => {
             const accountViews = accounts
               .filter(a => a.category == category)
-              .map(account => <Account account={account} />);
+              .map(account => <Account account={account} key={account.id} />);
 
             return (
               <div key={ category } className="m-category">
@@ -64,14 +64,14 @@
     },
 
     render: function(){
-      if (!this.props.accounts) return false;
-      const
-        assetAccounts = this.props.accounts
-          .filter(a=> !a.deleted_at && a.asset)
-          .sort((a,b)=> a.position - b.position),
-        liabilityAccounts = this.props.accounts
-          .filter(a=> !a.deleted_at && !a.asset)
-          .sort((a,b)=> a.position - b.position);
+      if (!this.props.Account) return false;
+      const accounts = Object.values(this.props.Account),
+            assetAccounts = accounts
+              .filter(a=> !a.deleted_at && a.asset)
+              .sort((a,b)=> a.position - b.position),
+            liabilityAccounts = accounts
+              .filter(a=> !a.deleted_at && !a.asset)
+              .sort((a,b)=> a.position - b.position);
       return (
         <div is l-flex="wrap center" l-margin="b3">
           <Category accounts={assetAccounts} title="Asset" is l-margin="r2" />

@@ -3,13 +3,16 @@ window.store = Redux.createStore(function(state, action){
 
   switch (action.type) {
 
-    case actions.receiveAccounts:
+    case actions.receiveRecords:
       return Object.assign({}, state, {
-        accounts: action.accounts
+        Account: Object.assign({}, state.Account, action.records.Account),
+        AccountEntry: Object.assign({}, state.AccountEntry, action.records.AccountEntry),
+        BankEntry: Object.assign({}, state.BankEntry, action.records.BankEntry)
       });
 
     case '@@redux/INIT':
     case actions.requestAccounts:
+    case actions.requestAccount:
       // noop
       return state;
 
