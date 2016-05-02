@@ -1,58 +1,11 @@
+module API
+  ImpossibleAction = Class.new(StandardError)
+  InvalidQuery = Class.new(StandardError)
+end
+
 class ApiController < ApplicationController
-  class ImpossibleAction < StandardError
-  end
-  class InvalidQuery < StandardError
-  end
-
-  class ApiResponse
-    attr_reader :responses, :records
-
-    def initialize
-      @responses = []
-      @records = {}
-    end
-
-    def <<(response) # { records: records, associated: records, errors: errors, data: data }
-      if records = response.delete(:records)
-        response[:records] = records.map do |record|
-          class_name = record.class.name
-          id         = record.id
-
-          @records[class_name] ||= {}
-          if serializer = ActiveModel::Serializer.serializer_for(record)
-            object = serializer.new(record, root: false)
-            @records[class_name][id] = object
-          else
-            @records[class_name][id] = record
-          end
-          { type: class_name, id: id }
-        end
-      end
-
-      if records = response.delete(:associated)
-        records.each do |record|
-          class_name = record.class.name
-          id         = record.id
-
-          @records[class_name] ||= {}
-          @records[class_name][id] = record
-        end
-      end
-
-      @responses << response
-    end
-
-    def as_json(options = {})
-      { responses: responses, records: records }.as_json(options)
-    end
-
-    def any_errors?
-      @responses.any?{ |r| r.has_key? :errors }
-    end
-  end
-
   def bulk
-    api_response = ApiResponse.new
+    api_response = API::Response.new
 
     ActiveRecord::Base.transaction do
       JSON.parse(request.body.string).each do |command|
@@ -62,7 +15,7 @@ class ApiController < ApplicationController
           response['reference'] = command['reference'] if command.has_key?('reference')
           api_response << response
         else
-          raise ImpossibleAction.new "#{command['resource']}.#{command['action']} isn't an accepted resource/action"
+          raise API::ImpossibleAction.new "#{command['resource']}.#{command['action']} isn't an accepted resource/action"
         end
       end
     end
@@ -74,144 +27,8 @@ class ApiController < ApplicationController
   private
 
   def get_request_resource(resource_name)
-    self.class.const_get(resource_name)
+    API.const_get(resource_name)
   rescue
     nil
-  end
-
-  module Service
-    private
-
-    def camelize(obj)
-      obj.inject({}) do |acc, (key, val)|
-        new_key = key.gsub(/_\w/){ |w| w[1].upcase }
-        if val.is_a? Array
-          acc[new_key] = val.map{ |v| camelize v }
-        elsif val.is_a? Hash
-          acc[new_key] = camelize val
-        else
-          acc[new_key] = val
-        end
-        acc
-      end
-    end
-  end
-
-  module Account_v1
-    def self.read(command)
-      records = ::Account.all
-      records = records.limit(command['limit']) if command['limit']
-      records = records.offset(command['offset']) if command['offset']
-      records = query(records, command['query']) if command['query']
-      { records: records }
-    end
-
-    def self.create(command)
-      { records: [ ::Account.create!(command['data']) ] }
-    rescue ActiveRecord::RecordInvalid => e
-      { errors: e.record.errors, data: e.record }
-    end
-
-    def self.update(command)
-      record = ::Account.find(command['id'])
-      record.update!(command['data'])
-      { records: [ record ] }
-    end
-
-    def self.delete(command)
-      record = ::Account.find(command['id'])
-      record_attrs = command['data'].merge(
-        deleted_at: Time.now
-      )
-      record.update! record_attrs
-      { records: [ record ] }
-    end
-
-    private
-
-    def self.query(records, query)
-      query.each do |column, val|
-        if column == 'id' && val.is_a?(Array)
-          records = records.where(id: val)
-        else
-          raise InvalidQuery.new "#{{ column => val }.inspect} is not a valid query."
-        end
-      end
-
-      records
-    end
-  end
-
-  module BankEntry_v1
-    extend Service
-
-    def self.read(command)
-      if command['needsDistribution'] == true
-        records = ::BankEntry
-                  .needs_distribution
-                  .with_balance
-        { records: records }
-      else
-        records = ::BankEntry
-                  .with_balance
-                  .limit(command['limit'] || 25)
-                  .offset(command['offset'] || 0)
-        account_entries = ::AccountEntry.where(bank_entry_id: records.pluck(:id))
-        { records: records, associated: account_entries }
-      end
-    end
-
-    def self.create(command)
-      record = ::BankEntry.create!(command['data'])
-      { records: [ record ], associated: record.accounts }
-    end
-
-    def self.update(command)
-      record = ::BankEntry.find(command['id'])
-      record.update!(command['data'])
-      { records: [ record ], associated: record.accounts }
-    end
-  end
-
-  module ProjectedEntry_v1
-    extend Service
-
-    def self.read(command)
-      records = ::ProjectedEntry
-                .limit(command['limit'] || 25)
-                .offset(command['offset'] || 0)
-      { records: records }
-    end
-
-    def self.create(command)
-      record = ::ProjectedEntry.create!(command['data'])
-      { records: [ record ] }
-    end
-
-    def self.update(command)
-      record = ::ProjectedEntry.find(command['id'])
-      record.update!(command['data'])
-      { records: [ record ] }
-    end
-
-    def self.delete(command)
-      record = ::ProjectedEntry.find(command['id'])
-      record.destroy!
-      { records: [] }
-    end
-  end
-
-  module LedgerSummary_v1
-    def self.read(_command)
-      latest_bank_import = ::BankImport
-                           .order(created_at: :desc)
-                           .first
-      {
-        data: {
-          latest_bank_import: latest_bank_import,
-          ledger_sum_cents: BankEntry.sum(:amount_cents)
-        }
-      }
-    end
   end
 end

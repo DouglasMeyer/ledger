@@ -77,7 +77,7 @@ describe ApiController do
         post :bulk, [
           { resource: 'Account_v1', action: :read, query: { blas: 'true' } }
         ].to_json
-      }).to raise_error(ApiController::InvalidQuery, '{"blas"=>"true"} is not a valid query.')
+      }).to raise_error(API::InvalidQuery, '{"blas"=>"true"} is not a valid query.')
     end
   end
   describe "reading a collection with pagination" do
@@ -164,7 +164,7 @@ describe ApiController do
         post :bulk, [
           { resource: 'Something', action: :something }
         ].to_json
-      }).to raise_error(ApiController::ImpossibleAction, "Something.something isn't an accepted resource/action")
+      }).to raise_error(API::ImpossibleAction, "Something.something isn't an accepted resource/action")
     end
   end
 
