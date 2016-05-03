@@ -1,5 +1,27 @@
 namespace :db do
 
+  # Stolen from https://github.com/rails/rails/blob/ac8d0d76cb72bd0542405cfb73552a699f2bc0ef/activerecord/lib/active_record/railties/databases.rake#L247-L256
+  namespace :schema do
+    desc 'Creates a db/schema.rb file that is portable against any DB supported by Active Record'
+    task :dump => [:environment, :load_config] do
+      require 'active_record/schema_dumper'
+      filename = ENV['SCHEMA'] || File.join(ActiveRecord::Tasks::DatabaseTasks.db_dir, 'schema.rb')
+      File.open(filename, "w:utf-8") do |file|
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+      end
+      ## Begin New ##
+      tenant_filename = ENV['TENANT_SCHEMA'] || File.join(ActiveRecord::Tasks::DatabaseTasks.db_dir, 'tenant_schema.rb')
+      tennant = User.pluck(:ledger).first
+      File.open(tenant_filename, "w:utf-8") do |file|
+        ActiveRecord::Base.connection.schema_search_path = tennant
+        ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
+        ActiveRecord::Base.connection.schema_search_path = 'public'
+      end
+      ## End New ##
+      Rake::Task['db:schema:dump'].reenable
+    end
+  end
+
   def report_entries(file)
     puts "Row count: #{BankEntry.count + AccountEntry.count}"
     CSV.open(file, 'wb') do |csv|
