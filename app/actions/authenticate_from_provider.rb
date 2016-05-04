@@ -13,9 +13,9 @@ class AuthenticateFromProvider
     @user = User.find_by(provider: @auth['provider'], email: @auth['info']['email'])
     if @user
       @user.update!(name: @auth['info']['name'])
-      @user
     elsif @auth['provider'] == 'developer'
-      @user = User.new(@auth['info'].merge(provider: 'developer').permit(:name, :email, :provider))
+      @user = User.new(@auth['info'].merge(provider: 'developer').permit(:name, :ledger, :provider))
     end
+    @user
   end
 end
