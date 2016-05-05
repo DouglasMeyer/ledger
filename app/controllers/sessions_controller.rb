@@ -4,7 +4,12 @@ class SessionsController < ApplicationController
   def create
     auth = request.env['omniauth.auth']
     action = AuthenticateFromProvider.new(auth)
-    session[:auth_user] = action.result
+    user = action.result
+    session[:auth_user] = {
+      provider: user.provider,
+      email: user.email,
+      ledger: user.ledger
+    }
     if action.success?
       render locals: { location: root_path, auth_user: action.result }
     else

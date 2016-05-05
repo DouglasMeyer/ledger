@@ -6,7 +6,7 @@ describe ApiController do
       class_name: 'Account', id: nil, created_at: nil, updated_at: nil, deleted_at: nil,
       name: nil, position: nil, category: nil, strategy_id: nil, balance_cents: 0
     }.stringify_keys
-    session[:auth_user] = :yes
+    session[:auth_user] = User.new(ledger: 'test_tenant')
   end
 
   def response_records(records)
