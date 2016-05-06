@@ -1,0 +1,28 @@
+!!! 5
+
+:css
+  body { background-color: #EEE; }
+  * { box-sizing: border-box; }
+  form {
+    background-color: #FFF;
+    width: 20rem;
+    margin: 25vh auto;
+    padding: 1rem;
+    box-shadow: 3px 5px 5px rgba(0,0,0, 0.25);
+  }
+  .field {
+    margin-top: 0.5rem;
+  }
+  input, select {
+    width: 100%;
+  }
+
+= form_tag @url do
+  .field
+    = label_tag :name
+    = text_field_tag :name
+  .field
+    = label_tag :ledger
+    = select_tag :ledger, options_for_select(@ledgers)
+  .field
+    = submit_tag :login

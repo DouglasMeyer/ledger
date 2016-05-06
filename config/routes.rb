@@ -28,6 +28,7 @@ Rails.application.routes.draw do
   end
 
   match "/auth/:provider/callback" => "sessions#create", via: [ :get, :post ]
+  get "/auth/developer" => "sessions#new" unless Rails.env.production?
   get "/sign_out" => "sessions#destroy"
 
   post '/api' => 'api#bulk'

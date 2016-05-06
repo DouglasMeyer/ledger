@@ -1,6 +1,13 @@
 class SessionsController < ApplicationController
   skip_before_filter :authenticate
 
+  def new
+    strategy = request.env['omniauth.strategy']
+    @url = strategy.callback_url
+    schemas = ActiveRecord::Base.connection.query("SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*'").flatten
+    @ledgers = schemas - %w( information_schema public )
+  end
+
   def create
     auth = request.env['omniauth.auth']
     action = AuthenticateFromProvider.new(auth)
