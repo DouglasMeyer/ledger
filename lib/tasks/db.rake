@@ -11,7 +11,7 @@ namespace :db do
       end
       ## Begin New ##
       tenant_filename = ENV['TENANT_SCHEMA'] || File.join(ActiveRecord::Tasks::DatabaseTasks.db_dir, 'tenant_schema.rb')
-      tennant = User.pluck(:ledger).first
+      tennant = User.pluck(:ledger).first || 'template_ledger'
       File.open(tenant_filename, "w:utf-8") do |file|
         ActiveRecord::Base.connection.schema_search_path = tennant
         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)

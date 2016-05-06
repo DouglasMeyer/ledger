@@ -6,6 +6,8 @@ require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'capybara/rails'
 
+ActiveRecord::Base.connection.schema_search_path = 'template_ledger,public'
+
 Capybara::Screenshot.prune_strategy = :keep_last_run
 
 #
@@ -48,7 +50,7 @@ RSpec.configure do |config|
     OmniAuth.config.test_mode = true
     OmniAuth.config.mock_auth[:developer] = OmniAuth::AuthHash.new(
       provider: 'developer',
-      info: { name: 'feature tester' }
+      info: { name: 'feature tester', ledger: 'template_ledger' }
     )
     yield
   ensure

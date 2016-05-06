@@ -21,7 +21,11 @@ describe AuthenticateFromProvider do
     )
   end
   let(:doug_user) do
-    User.create!(provider: doug_auth['provider'], email: doug_auth['info']['email'])
+    User.create!(
+      provider: doug_auth['provider'],
+      email: doug_auth['info']['email'],
+      ledger: 'template_ledger'
+    )
   end
 
   describe '#success?' do
