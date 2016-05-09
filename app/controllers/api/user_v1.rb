@@ -9,5 +9,11 @@ module API
                 .offset(command['offset'] || 0)
       { records: records }
     end
+
+    def self.create(command)
+      return { errors: ["Only the admin is authorized to be here"] } unless AuthIsAdmin.new(command['user']).success?
+      record = ::User.create!(command['data'])
+      { records: [ record ] }
+    end
   end
 end

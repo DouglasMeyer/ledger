@@ -6,5 +6,11 @@ module API
       return { errors: ["Only the admin is authorized to be here"] } unless AuthIsAdmin.new(command['user']).success?
       { data: ::TenantLedger.all }
     end
+
+    def self.create(command)
+      return { errors: ["Only the admin is authorized to be here"] } unless AuthIsAdmin.new(command['user']).success?
+      record = ::TenantLedger.create(command['data'])
+      { data: command['data'] }
+    end
   end
 end

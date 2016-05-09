@@ -7,9 +7,12 @@ describe API::Ledger_v1 do
     extra_ledgers = TenantLedger.all - [ 'template_ledger' ]
     extra_ledgers.each{|ledger| TenantLedger.delete(ledger) }
   end
+  let(:user){ admin }
 
   describe "read" do
-    let(:response){ API::Ledger_v1.read({ 'user' => admin }) }
+    let(:response){ API::Ledger_v1.read({ 'user' => user }) }
+
+    it_behaves_like "an admin only action"
 
     it "responds with collection" do
       TenantLedger.create('test_one')
@@ -19,15 +22,16 @@ describe API::Ledger_v1 do
         TenantLedger.all
       )
     end
+  end
 
-    context "for a non-admin" do
-      let(:response){ API::User_v1.read({ 'user' => {} }) }
+  describe "create" do
+    let(:response){ API::Ledger_v1.create({ 'user' => user, 'data' => 'ledger_name' }) }
 
-      it "returns an error" do
-        expect(response[:errors]).to eq([
-          "Only the admin is authorized to be here"
-        ])
-      end
+    it_behaves_like "an admin only action"
+
+    it "creates the ledger" do
+      expect(TenantLedger).to receive(:create).with('ledger_name')
+      expect(response[:data]).to eq('ledger_name')
     end
   end
 end
