@@ -15,5 +15,12 @@ module API
       record = ::User.create!(command['data'])
       { records: [ record ] }
     end
+
+    def self.delete(command)
+      return { errors: ["Only the admin is authorized to be here"] } unless AuthIsAdmin.new(command['user']).success?
+      record = ::User.find(command['id'])
+      record.destroy!
+      { records: [] }
+    end
   end
 end

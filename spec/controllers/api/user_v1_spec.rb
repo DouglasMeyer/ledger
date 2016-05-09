@@ -33,4 +33,16 @@ describe API::User_v1 do
       )
     end
   end
+
+  describe "delete" do
+    let(:user_to_delete){ User.make! }
+    let(:response){ API::User_v1.delete({ 'user' => user, 'id' => user_to_delete.id }) }
+
+    it_behaves_like "an admin only action"
+
+    it "deletes the user" do
+      response
+      expect(User.find_by(id: user_to_delete.id)).to be_nil
+    end
+  end
 end

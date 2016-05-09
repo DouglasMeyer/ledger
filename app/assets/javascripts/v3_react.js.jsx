@@ -1,4 +1,4 @@
-/* globals React ReactDOM jQuery */
+/* globals React ReactDOM jQuery confirm */
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^(App|Users|Ledgers)$" }] */
 //= require react
 //= require jquery
@@ -20,6 +20,13 @@ var Users = React.createClass({
     this.setState({ newName: '', newEmail: '', newLedger: '' });
   },
 
+  onDeleteUser: function(id){
+    var user = this.props.users.find(function(user){ return user.id === id; });
+    if (confirm('Delete user: ' + user.name)) {
+      this.props.onDeleteUser(id);
+    }
+  },
+
   render: function(){
     var users = this.props.users;
     var ledgers = this.props.ledgers;
@@ -38,9 +45,9 @@ var Users = React.createClass({
         <tbody>
           { users.map(function(user){
             return <tr key={ user.id }>
-              <td>{ user.name }</td><td>{ user.email }</td><td>{ user.ledger }</td>
+              <td>{ user.name }</td><td>{ user.email }</td><td>{ user.ledger }</td><td><button onClick={ this.onDeleteUser.bind(this, user.id) }>Delete User</button></td>
             </tr>;
-          }) }
+          }, this) }
           <tr>
             <td>
               <input placeholder='name' name='newName' value={ newName } onChange={ this.onInputChange } />
@@ -82,6 +89,12 @@ var Ledgers = React.createClass({
     this.setState({ newLedger: '' });
   },
 
+  onDeleteLedger: function(ledger){
+    if (confirm('Delete ledger: ' + ledger)) {
+      this.props.onDeleteLedger(ledger);
+    }
+  },
+
   render: function(){
     var users = this.props.users;
     var ledgers = this.props.ledgers;
@@ -104,9 +117,9 @@ var Ledgers = React.createClass({
               .map(function(user){ return user.name; })
               .join(', ');
             return <tr key={ ledger }>
-              <td>{ ledger }</td><td>{ ledgerUsers }</td>
+              <td>{ ledger }</td><td>{ ledgerUsers }</td><td><button onClick={ this.onDeleteLedger.bind(this, ledger) }>Delete Ledger</button></td>
             </tr>;
-          }) }
+          }, this) }
           <tr>
             <td>
               <input name='newLedger' placeholder='name' value={ newLedger } onChange={ this.onInputChange }/>
@@ -180,8 +193,18 @@ var App = React.createClass({
     this.fetchUsersAndLedgers();
   },
 
+  deleteUser: function(id){
+    API({ resource: 'User_v1', action: 'delete', id: id });
+    this.fetchUsersAndLedgers();
+  },
+
   createLedger: function(ledger){
     API({ resource: 'Ledger_v1', action: 'create', data: ledger });
+    this.fetchUsersAndLedgers();
+  },
+
+  deleteLedger: function(ledger){
+    API({ resource: 'Ledger_v1', action: 'delete', id: ledger });
     this.fetchUsersAndLedgers();
   },
 
@@ -191,11 +214,13 @@ var App = React.createClass({
         users={ this.state.users }
         ledgers={ this.state.ledgers }
         onCreateUser={ this.createUser }
+        onDeleteUser={ this.deleteUser }
       />
       <Ledgers
         users={ this.state.users }
         ledgers={ this.state.ledgers }
         onCreateLedger={ this.createLedger }
+        onDeleteLedger={ this.deleteLedger }
       />
     </div>;
   }

@@ -34,4 +34,16 @@ describe API::Ledger_v1 do
       expect(response[:data]).to eq('ledger_name')
     end
   end
+
+  describe "delete" do
+    let(:response){ API::Ledger_v1.delete({ 'user' => user, 'id' => 'ledger_to_delete' }) }
+    before { TenantLedger.create('ledger_to_delete') }
+
+    it_behaves_like "an admin only action"
+
+    it "creates the ledger" do
+      response
+      expect(TenantLedger.all).not_to include('ledger_to_delete')
+    end
+  end
 end
