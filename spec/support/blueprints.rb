@@ -34,3 +34,9 @@ end
 BankImport.blueprint do
   balance_cents { (rand * 200_00).round / 100.0 - 100 }
 end
+
+User.blueprint do
+  email { "email_#{sn}@gmail.com" }
+  provider { "google_oauth2"}
+  ledger { "ledger_#{sn}" }
+end

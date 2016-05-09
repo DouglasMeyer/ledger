@@ -25,4 +25,11 @@ class ApplicationController < ActionController::Base
     end
     ActiveRecord::Base.connection.schema_search_path = schema
   end
+
+  def admin_only
+    unless AuthIsAdmin.new(session[:auth_user]).success?
+      render status: :unauthorized,
+        text: "Only the admin is authorized to be here"
+    end
+  end
 end

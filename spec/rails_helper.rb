@@ -6,8 +6,6 @@ require 'capybara/rspec'
 require 'capybara-screenshot/rspec'
 require 'capybara/rails'
 
-ActiveRecord::Base.connection.schema_search_path = 'template_ledger,public'
-
 Capybara::Screenshot.prune_strategy = :keep_last_run
 
 #
@@ -35,14 +33,17 @@ end
 
 RSpec.configure do |config|
   config.before(:suite) do
+    ActiveRecord::Base.connection.schema_search_path = 'template_ledger,public'
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
   end
 
   config.around(:each) do |example|
+    ActiveRecord::Base.connection.schema_search_path = 'template_ledger,public'
     DatabaseCleaner.cleaning do
       example.run
     end
+    ActiveRecord::Base.connection.schema_search_path = 'template_ledger,public'
     Capybara.reset_sessions!
   end
 

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     resources :strategies, only: [ :index, :show, :new, :create ]
     resources :bank_imports, only: [ :create ]
 
+    get 'admin' => 'pages#admin'
     root to: 'pages#angular'
     offline = Rack::Offline.configure cache: true do
       %w( normalize.css v3.css v3.js icomoon.ttf icomoon.woff favicon.ico ).each do |asset|
