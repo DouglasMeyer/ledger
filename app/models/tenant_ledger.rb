@@ -7,15 +7,17 @@ class TenantLedger
   end
 
   def self.create(ledger_name)
-    ActiveRecord::Base.connection.execute %{CREATE SCHEMA "#{ledger_name}"}
     original_schema_earch_path = ActiveRecord::Base.connection.schema_search_path
-    ActiveRecord::Base.connection.schema_search_path = "#{ledger_name},public"
-
     old_verbose = ActiveRecord::Migration.verbose
+
+    ActiveRecord::Base.connection.execute %{CREATE SCHEMA "#{ledger_name}"}
+    ActiveRecord::Base.connection.schema_search_path = ledger_name
+
     ActiveRecord::Migration.verbose = false
     load Rails.root + 'db/tenant_schema.rb'
-    ActiveRecord::Migration.verbose = old_verbose
 
+  ensure
+    ActiveRecord::Migration.verbose = old_verbose
     ActiveRecord::Base.connection.schema_search_path = original_schema_earch_path
   end
 

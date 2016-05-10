@@ -23,6 +23,7 @@ class ApplicationController < ActionController::Base
     else
       schema = 'public'
     end
+    logger.info "schema_search_path = #{schema}"
     ActiveRecord::Base.connection.schema_search_path = schema
   end
 
