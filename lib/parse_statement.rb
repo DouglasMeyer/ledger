@@ -18,11 +18,11 @@ module ParseStatement
     end
 
     attr_reader :raw
-    statement_attr :type,    'TRNTYPE'
-    statement_attr(:id,      'FITID', &:to_i)
-    statement_attr :name,    'NAME'
-    statement_attr :memo,    'MEMO'
-    statement_attr(:date,    'DTPOSTED'){ |string| DateTime.parse(string) }
+    statement_attr :type,   'TRNTYPE'
+    statement_attr(:id,     'FITID', &:to_i)
+    statement_attr :name,   'NAME'
+    statement_attr :memo,   'MEMO'
+    statement_attr(:date,   'DTPOSTED'){ |string| DateTime.parse(string) }
     statement_attr(:amount, 'TRNAMT'){ |string| BigDecimal.new(string) }
 
     def initialize(raw)
