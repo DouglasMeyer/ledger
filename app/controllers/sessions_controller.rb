@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  skip_before_filter :authenticate
+  skip_before_filter :authenticate, :scope_tenant
 
   def new
     strategy = request.env['omniauth.strategy']
