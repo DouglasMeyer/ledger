@@ -155,9 +155,9 @@ var API = (function(){
     requests.push(request);
     if (requestTimeout) clearTimeout(requestTimeout);
     requestTimeout = setTimeout(doAPI, 100);
-    var deferred = Promise.defer();
-    resolves[request.reference] = deferred.resolve;
-    return deferred.promise;
+    return new Promise(function(resolve){
+      resolves[request.reference] = resolve;
+    });
   };
 })();
 
