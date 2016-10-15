@@ -18,10 +18,13 @@ class SessionsController < ApplicationController
         email: user.email,
         ledger: user.ledger
       }
-      render locals: { location: root_path, auth_user: action.result }
+      render locals: { location: root_path, user: user }
     else
-      yaml = auth.to_yaml
-      render text: "<pre>#{yaml}</pre>"
+      render text: <<-END
+        <h3>You tried to signed-in using "#{auth.info.email}", and that isn't setup in Ledger.</h3>
+        <p><a href="/sign_out">Sign-out</a> to try another account.</p>
+        <pre style="display:none">#{auth.to_yaml}</pre>
+      END
     end
   end
 
