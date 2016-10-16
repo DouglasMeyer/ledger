@@ -2,7 +2,8 @@ module ParseStatement
   class StatementEntry
     def self.statement_attr(attr, key, &block)
       define_method attr do
-        value = raw.scan(/<#{key}>(.*)/)[0][0].strip
+        return unless match = raw.scan(/<#{key}>(.*)/)[0]
+        value = match[0].strip
         value = block.call(value) if block_given?
         value
       end
