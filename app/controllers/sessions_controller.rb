@@ -4,8 +4,7 @@ class SessionsController < ApplicationController
   def new
     strategy = request.env['omniauth.strategy']
     @url = strategy.callback_url
-    schemas = ActiveRecord::Base.connection.query("SELECT nspname FROM pg_namespace WHERE nspname !~ '^pg_.*'").flatten
-    @ledgers = schemas - %w( information_schema public )
+    @ledgers = TenantLedger.all
   end
 
   def create
