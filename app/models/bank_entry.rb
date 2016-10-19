@@ -2,7 +2,7 @@ class BankEntry < ApplicationRecord
   attr_accessor :bank_balance_cents
 
   default_scope { order("bank_entries.date DESC, bank_entries.id DESC") }
-  has_many :account_entries, dependent: :restrict_with_error
+  has_many :account_entries, inverse_of: :bank_entry, dependent: :restrict_with_error
   accepts_nested_attributes_for :account_entries, allow_destroy: true
   has_many :accounts, through: :account_entries
 
