@@ -1,6 +1,6 @@
 require Rails.root + 'lib' + 'parse_statement'
 
-class BankImport < ActiveRecord::Base
+class BankImport < ApplicationRecord
   def self.upload!(file)
     initial_import = BankImport.count.zero?
     bank_entry_attrs, balance = ParseStatement.run(file)

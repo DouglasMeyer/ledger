@@ -1,4 +1,4 @@
-class Strategy < ActiveRecord::Base
+class Strategy < ApplicationRecord
   attr_accessor :amount
 
   has_one :account

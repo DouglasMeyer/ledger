@@ -1,4 +1,4 @@
-class ProjectedEntry < ActiveRecord::Base
+class ProjectedEntry < ApplicationRecord
   include AccountName
 
   belongs_to :account

@@ -1,4 +1,4 @@
-class Account < ActiveRecord::Base
+class Account < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validate :zero_balance_when_deleting
 

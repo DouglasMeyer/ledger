@@ -1,4 +1,4 @@
-class AccountEntry < ActiveRecord::Base
+class AccountEntry < ApplicationRecord
   include AccountName
 
   belongs_to :bank_entry, inverse_of: :account_entries

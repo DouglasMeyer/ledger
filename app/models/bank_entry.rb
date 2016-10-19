@@ -1,4 +1,4 @@
-class BankEntry < ActiveRecord::Base
+class BankEntry < ApplicationRecord
   attr_accessor :bank_balance_cents
 
   default_scope { order("bank_entries.date DESC, bank_entries.id DESC") }
