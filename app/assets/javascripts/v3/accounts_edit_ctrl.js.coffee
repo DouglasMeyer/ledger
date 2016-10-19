@@ -1,5 +1,5 @@
 angular.module('ledger').controller 'AccountsEditCtrl', ($scope, Model, $window, $q)->
-  $scope.accounts = Model.Account.all
+  $scope.accounts = Model.Account.all.concat()
 
   sortAccounts = ->
     for isAsset in [ true, false ]
