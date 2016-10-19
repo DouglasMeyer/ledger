@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
-  before_filter :authenticate
-  before_filter :scope_tenant
+  before_action :authenticate
+  before_action :scope_tenant
 
   private
 
@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     unless session[:auth_user]
       if request.xhr?
         head :unauthorized
-        false
+        throw :abort
       else
         redirect_to "/auth/google_oauth2"
       end

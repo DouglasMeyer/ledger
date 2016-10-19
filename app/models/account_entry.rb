@@ -3,7 +3,7 @@ class AccountEntry < ApplicationRecord
 
   belongs_to :bank_entry, inverse_of: :account_entries
   belongs_to :account, inverse_of: :account_entries
-  belongs_to :strategy
+  belongs_to :strategy, optional: true
 
   #FIXME: This should be un-commented, but `BankEntry.create! account_entries_attributes: []` won't work.
   #validates :bank_entry, :account, :presence => true

@@ -1,6 +1,6 @@
 module V3
   class BankEntriesController < BaseController
-    before_filter :load_account_names
+    before_action :load_account_names
 
     def show
       render bank_entry

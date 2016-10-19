@@ -3,7 +3,7 @@ class Account < ApplicationRecord
   validate :zero_balance_when_deleting
 
   has_many :entries, class_name: 'AccountEntry'
-  belongs_to :strategy
+  belongs_to :strategy, optional: true
   has_many :bank_entries, through: :entries
   has_many :account_entries
 

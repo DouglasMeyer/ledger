@@ -1,6 +1,6 @@
 module V3
   class StrategiesController < BaseController
-    before_filter :load_strategy
+    before_action :load_strategy
 
     def index
       @accounts = Account.not_deleted.order(:position)
