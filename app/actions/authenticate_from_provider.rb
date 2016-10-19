@@ -14,7 +14,8 @@ class AuthenticateFromProvider
     if @user
       @user.update!(name: @auth['info']['name'])
     elsif @auth['provider'] == 'developer'
-      @user = User.new(@auth['info'].to_hash.merge(provider: 'developer'))
+      dev_user_attrs = @auth['info'].merge(provider: 'developer').to_hash
+      @user = User.new(dev_user_attrs)
     end
     @user
   end

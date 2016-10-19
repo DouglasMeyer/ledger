@@ -3,17 +3,17 @@ require 'rails_helper'
 
 describe AuthenticateFromProvider do
   let(:developer_auth) do
-    ActionController::Parameters.new(
+    OmniAuth::AuthHash.new(
       'provider' => 'developer', 'info' => {}
     )
   end
   let(:invalid_auth) do
-    ActionController::Parameters.new(
+    OmniAuth::AuthHash.new(
       'provider' => 'x', 'info' => {}
     )
   end
   let(:doug_auth) do
-    ActionController::Parameters.new(
+    OmniAuth::AuthHash.new(
       'provider' => 'google_oauth2', 'info' => {
         'email' => 'douglasyman@gmail.com',
         'name' => 'Douglas Meyer'
