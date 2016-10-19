@@ -11,7 +11,7 @@ describe TenantLedger do
     it 'returns all ledger names' do
       ActiveRecord::Base.connection.execute %{CREATE SCHEMA "fake_ledger"}
 
-      expect(TenantLedger.all).to eq %w(template_ledger fake_ledger)
+      expect(TenantLedger.all).to match_array %w(template_ledger fake_ledger)
     end
   end
 
@@ -19,7 +19,7 @@ describe TenantLedger do
     it 'creates a new ledger' do
       TenantLedger.create('new_ledger')
 
-      expect(TenantLedger.all).to eq %w(template_ledger new_ledger)
+      expect(TenantLedger.all).to match_array %w(template_ledger new_ledger)
     end
 
     it 'loads tenant schema' do

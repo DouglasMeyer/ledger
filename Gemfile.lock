@@ -62,7 +62,7 @@ GEM
       tilt
     arel (7.1.4)
     ast (2.2.0)
-    autoprefixer-rails (6.3.3.1)
+    autoprefixer-rails (6.5.1)
       execjs
     babel-source (5.8.35)
     babel-transpiler (0.7.0)

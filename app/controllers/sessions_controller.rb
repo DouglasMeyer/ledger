@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
       }
       render locals: { location: root_path, user: user }
     else
-      render text: <<-END
+      render html: <<-END.html_safe
         <h3>You tried to signed-in using "#{auth.info.email}", and that isn't setup in Ledger.</h3>
         <p><a href="/sign_out">Sign-out</a> to try another account (you may have to go to <a href="http://www.google.com" target="_blank">google</a> and sign-out).</p>
         <pre style="display:none">#{auth.to_yaml}</pre>

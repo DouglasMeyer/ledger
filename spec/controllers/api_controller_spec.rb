@@ -33,7 +33,7 @@ describe ApiController do
       Account.make!
       Account.make!
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'Account_v1', action: :read }
       ].to_json
     end
@@ -55,7 +55,7 @@ describe ApiController do
       @account = Account.make!
       Account.make!
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'Account_v1', action: :read, query: { id: [ @account.id ] } }
       ].to_json
     end
@@ -74,7 +74,7 @@ describe ApiController do
   describe "reading a collection with an invalid query" do
     it "raises a InvalidQuery exception" do
       expect(lambda {
-        post :bulk, [
+        post :bulk, body: [
           { resource: 'Account_v1', action: :read, query: { blas: 'true' } }
         ].to_json
       }).to raise_error(API::InvalidQuery, '{"blas"=>"true"} is not a valid query.')
@@ -85,7 +85,7 @@ describe ApiController do
       @account1 = Account.make!
       @account2 = Account.make!
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'Account_v1', action: :read, limit: 1 },
         { resource: 'Account_v1', action: :read, limit: 1, offset: 1 }
       ].to_json
@@ -104,7 +104,7 @@ describe ApiController do
 
   describe "creating a record" do
     before do
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'Account_v1', action: :create, reference: 'the new record',
           data: { name: 'New Account', asset: 'true' }
         }
@@ -132,7 +132,7 @@ describe ApiController do
   describe "updating a record" do
     let(:account){ Account.make! asset: false }
     before do
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'Account_v1', action: :update, id: account.id, reference: 'updating the record',
           data: { name: 'New Account Name', asset: 'true' }
         }
@@ -161,7 +161,7 @@ describe ApiController do
   describe "attempting to perform an impossible action" do
     it "raises a ImpossibleAction exception" do
       expect(lambda {
-        post :bulk, [
+        post :bulk, body: [
           { resource: 'Something', action: :something }
         ].to_json
       }).to raise_error(API::ImpossibleAction, "Something.something isn't an accepted resource/action")
@@ -172,7 +172,7 @@ describe ApiController do
     before do
       @account1_data = { 'asset' => true }
       @account2_data = { 'name' => 'New Account', 'asset' => true }
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'Account_v1', action: :create, reference: 'failed creation', data: @account1_data },
         { resource: 'Account_v1', action: :create, reference: 'actual created', data: @account2_data }
       ].to_json
@@ -209,7 +209,7 @@ describe ApiController do
       ProjectedEntry.make!
       ProjectedEntry.make!
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'ProjectedEntry_v1', action: :read }
       ].to_json
       expect(response.body).to be_json_eql({
@@ -227,7 +227,7 @@ describe ApiController do
       ProjectedEntry.make!
       ProjectedEntry.make!
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'ProjectedEntry_v1', action: :read, limit: 2 }
       ].to_json
       expect(response.body).to be_json_eql({
@@ -239,7 +239,7 @@ describe ApiController do
         }
       }.to_json)
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'ProjectedEntry_v1', action: :read, limit: 2, offset: 2 }
       ].to_json
       expect(response.body).to be_json_eql({
@@ -262,7 +262,7 @@ describe ApiController do
         rrule: 'FREQ=MONTHLY'
       }
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'ProjectedEntry_v1', action: 'create', reference: 'create projected entry',
           data: data }
       ].to_json
@@ -292,7 +292,7 @@ describe ApiController do
         rrule: 'FREQ=MONTHLY'
       }
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'ProjectedEntry_v1', action: 'update', id: projected_entry.id, reference: 'update projected entry',
           data: data }
       ].to_json
@@ -315,7 +315,7 @@ describe ApiController do
     it "deletes a projected entry" do
       projected_entry = ProjectedEntry.make!
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'ProjectedEntry_v1', action: 'delete', id: projected_entry.id, reference: 'delete projected entry' }
       ].to_json
 
@@ -336,7 +336,7 @@ describe ApiController do
       account = Account.make!
 
       data = { id: account.id }
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'Account_v1', action: 'delete', id: account.id, refrence: 'delete account', data: data }
       ].to_json
 
@@ -350,7 +350,7 @@ describe ApiController do
         id: account.id,
         position: 12
       }
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'Account_v1', action: 'delete', id: account.id, refrence: 'delete account', data: data }
       ].to_json
 
@@ -369,7 +369,7 @@ describe ApiController do
       BankEntry.make!(amount_cents:  1_00)
       ledger_sum_cents = 1_00
 
-      post :bulk, [
+      post :bulk, body: [
         { resource: 'LedgerSummary_v1', action: :read }
       ].to_json
       expect(response.body).to be_json_eql({

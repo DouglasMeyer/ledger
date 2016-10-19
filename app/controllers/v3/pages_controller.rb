@@ -3,12 +3,12 @@ module V3
     before_action :admin_only, only: :admin
 
     def admin
-      render text: '<div class="app"></div>', layout: 'v3_react'
+      render html: '<div class="app"></div>'.html_safe, layout: 'v3_react'
     end
 
     def angular
       @do_manifest = Rails.env.production?
-      render text: '<div ng-view></div>', layout: true
+      render html: '<div ng-view></div>'.html_safe, layout: true
     end
   end
 end
