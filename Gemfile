@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.2.4'
+ruby '2.3.1'
 
 gem 'rails', '5.0.0.1'
 
@@ -10,7 +10,7 @@ gem 'autoprefixer-rails'
 gem 'bourbon'
 gem 'coffee-rails'
 gem 'haml'
-gem 'ngannotate-rails', github: 'kikonen/ngannotate-rails'
+gem 'ngannotate-rails'
 gem 'omniauth-google-oauth2'
 gem 'party_foul'
 gem 'pg'
@@ -23,7 +23,6 @@ gem 'react-rails'
 
 group :development, :test do
   gem 'capybara-webkit'
-  gem 'database_cleaner'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-rails'
@@ -44,4 +43,5 @@ group :test do
   gem 'capybara-screenshot'
   gem 'json_spec'
   gem 'machinist'
+  gem 'database_cleaner'
 end

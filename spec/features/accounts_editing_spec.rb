@@ -5,7 +5,6 @@ describe 'accounts editing view', type: :feature do
   let(:accounts_page){ AccountsPage.new }
 
   it "shows accounts ordered by position" do
-    pending "Fails for some reason"
     Account.make!(asset: true, name: 'asset 2', category: 'save', position: 2)
     Account.make!(asset: true, name: 'asset 1', category: 'save', position: 1)
 
@@ -14,6 +13,7 @@ describe 'accounts editing view', type: :feature do
 
     accounts_edit_page.load
     accounts_edit_page.wait_for_asset_categories
+    accounts_edit_page.load
 
     expect(accounts_edit_page.asset_categories.count).to eq(1)
     expect(accounts_edit_page.liability_categories.count).to eq(1)
@@ -31,7 +31,6 @@ describe 'accounts editing view', type: :feature do
   end
 
   it "can create categories and accounts" do
-    pending "Fails for some reason"
     accounts_edit_page.load
 
     accounts_edit_page.add_category :asset, 'asset category'

@@ -21,7 +21,7 @@ describe API::BankEntry_v1 do
       BankEntry.make!
       AccountEntry.make!
 
-      response = API::BankEntry_v1.read( 'limit' => 2 )
+      response = API::BankEntry_v1.read('limit' => 2)
       expect(response[:records].pluck(:id)).to eq(
         BankEntry.limit(2).pluck(:id)
       )
@@ -29,7 +29,7 @@ describe API::BankEntry_v1 do
         AccountEntry.last(1).map(&:id)
       )
 
-      response = API::BankEntry_v1.read( 'limit' => 2, 'offset' => 2 )
+      response = API::BankEntry_v1.read('limit' => 2, 'offset' => 2)
       expect(response[:records].pluck(:id)).to eq(
         BankEntry.last(1).map(&:id)
       )

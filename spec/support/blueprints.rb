@@ -8,7 +8,7 @@ end
 
 BankEntry.blueprint do
   date { Date.today }
-  amount_cents { (rand * 100_00 + 1).round / 100.0 * (rand > 0.5 ? 1 : -1) }
+  amount_cents { (rand * 100_00 + 1).round * (rand > 0.5 ? 1 : -1) }
   description { "Bank entry #{sn}" }
   external_id { sn }
 end

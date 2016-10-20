@@ -42,8 +42,8 @@ RSpec.configure do |config|
     ActiveRecord::Base.connection.schema_search_path = 'template_ledger,public'
     DatabaseCleaner.cleaning do
       example.run
+      ActiveRecord::Base.connection.schema_search_path = 'template_ledger,public'
     end
-    ActiveRecord::Base.connection.schema_search_path = 'template_ledger,public'
     Capybara.reset_sessions!
   end
 
