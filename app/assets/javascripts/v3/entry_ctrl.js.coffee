@@ -7,8 +7,12 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
   watchAEs = undefined
   amountRemainingCentsExpression = 'editingEntry.amountCents - (editingEntry.accountEntries | map:"amountCents" | sum)'
 
+  autoOpen = ->
+    $scope.open() if $scope.isEditable && (!$scope.entry.id || $parse(amountRemainingCentsExpression)($scope))
+
   reset = ->
     $scope.isOpen = false
+    $scope.isEditable = -> !$scope.entries.isFromLocalStorage && !$scope.saving
     $scope.editingEntry = angular.copy($scope.entry)
     $scope.form?.$setPristine()
 
@@ -18,10 +22,6 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
     $scope.to = for ae in $scope.entry.accountEntries when ae.amountCents > 0
       $scope.amountCents += ae.amountCents if $scope.entry.amountCents == 0
       ae.accountName
-
-    $scope.open() unless $scope.entry.id
-
-  $scope.isEditable = -> !$scope.entries.isFromLocalStorage && !$scope.saving
 
   $scope.open = ->
     return if $scope.isOpen
@@ -60,4 +60,10 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
     $scope.saving = true
 
   reset()
-  $scope.open() if $parse(amountRemainingCentsExpression)($scope)
+  autoOpen()
+  if $scope.entries.isFromLocalStorage
+    destroyWatchFromLocalStorage = $scope.$watch 'entries.isFromLocalStorage', (isFromLocalStorage)->
+      return if isFromLocalStorage
+      destroyWatchFromLocalStorage()
+      reset()
+      autoOpen()
