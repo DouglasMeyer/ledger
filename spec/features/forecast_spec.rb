@@ -24,9 +24,8 @@ describe 'forecast view', type: :feature do
     end
 
     it "creates" do
-      pending "Fails for some reason"
       forecast_page.projected_entries.first.tap do |pe|
-        pe.date.set Date.today.to_s
+        # pi.date # defaults to today's date
         pe.set_account account_name
         pe.amount.set '56.78'
         pe.description.set 'something'
@@ -60,9 +59,8 @@ describe 'forecast view', type: :feature do
     end
 
     it "edits" do
-      pending "Fails for some reason"
       forecast_page.projected_entries.first.tap do |pe|
-        pe.date.set Date.today.to_s
+        # pi.date # defaults to today's date
         pe.account.set account_name
         pe.amount.set '56.78'
         pe.description.set 'something'
