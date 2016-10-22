@@ -35,8 +35,7 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
         if !$scope.form.amount? || $scope.form.amount.$dirty || $scope.form.account.$modelValue
           newAE = amountCents: amountRemainingCents
           $scope.editingEntry.accountEntries.push( newAE )
-        else
-          lastAE = $scope.editingEntry.accountEntries[$scope.editingEntry.accountEntries.length-1]
+        else if lastAE = $scope.editingEntry.accountEntries[$scope.editingEntry.accountEntries.length-1]
           lastAE.amountCents += amountRemainingCents
 
   $scope.close = (e)->
