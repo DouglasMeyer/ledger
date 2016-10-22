@@ -23,6 +23,10 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
       $scope.amountCents += ae.amountCents if $scope.entry.amountCents == 0
       ae.accountName
 
+  removeEntry = ->
+    index = $scope.entries.indexOf($scope.entry)
+    $scope.entries.splice(index, 1)
+
   $scope.open = ->
     return if $scope.isOpen
     $scope.isOpen = true
@@ -41,8 +45,7 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
     if $scope.entry.id
       reset()
     else
-      index = $scope.entries.indexOf($scope.entry)
-      $scope.entries.splice(index, 1)
+      removeEntry()
 
   $scope.save = (e)->
     e.stopPropagation()
@@ -51,6 +54,8 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
     $scope.editingEntry.accountEntries = $scope.editingEntry.accountEntries.filter (ae)->
       ae.id || (ae.amountCents && ae.accountName)
     promise = Model.BankEntry.save($scope.editingEntry).then (bankEntries)->
+      if !$scope.editingEntry.id
+        removeEntry()
       delete $scope.saving
       $scope.entry = bankEntries[0]
       reset()
@@ -67,3 +72,5 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
       destroyWatchFromLocalStorage()
       reset()
       autoOpen()
+  $scope.$on '$destroy', ->
+    removeEntry() if !$scope.editingEntry.id
