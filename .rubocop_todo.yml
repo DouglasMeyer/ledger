@@ -345,21 +345,6 @@ Style/SpaceBeforeFirstArg:
   Exclude:
     - 'spec/models/account_spec.rb'
 
-# Offense count: 92
-# Cop supports --auto-correct.
-Style/SpaceInsideBrackets:
-  Exclude:
-    - 'app/controllers/api_controller.rb'
-    - 'app/controllers/v3/accounts_controller.rb'
-    - 'app/controllers/v3/strategies_controller.rb'
-    - 'app/helpers/v3/base_helper.rb'
-    - 'config/routes.rb'
-    - 'lib/parse_statement.rb'
-    - 'spec/controllers/api_controller_spec.rb'
-    - 'spec/features/accounts_editing_spec.rb'
-    - 'spec/models/account_entry_spec.rb'
-    - 'spec/models/bank_entry_spec.rb'
-
 # Offense count: 151
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, ConsistentQuotesInMultiline.

@@ -18,3 +18,4 @@
 /Quick*.*
 /db/*.sqldump
 /.powenv
+.DS_Store

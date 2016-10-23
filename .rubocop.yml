@@ -1,8 +1,5 @@
 inherit_from: .rubocop_todo.yml
 
-Rails:
-  Enabled: true
-
 Styles/LeadingCommentSpace:
   Exclude:
     - 'spec/teaspoon_env.rb'
@@ -10,6 +7,9 @@ Styles/LeadingCommentSpace:
 Style/FileName:
   Exclude:
     - 'Gemfile'
+
+Rails:
+  Enabled: true
 
 AllCops:
   Include:
@@ -20,3 +20,6 @@ AllCops:
     - 'db/migrate/**/*'
     - 'db/schema.rb'
     - 'node_modules/**/*'
+
+Style/SpaceInsideBrackets:
+  Enabled: False
