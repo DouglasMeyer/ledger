@@ -8,8 +8,7 @@ class ApplicationController < ActionController::Base
     return if session[:auth_user]
 
     if request.xhr?
-      head :unauthorized
-      throw :abort
+      render status: :unauthorized, json: { error: :unauthorized }
     else
       redirect_to "/auth/google_oauth2"
     end
