@@ -1,4 +1,4 @@
-angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
+angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse, entriesNeedingDistribution)->
 
   $scope.accounts = Model.Account.all
   $scope.$watchCollection 'accounts | filter:{isDeleted:false} | pMap:"name" | orderBy', (accountNames)->
@@ -65,6 +65,10 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
         delete $scope.saving
         $scope.entry = bankEntries[0]
         reset()
+    Model.BankEntry.read(needsDistribution: true).then (entries)->
+      oldLength = entriesNeedingDistribution.length
+      args = [0,oldLength].concat(entries)
+      entriesNeedingDistribution.splice.apply(entriesNeedingDistribution, args)
     $scope.$root.$emit 'status',
       text: 'saving'
       promise: promise
