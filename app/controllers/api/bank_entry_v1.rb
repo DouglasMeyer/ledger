@@ -28,5 +28,12 @@ module API
       record.update!(command['data'])
       { records: [ record ], associated: record.accounts }
     end
+
+    def self.delete(command)
+      record = ::BankEntry.find(command['id'])
+      record.account_entries.destroy_all
+      record.destroy! unless record.from_bank?
+      { records: [] }
+    end
   end
 end

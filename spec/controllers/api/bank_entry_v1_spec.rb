@@ -104,4 +104,25 @@ describe API::BankEntry_v1 do
       expect(response[:associated]).to eq(Account.all)
     end
   end
+
+  describe "delete" do
+    it "deletes bank_entry and associated account_entries" do
+      bank_entry = BankEntry.make!(external_id: nil)
+      account_entry = AccountEntry.make!(bank_entry: bank_entry)
+
+      response = API::BankEntry_v1.delete('id' => bank_entry.id)
+
+      expect(response[:records]).to be_empty
+      expect { bank_entry.reload }.to raise_error ActiveRecord::RecordNotFound
+      expect { account_entry.reload }.to raise_error ActiveRecord::RecordNotFound
+    end
+
+    it "preserves the bank_entry if it is from_bank?" do
+      bank_entry = BankEntry.make!
+      expect(bank_entry).to be_from_bank
+
+      API::BankEntry_v1.delete('id' => bank_entry.id)
+      bank_entry.reload
+    end
+  end
 end

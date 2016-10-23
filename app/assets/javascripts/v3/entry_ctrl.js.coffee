@@ -3,16 +3,16 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
   $scope.accounts = Model.Account.all
   $scope.$watchCollection 'accounts | filter:{isDeleted:false} | pMap:"name" | orderBy', (accountNames)->
     $scope.accountNames = accountNames
+  $scope.isEditable = -> !$scope.entries.isFromLocalStorage && !$scope.saving
 
   watchAEs = undefined
   amountRemainingCentsExpression = 'editingEntry.amountCents - (editingEntry.accountEntries | map:"amountCents" | sum)'
 
   autoOpen = ->
-    $scope.open() if $scope.isEditable && (!$scope.entry.id || $parse(amountRemainingCentsExpression)($scope))
+    $scope.open() if $scope.isEditable() && (!$scope.entry.id || $parse(amountRemainingCentsExpression)($scope))
 
   reset = ->
     $scope.isOpen = false
-    $scope.isEditable = -> !$scope.entries.isFromLocalStorage && !$scope.saving
     $scope.editingEntry = angular.copy($scope.entry)
     $scope.form?.$setPristine()
 
@@ -52,12 +52,19 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse)->
       ae._destroy = true unless ae.amountCents
     $scope.editingEntry.accountEntries = $scope.editingEntry.accountEntries.filter (ae)->
       ae.id || (ae.amountCents && ae.accountName)
-    promise = Model.BankEntry.save($scope.editingEntry).then (bankEntries)->
-      if !$scope.editingEntry.id
+    shouldDeleteEntry =
+      !$scope.editingEntry.externalId &&
+      $scope.editingEntry.accountEntries.every (ae)-> ae._destroy
+    promise = if shouldDeleteEntry
+      Model.BankEntry.destroy($scope.editingEntry).then ->
         removeEntry()
-      delete $scope.saving
-      $scope.entry = bankEntries[0]
-      reset()
+    else
+      Model.BankEntry.save($scope.editingEntry).then (bankEntries)->
+        if !$scope.editingEntry.id
+          removeEntry()
+        delete $scope.saving
+        $scope.entry = bankEntries[0]
+        reset()
     $scope.$root.$emit 'status',
       text: 'saving'
       promise: promise
