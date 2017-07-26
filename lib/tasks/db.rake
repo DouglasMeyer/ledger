@@ -37,6 +37,9 @@ namespace :db do
   task condense: :environment do
     require 'csv'
 
+    ledger = ENV['LEDGER']
+    raise "LEDGER must be one of: #{TenantLedger.all.inspect}" unless TenantLedger.all.include? ledger
+    ActiveRecord::Base.connection.schema_search_path = "#{ledger},public"
     report_entries('before.csv')
 
     row_count = BankEntry.count + AccountEntry.count
