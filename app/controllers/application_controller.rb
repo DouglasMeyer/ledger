@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   def scope_tenant(&block)
     ledger = session[:auth_user][:ledger] if session[:auth_user]
 
-    schema = if ledger
+    if ledger
       logger.info "TenantLedger.scope #{ledger}"
       TenantLedger.scope(ledger, &block)
     else
@@ -27,8 +27,7 @@ class ApplicationController < ActionController::Base
 
   def admin_only
     unless AuthIsAdmin.new(session[:auth_user]).success?
-      render status: :unauthorized,
-        plain: "Only the admin is authorized to be here"
+      render status: :unauthorized, plain: "Only the admin is authorized to be here"
     end
   end
 end

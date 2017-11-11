@@ -26,22 +26,21 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-rails'
-  gem 'selenium-webdriver'
   gem 'site_prism'
   gem 'teaspoon-jasmine'
 end
 
 group :development do
-  gem 'net-netrc', require: false
-  gem 'httparty', require: false
   gem 'guard-livereload', require: false
-  gem "rack-livereload"
+  gem 'httparty', require: false
+  gem 'net-netrc', require: false
+  gem 'rack-livereload'
   gem 'rubocop', require: false
 end
 
 group :test do
   gem 'capybara-screenshot'
+  gem 'database_cleaner'
   gem 'json_spec'
   gem 'machinist'
-  gem 'database_cleaner'
 end

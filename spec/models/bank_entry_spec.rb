@@ -64,7 +64,7 @@ describe BankEntry do
     it "includes 'aggrigate_account_entries.amount_cents'" do
       be = BankEntry.make!
       AccountEntry.make! bank_entry: be, amount_cents: 10_12
-      AccountEntry.make! bank_entry: be, amount_cents:  8_15
+      AccountEntry.make! bank_entry: be, amount_cents: 8_15
 
       be = BankEntry.join_aggrigate_account_entries.select('aggrigate_account_entries.amount_cents').find(be.id)
       expect(be.amount_cents).to eq(10_12 + 8_15)

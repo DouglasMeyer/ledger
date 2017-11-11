@@ -1,12 +1,13 @@
 inherit_from: .rubocop_todo.yml
 
-Styles/LeadingCommentSpace:
+Layout/LeadingCommentSpace:
   Exclude:
     - 'spec/teaspoon_env.rb'
 
-Style/FileName:
+Naming/FileName:
   Exclude:
     - 'Gemfile'
+    - 'Guardfile'
 
 Rails:
   Enabled: true
@@ -21,5 +22,15 @@ AllCops:
     - 'db/schema.rb'
     - 'node_modules/**/*'
 
-Style/SpaceInsideBrackets:
+Layout/SpaceInsideBrackets:
   Enabled: False
+
+Layout/AlignParameters:
+  EnforcedStyle: 'with_fixed_indentation'
+
+Layout/IndentArray:
+  EnforcedStyle: consistent
+
+Layout/ExtraSpacing:
+  Exclude:
+    - 'db/tenant_schema.rb'

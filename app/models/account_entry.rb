@@ -5,8 +5,8 @@ class AccountEntry < ApplicationRecord
   belongs_to :account, inverse_of: :account_entries
   belongs_to :strategy, optional: true
 
-  #FIXME: This should be un-commented, but `BankEntry.create! account_entries_attributes: []` won't work.
-  #validates :bank_entry, :account, :presence => true
+  # FIXME: This should be un-commented, but `BankEntry.create! account_entries_attributes: []` won't work.
+  # validates :bank_entry, :account, :presence => true
 
   accepts_nested_attributes_for :strategy
 

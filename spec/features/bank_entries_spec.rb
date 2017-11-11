@@ -63,13 +63,13 @@ describe 'bank entries view', type: :feature do
     expect(bank_entries_page.bank_entries.first.text).to eq("2015-01-19 $10.00 from #{accounts.first} to #{accounts.last}")
   end
 
-  #TODO: to test this properly, I would need the server to be down :(
-  #it "caches fetched bank entries" do
-  #  bank_entries_page.load
-  #  expect(bank_entries_page).to have_bank_entries(count: 25)
+  # TODO: to test this properly, I would need the server to be down :(
+  # it "caches fetched bank entries" do
+  #   bank_entries_page.load
+  #   expect(bank_entries_page).to have_bank_entries(count: 25)
 
-  #  bank_entries_page.reload
-  #  expect(bank_entries_page).to have_status(text: 'loading')
-  #  expect(bank_entries_page).to have_bank_entries(count: 25)
-  #end
+  #   bank_entries_page.reload
+  #   expect(bank_entries_page).to have_status(text: 'loading')
+  #   expect(bank_entries_page).to have_bank_entries(count: 25)
+  # end
 end

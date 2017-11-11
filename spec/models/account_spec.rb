@@ -21,14 +21,14 @@ describe Account do
   describe "average_spent" do
     it "is calculated from spending" do
       @account = Account.make!
-      add_ae -100, 1,  1
-      add_ae  -50, 1, 10
+      add_ae -100, 1, 1
+      add_ae -50, 1, 10
       add_ae -200, 1, 20
-      add_ae -350, 2,  1
-      add_ae  999, 2,  1
-      add_ae -999, 2,  1, false
-      add_ae  -50, 3,  5
-      add_ae  -50, 3, 15
+      add_ae -350, 2, 1
+      add_ae 999, 2, 1
+      add_ae -999, 2, 1, false
+      add_ae -50, 3, 5
+      add_ae -50, 3, 15
       add_ae -100, 3, 10
       add_ae -150, 3, 31
 
@@ -45,12 +45,11 @@ describe Account do
 
     it "returns the amount as dollars per x" do
       @account = Account.make!
-      add_ae -100, 1,  1
-      add_ae  -50, 1, 10
+      add_ae -100, 1, 1
+      add_ae -50, 1, 10
       add_ae -200, 1, 31
 
       expect(@account.average_spent(0.5)).to be_within(6).of(-175)
     end
   end
-
 end

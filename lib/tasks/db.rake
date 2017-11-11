@@ -1,5 +1,4 @@
 namespace :db do
-
   # Stolen from https://github.com/rails/rails/blob/ac8d0d76cb72bd0542405cfb73552a699f2bc0ef/activerecord/lib/active_record/railties/databases.rake#L247-L256
   namespace :schema do
     desc 'Creates a db/schema.rb file that is portable against any DB supported by Active Record'
@@ -79,8 +78,6 @@ namespace :db do
       base_bank_entry.save!
     end
 
-
     report_entries('after.csv')
   end
-
 end
