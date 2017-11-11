@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate
-  before_action :scope_tenant
+  around_action :scope_tenant
 
   private
 
@@ -14,16 +14,15 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def scope_tenant
+  def scope_tenant(&block)
     ledger = session[:auth_user][:ledger] if session[:auth_user]
 
     schema = if ledger
-      "#{ledger},public"
+      logger.info "TenantLedger.scope #{ledger}"
+      TenantLedger.scope(ledger, &block)
     else
-      'public'
+      yield
     end
-    logger.info "schema_search_path = #{schema}"
-    ActiveRecord::Base.connection.schema_search_path = schema
   end
 
   def admin_only

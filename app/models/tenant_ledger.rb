@@ -6,19 +6,24 @@ class TenantLedger
     schemas - %w( information_schema public )
   end
 
-  def self.create(ledger_name)
+  def self.scope(ledger_name, &block)
     original_schema_earch_path = ActiveRecord::Base.connection.schema_search_path
-    old_verbose = ActiveRecord::Migration.verbose
+    ActiveRecord::Base.connection.schema_search_path = "#{ledger_name},public"
+    yield
+  ensure
+    ActiveRecord::Base.connection.schema_search_path = original_schema_earch_path
+  end
+
+  def self.create(ledger_name)
+    original_verbose = ActiveRecord::Migration.verbose
 
     ActiveRecord::Base.connection.execute %{CREATE SCHEMA "#{ledger_name}"}
-    ActiveRecord::Base.connection.schema_search_path = ledger_name
-
-    ActiveRecord::Migration.verbose = false
-    load Rails.root + 'db/tenant_schema.rb'
-
+    scope(ledger_name) do
+      ActiveRecord::Migration.verbose = false
+      load Rails.root + 'db/tenant_schema.rb'
+    end
   ensure
-    ActiveRecord::Migration.verbose = old_verbose
-    ActiveRecord::Base.connection.schema_search_path = original_schema_earch_path
+    ActiveRecord::Migration.verbose = original_verbose
   end
 
   def self.delete(ledger_name)

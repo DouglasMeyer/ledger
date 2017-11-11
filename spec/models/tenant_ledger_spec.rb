@@ -53,4 +53,30 @@ describe TenantLedger do
       }.to raise_error(TenantLedger::TenantLedgerError)
     end
   end
+
+  describe '.scope' do
+    it 'scopes block to tennants data' do
+      Account.make!
+      TenantLedger.create('new_ledger')
+
+      TenantLedger.scope('new_ledger') do
+        expect(Account.count).to eq 0
+      end
+      expect(Account.count).to eq 1
+    end
+
+    context 'when block raises an exception' do
+      it 'un scopes outside of block' do
+        Account.make!
+        TenantLedger.create('new_ledger')
+
+        expect {
+          TenantLedger.scope('new_ledger') do
+            raise "problem"
+          end
+        }.to raise_error "problem"
+        expect(Account.count).to eq 1
+      end
+    end
+  end
 end
