@@ -333,10 +333,10 @@ DEPENDENCIES
   activerecord-session_store
   angular-rails-templates
   autoprefixer-rails
-  bourbon
+  bourbon (~> 4.2)
   capybara-screenshot
   capybara-webkit
-  coffee-rails
+  coffee-rails (= 4.2.1)
   database_cleaner
   guard-livereload
   haml
