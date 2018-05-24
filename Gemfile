@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 ruby '2.3.1'
 
-gem 'rails', '5.0.0.1'
+gem 'rails', '5.2.0'
 
 gem 'active_model_serializers'
 gem 'activerecord-session_store'
 gem 'angular-rails-templates'
 gem 'autoprefixer-rails'
-gem 'bourbon', '~> 4.2'
-gem 'coffee-rails', '= 4.2.1'
+gem 'bourbon'
+gem 'coffee-rails'
 gem 'haml'
 gem 'ngannotate-rails'
 gem 'omniauth-google-oauth2'

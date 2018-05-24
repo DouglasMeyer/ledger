@@ -10,7 +10,6 @@ class BankEntry < ApplicationRecord
   validates :date, :amount_cents, presence: true
   validate :fields_from_bank_do_not_update
 
-  scope :reverse_order, -> { order(:date, :id) }
   scope :join_aggrigate_bank_entries, ->{ joins(<<-ENDSQL) }
     LEFT OUTER JOIN (
       SELECT SUM(bank_entries.amount_cents) AS balance_cents,

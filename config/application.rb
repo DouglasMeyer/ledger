@@ -19,7 +19,6 @@ module Ledger
     # config.i18n.default_locale = :de
 
     config.active_record.belongs_to_required_by_default = true
-    ActiveSupport.halt_callback_chains_on_return_false = false
 
     config.autoload_paths += %W( #{config.root}/lib )
     config.assets.paths << Rails.root.join('vendor', 'assets', 'bower_components')
