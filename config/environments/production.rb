@@ -1,5 +1,5 @@
 Rails.application.configure do
-  config.middleware.use 'PartyFoul::Middleware'
+  config.middleware.use PartyFoul::Middleware
 
   # Settings specified here will take precedence over those in config/application.rb.
 
