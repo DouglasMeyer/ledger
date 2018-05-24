@@ -465,7 +465,7 @@ body { padding-top: 2.2rem; }
   .bank_import__details:hover { display: initial; }
 
   .page-actions__calculator > .dropdown {
-    margin-left: -10.5em;
+    transform: translateX(calc(2em - 100%));
 
     &:before, &:after {
       left: auto;
