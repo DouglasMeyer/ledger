@@ -1,4 +1,4 @@
-class Strategy < ActiveRecord::Migration
+class Strategy < ActiveRecord::Migration[4.2]
   def up
     create_table :strategies do |t|
       t.string  :strategy_type, null: false, default: 'fixed'

@@ -1,4 +1,4 @@
-class AddLedgerToUsers < ActiveRecord::Migration
+class AddLedgerToUsers < ActiveRecord::Migration[4.2]
   class User < ActiveRecord::Base ; end
 
   def up

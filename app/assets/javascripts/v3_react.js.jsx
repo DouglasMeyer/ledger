@@ -3,31 +3,35 @@
 //= require react
 //= require jquery
 
-var Users = React.createClass({
-  getInitialState: function(){
-    return { newName: '', newEmail: '', newLedger: '' };
-  },
+class Users extends React.PureComponent {
+  constructor() {
+    super();
+    this.state = { newName: '', newEmail: '', newLedger: '' };
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onCreateUser = this.onCreateUser.bind(this);
+    this.onDeleteUser = this.onDeleteUser.bind(this);
+  }
 
-  onInputChange: function(e){
+  onInputChange(e){
     var stateUpdates = {};
     stateUpdates[e.target.name] = e.target.value;
     this.setState(stateUpdates);
-  },
+  }
 
-  onCreateUser: function(){
+  onCreateUser(){
     var state = this.state;
     this.props.onCreateUser(state.newName, state.newEmail, state.newLedger);
     this.setState({ newName: '', newEmail: '', newLedger: '' });
-  },
+  }
 
-  onDeleteUser: function(id){
+  onDeleteUser(id){
     var user = this.props.users.find(function(user){ return user.id === id; });
     if (confirm('Delete user: ' + user.name)) {
       this.props.onDeleteUser(id);
     }
-  },
+  }
 
-  render: function(){
+  render(){
     var users = this.props.users;
     var ledgers = this.props.ledgers;
     var newName = this.state.newName;
@@ -71,31 +75,35 @@ var Users = React.createClass({
       </table>
     </div>;
   }
-});
+}
 
-var Ledgers = React.createClass({
-  getInitialState: function(){
-    return { newLedger: '' };
-  },
+class Ledgers extends React.PureComponent {
+  constructor() {
+    super();
+    this.state = { newLedger: '' };
+    this.onInputChange = this.onInputChange.bind(this);
+    this.onCreateLedger = this.onCreateLedger.bind(this);
+    this.onDeleteLedger = this.onDeleteLedger.bind(this);
+  }
 
-  onInputChange: function(e){
+  onInputChange(e){
     var stateUpdates = {};
     stateUpdates[e.target.name] = e.target.value;
     this.setState(stateUpdates);
-  },
+  }
 
-  onCreateLedger: function(){
+  onCreateLedger(){
     this.props.onCreateLedger(this.state.newLedger);
     this.setState({ newLedger: '' });
-  },
+  }
 
-  onDeleteLedger: function(ledger){
+  onDeleteLedger(ledger){
     if (confirm('Delete ledger: ' + ledger)) {
       this.props.onDeleteLedger(ledger);
     }
-  },
+  }
 
-  render: function(){
+  render(){
     var users = this.props.users;
     var ledgers = this.props.ledgers;
     var newLedger = this.state.newLedger;
@@ -132,7 +140,7 @@ var Ledgers = React.createClass({
       </table>
     </div>;
   }
-});
+}
 
 var API = (function(){
   var requests = [];
@@ -161,16 +169,21 @@ var API = (function(){
   };
 })();
 
-var App = React.createClass({
-  getInitialState: function(){
-    return { users: [], ledgers: [] };
-  },
+class App extends React.PureComponent {
+  constructor() {
+    super();
+    this.state = { users: [], ledgers: [] };
+    this.createUser = this.createUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.createLedger = this.createLedger.bind(this);
+    this.deleteLedger = this.deleteLedger.bind(this);
+  }
 
-  componentDidMount: function(){
+  componentDidMount(){
     this.fetchUsersAndLedgers();
-  },
+  }
 
-  fetchUsersAndLedgers: function(){
+  fetchUsersAndLedgers(){
     Promise.all([
       API({ reference: 'users', resource: 'User_v1', action: 'read' }),
       API({ reference: 'ledgers', resource: 'Ledger_v1', action: 'read' })
@@ -184,31 +197,31 @@ var App = React.createClass({
         ledgers: ledgerResponse.data
       });
     }.bind(this));
-  },
+  }
 
-  createUser: function(name, email, ledger){
+  createUser(name, email, ledger){
     API({ resource: 'User_v1', action: 'create', data: {
       name: name, provider: 'google_oauth2', email: email, ledger: ledger
     }});
     this.fetchUsersAndLedgers();
-  },
+  }
 
-  deleteUser: function(id){
+  deleteUser(id){
     API({ resource: 'User_v1', action: 'delete', id: id });
     this.fetchUsersAndLedgers();
-  },
+  }
 
-  createLedger: function(ledger){
+  createLedger(ledger){
     API({ resource: 'Ledger_v1', action: 'create', data: ledger });
     this.fetchUsersAndLedgers();
-  },
+  }
 
-  deleteLedger: function(ledger){
+  deleteLedger(ledger){
     API({ resource: 'Ledger_v1', action: 'delete', id: ledger });
     this.fetchUsersAndLedgers();
-  },
+  }
 
-  render: function(){
+  render(){
     return <div>
       <Users
         users={ this.state.users }
@@ -224,7 +237,7 @@ var App = React.createClass({
       />
     </div>;
   }
-});
+}
 
 var app = document.querySelector('.app');
 ReactDOM.render(<App />, app);

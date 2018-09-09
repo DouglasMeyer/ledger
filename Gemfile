@@ -31,10 +31,8 @@ group :development, :test do
 end
 
 group :development do
-  gem 'guard-livereload', require: false
   gem 'httparty', require: false
   gem 'net-netrc', require: false
-  gem 'rack-livereload'
   gem 'rubocop', require: false
 end
 

@@ -1,3 +1,18 @@
+adminAuth = ENV['ADMIN_AUTH']
+if adminAuth
+  ledger = TenantLedger.all.first
+  unless ledger
+    TenantLedger.create('admin')
+    ledger = 'admin'
+  end
+  User.create!(
+    JSON.parse(adminAuth).merge(
+      name: 'Admin',
+      ledger: ledger
+    )
+  )
+end
+
 # 1.upto(5) do |n|
 #   harris.entries.create! do |e|
 #     e.date = n.days.ago

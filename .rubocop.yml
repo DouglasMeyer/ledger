@@ -7,7 +7,6 @@ Layout/LeadingCommentSpace:
 Naming/FileName:
   Exclude:
     - 'Gemfile'
-    - 'Guardfile'
 
 Rails:
   Enabled: true

@@ -1,4 +1,4 @@
-class CreateBankImport < ActiveRecord::Migration
+class CreateBankImport < ActiveRecord::Migration[4.2]
   def change
     create_table :bank_imports do |t|
       t.integer :balance_cents, null: false

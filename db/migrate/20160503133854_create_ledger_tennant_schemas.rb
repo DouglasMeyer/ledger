@@ -1,4 +1,4 @@
-class CreateLedgerTennantSchemas < ActiveRecord::Migration
+class CreateLedgerTennantSchemas < ActiveRecord::Migration[4.2]
   PRIVATE_TABLES = %w(
     account_entries
     accounts

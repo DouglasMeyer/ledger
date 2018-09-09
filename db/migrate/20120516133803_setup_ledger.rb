@@ -1,4 +1,4 @@
-class SetupLedger < ActiveRecord::Migration
+class SetupLedger < ActiveRecord::Migration[4.2]
   def change
     create_table :bank_entries do |t|
       t.date    :date,          null: false

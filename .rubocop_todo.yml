@@ -95,7 +95,7 @@ Lint/IneffectiveAccessModifier:
     - 'app/controllers/api/account_v1.rb'
 
 # Offense count: 1
-Lint/RescueWithoutErrorClass:
+Style/RescueStandardError:
   Exclude:
     - 'app/controllers/api_controller.rb'
 
@@ -176,13 +176,6 @@ Naming/HeredocDelimiterNaming:
     - 'app/models/account_entry.rb'
     - 'app/models/bank_entry.rb'
     - 'spec/lib/parse_statement_spec.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect.
-Performance/HashEachMethods:
-  Exclude:
-    - 'app/controllers/v3/accounts_controller.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.

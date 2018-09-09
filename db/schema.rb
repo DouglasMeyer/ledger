@@ -10,26 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160503133854) do
+ActiveRecord::Schema.define(version: 2016_05_03_133854) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "citext"
   enable_extension "plpgsql"
 
-  create_table "sessions", force: :cascade do |t|
-    t.string   "session_id", limit: 255, null: false
-    t.text     "data"
+  create_table "sessions", id: :serial, force: :cascade do |t|
+    t.string "session_id", null: false
+    t.text "data"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
-    t.index ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
+    t.index ["session_id"], name: "index_sessions_on_session_id", unique: true
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :serial, force: :cascade do |t|
     t.string "provider", null: false
-    t.string "email",    null: false
+    t.string "email", null: false
     t.string "name"
-    t.string "ledger",   null: false
+    t.string "ledger", null: false
   end
 
 end
