@@ -17,15 +17,6 @@ Rails.application.routes.draw do
 
     get 'admin' => 'pages#admin'
     root to: 'pages#angular'
-    offline = Rack::Offline.configure cache: true do
-      %w( normalize.css v3.css v3.js icomoon.ttf icomoon.woff favicon.ico ).each do |asset|
-        cache ActionController::Base.helpers.asset_path(asset)
-      end
-      cache "/v3"
-      network "/api"
-      network "*"
-    end
-    get '/application.manifest' => offline, as: :manifest
   end
 
   match "/auth/:provider/callback" => "sessions#create", via: [ :get, :post ]

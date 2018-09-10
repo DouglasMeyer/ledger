@@ -2,6 +2,7 @@
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^(App|Users|Ledgers)$" }] */
 //= require react
 //= require jquery
+//= require serviceworker-companion
 
 class Users extends React.PureComponent {
   constructor() {

@@ -184,7 +184,6 @@ GEM
       byebug (~> 10.0)
       pry (~> 0.10)
     rack (2.0.5)
-    rack-offline (0.6.4)
     rack-test (1.0.0)
       rack (>= 1.0, < 3)
     rails (5.2.0)
@@ -266,6 +265,8 @@ GEM
     sawyer (0.6.0)
       addressable (~> 2.3.5)
       faraday (~> 0.8, < 0.10)
+    serviceworker-rails (0.5.5)
+      railties (>= 3.1)
     site_prism (2.9)
       addressable (>= 2.3.3, < 3.0)
       capybara (>= 2.1, < 3.0)
@@ -320,12 +321,12 @@ DEPENDENCIES
   pg
   pry
   pry-byebug
-  rack-offline
   rails (= 5.2.0)
   react-rails
   rspec-rails
   rubocop
   sass-rails
+  serviceworker-rails
   site_prism
   teaspoon-jasmine
   uglifier

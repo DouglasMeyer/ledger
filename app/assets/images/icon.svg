@@ -1,0 +1,19 @@
+<svg viewBox="0 0 48 48" width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    text {
+      font: 14px sans-serif;
+    }
+  </style>
+
+  <line x1="00" y1="06" x2="48" y2="06" stroke="#EEE" />
+  <line x1="00" y1="18" x2="48" y2="18" stroke="#EEE" />
+  <line x1="00" y1="30" x2="48" y2="30" stroke="#EEE" />
+  <line x1="00" y1="42" x2="48" y2="42" stroke="#EEE" />
+
+  <line x1="06" y1="00" x2="06" y2="45" stroke="#EEE" />
+  <line x1="18" y1="00" x2="18" y2="45" stroke="#EEE" />
+  <line x1="30" y1="00" x2="30" y2="45" stroke="#EEE" />
+  <line x1="42" y1="00" x2="42" y2="45" stroke="#EEE" />
+
+  <text x="2.2" y="28">Ledger</text>
+</svg>

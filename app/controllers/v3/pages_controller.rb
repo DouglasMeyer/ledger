@@ -7,7 +7,6 @@ module V3
     end
 
     def angular
-      @do_manifest = Rails.env.production?
       render html: '<div ng-view></div>'.html_safe, layout: true
     end
   end

@@ -2,6 +2,7 @@
 //= require ./v3/ledger
 //= require_self
 //= require_tree ./v3/
+//= require serviceworker-companion
 
 window.currency =
   parse: (input) ->

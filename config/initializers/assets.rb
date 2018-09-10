@@ -8,4 +8,4 @@ Rails.application.config.assets.version = '1.0'
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
-Rails.application.config.assets.precompile += %w( normalize.css v3.js v3.css v3_react.js icomoon.eot icomoon.woff icomoon.ttf icomoon.svg )
+Rails.application.config.assets.precompile += %w( normalize.css v3.js v3.css v3_react.js icomoon.eot icomoon.woff icomoon.ttf icomoon.svg serviceworker.js manifest.json icon.svg )
