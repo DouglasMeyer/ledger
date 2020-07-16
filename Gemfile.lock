@@ -79,12 +79,6 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
-    capybara-screenshot (1.0.21)
-      capybara (>= 1.0, < 4)
-      launchy
-    capybara-webkit (1.15.0)
-      capybara (>= 2.3, < 4.0)
-      json
     case_transform (0.2)
       activesupport
     coderay (1.1.2)
@@ -107,6 +101,10 @@ GEM
     ffi (1.9.23)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    graphiql-rails (1.7.0)
+      railties
+      sprockets-rails
+    graphql (1.9.9)
     haml (5.0.4)
       temple (>= 0.8.0)
       tilt
@@ -305,10 +303,10 @@ DEPENDENCIES
   angular-rails-templates
   autoprefixer-rails
   bourbon
-  capybara-screenshot
-  capybara-webkit
   coffee-rails
   database_cleaner
+  graphiql-rails
+  graphql
   haml
   httparty
   jquery-rails

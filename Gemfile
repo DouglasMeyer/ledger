@@ -10,6 +10,7 @@ gem 'autoprefixer-rails'
 gem 'bourbon'
 gem 'coffee-rails'
 gem 'haml'
+gem 'graphql'
 gem 'ngannotate-rails'
 gem 'omniauth-google-oauth2'
 gem 'party_foul'
@@ -22,7 +23,7 @@ gem 'jquery-rails'
 gem 'react-rails'
 
 group :development, :test do
-  gem 'capybara-webkit'
+  #gem 'capybara-webkit'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-rails'
@@ -37,8 +38,10 @@ group :development do
 end
 
 group :test do
-  gem 'capybara-screenshot'
+  #gem 'capybara-screenshot'
   gem 'database_cleaner'
   gem 'json_spec'
   gem 'machinist'
 end
+
+gem 'graphiql-rails', group: :development

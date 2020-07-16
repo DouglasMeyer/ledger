@@ -1,0 +1,42 @@
+html {
+  font-family: sans-serif;
+}
+
+// .NewApp {
+//   > .accounts {
+//     display: inline-block;
+//     width: calc(1 * (12em + 2ex));
+
+//     > .account {
+//       display: inline-block;
+//       margin: 3px 1ex;
+//       width: 12em;
+//       border-bottom: 1px dashed #CCC;
+
+//       > span {
+//         float: right;
+//       }
+//     }
+//   }
+// }
+.forecast {
+  border-spacing: 10px 2px;
+
+  tr {
+    th, td {
+      &:nth-child(1), // date
+      &:nth-child(5), // amount
+      &:nth-child(6), // balance
+      {
+        text-align: right;
+      }
+    }
+  }
+
+  input, select {
+    box-sizing: border-box;
+    width: 100%;
+    text-align: inherit;
+    font: inherit;
+  }
+}
