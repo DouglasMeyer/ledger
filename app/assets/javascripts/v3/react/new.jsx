@@ -1,280 +1,330 @@
-function formatCurrency(amountCents) {
-  // return ('$' + number).replace(/(\d)(?=\d{2}$)/, '$1.').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-  // return String(number).replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-  let [_, sign, dollars, cents ] = String(amountCents / 100).match(/(-)?(\d+)(?:\.(\d+))?/);
-  dollars = dollars.replace(/(\d)(?=(\d{3})+$)/g, '$1,');
-  cents = ((cents || '') + '00').substr(0,2);
+const pipe = (...valNFns) => valNFns.reduce((val, fn) => fn(val));
 
-  return `$${sign || ''}${dollars}.${cents}`;
-}
+const toCurrency = (amount) =>
+  amount.toLocaleString("en", { style: "currency", currency: "USD" });
 
-const nth = n => [,'st','nd','rd'][n%100>>3^1&&n%10]||'th';
-const frequencies = 'year month week day hour minute second'.split(' ');
-function rruleToText(rrule) {
-  const { interval, freq, bymonthday } = RRule.fromString(rrule).options;
-  return `${
-    interval === 1 ? 'every' : `${interval} times a`
-  } ${frequencies[freq]}${
-    bymonthday ? ` on the ${bymonthday}${nth(bymonthday)}` : ''
-  }`;
-}
+const monthAgo = new Date();
+monthAgo.setMonth(monthAgo.getMonth() - 1);
 
-class V3React extends React.PureComponent {
-  constructor() {
-    super();
-    // this.state = { users: [], ledgers: [] };
-    // this.createUser = this.createUser.bind(this);
-    // this.deleteUser = this.deleteUser.bind(this);
-    // this.createLedger = this.createLedger.bind(this);
-    // this.deleteLedger = this.deleteLedger.bind(this);
-    // this.state = { bankEntries: [] };
-    // this.state = { accounts: [] };
-    this.state = { projectedEntries: [] }
-    // this.generateForecastedEntries = this.generateForecastedEntries.bind(this);
-    this.handleProjectedEntry = this.handleProjectedEntry.bind(this);
-  }
+const dateFmt = (date) => date.toLocaleDateString("fr-CA");
 
-  componentDidMount(){
-    // this.fetchBankEntries();
-    this.fetchProjectedEntries();
-  }
-
-  generateForecastedEntries(){
-    const { projectedEntries, accounts } = this.state;
-    const day = 24 * 60 * 60 * 1000;
-    const today = new Date;
-    today.setHours(0);
-    today.setMinutes(0);
-    today.setSeconds(0);
-    // const monthAndHalf = new Date(today.getTime() + 2.5 * 30 * day);
-    const bitOverAYear =  new Date(today.getTime() + 400 * day);
-
-    const forecastedEntries = projectedEntries
-      .map(({ id, rrule }) => {
-        try {
-          return RRule.fromString(rrule).between(today, bitOverAYear)
-            .map((date, index) => ({ projectedEntryId: id, date, first: index === 0 }));
-        } catch (e) {
-          return [{ projectedEntryId: id, first: true }];
-        }
-      })
-      .reduce((a,b) => a.concat(b), [])
-      .sort(({ date: aDate }, { date: bDate }) =>
-        aDate === undefined ? -1 :
-        bDate === undefined ? 1 :
-        aDate - bDate
+const useTransform = (timing) => {
+  const elRef = React.useRef();
+  const prevBounds = React.useRef();
+  React.useLayoutEffect(() => {
+    const bounds = elRef.current.getBoundingClientRect();
+    if (prevBounds.current) {
+      elRef.current.animate(
+        [
+          {
+            transform: `translate(${prevBounds.current.left - bounds.left}px, ${
+              prevBounds.current.top - bounds.top
+            }px)`,
+            clipPath: `polygon(0 0, ${prevBounds.current.width}px 0, ${prevBounds.current.width}px ${prevBounds.current.height}px, 0 ${prevBounds.current.height}px)`,
+            overflow: "visible",
+          },
+          {
+            transform: "translate(0, 0)",
+            clipPath: `polygon(0 0, ${bounds.width}px 0, ${bounds.width}px ${bounds.height}px, 0 ${bounds.height}px)`,
+            overflow: "visible",
+          },
+        ],
+        timing
       );
+    }
+    prevBounds.current = bounds;
+  });
+  return elRef;
+};
 
-    this.setState({ forecastedEntries });
-  }
+const Account = ({
+  account,
+  bankEntries,
+  balance,
+  highlighted,
+  selected,
+  onClick,
+}) => {
+  const elRef = useTransform({ duration: 300, easing: "ease" });
+  const handleClick = React.useCallback((e) => {
+    e.preventDefault();
+    onClick(account);
+  });
+  const accountEntries = [];
+  bankEntries.forEach((bankEntry) => {
+    bankEntry.accountEntries.forEach((accountEntry) => {
+      if (accountEntry.account.name === account)
+        accountEntries.push(accountEntry);
+    });
+  });
 
-  fetchProjectedEntries(){
-    fetch('/graphql', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ query: `{
-        accounts { id name balanceCents }
-        projectedEntries {
+  return (
+    <div
+      ref={elRef}
+      className={`Account${highlighted ? " highlighted" : ""}${
+        selected ? " selected" : ""
+      }`}
+    >
+      <a href="#" onClick={handleClick}>
+        {account} {toCurrency(balance / 100)}
+      </a>
+      <div>
+        Last Month Spent:{" "}
+        {toCurrency(
+          accountEntries
+            .filter((e) => e.date > monthAgo && e.amountCents < 0)
+            .reduce((a, e) => a + e.amountCents, 0) / 100
+        )}
+      </div>
+    </div>
+  );
+};
+const Entry = ({ isSelected, onClick, previousEntry, entry }) => {
+  const { amountCents, date, accountEntries } = entry;
+  const from = accountEntries.filter(({ amountCents }) => amountCents < 0);
+  const to = accountEntries.filter(({ amountCents }) => amountCents > 0);
+  const amount =
+    amountCents === 0
+      ? from.reduce((sum, { amountCents }) => sum + amountCents, 0)
+      : amountCents;
+  const handleClick = React.useCallback(() => {
+    onClick(entry);
+  }, []);
+  return (
+    <React.Fragment>
+      <div onClick={handleClick}>
+        {!previousEntry || previousEntry.date !== date ? date : null}
+      </div>
+      <div onClick={handleClick}>
+        {amountCents === 0 ? "↔" : amount < 0 ? "←" : "→"}
+      </div>
+      <div onClick={handleClick}>{toCurrency(amount / 100)}</div>
+      <div onClick={handleClick} className={isSelected ? "selected" : ""}>
+        {from.length
+          ? `from ${from.map(({ account: { name } }) => name).join(", ")}`
+          : ""}
+        {to.length
+          ? ` to ${to.map(({ account: { name } }) => name).join(", ")}`
+          : ""}
+      </div>
+    </React.Fragment>
+  );
+};
+const EntryForm = ({ entry, accounts, isOpen, onClose, onSave }) => {
+  const [editingEntry, setEditingEntry] = React.useState({});
+  React.useEffect(() => {
+    console.log(entry);
+    setEditingEntry(entry || {});
+  }, [isOpen, entry]);
+  const handleChange = React.useCallback(({ target: { name, value } }) => {
+    setEditingEntry((entry) => Object.assign({}, entry, { [name]: value }));
+  }, []);
+  const handleCancel = React.useCallback((event) => {
+    event.preventDefault();
+    onClose();
+  }, []);
+  const date = (function (year, month, day) {
+    if (!year) return new Date();
+    return new Date(year, month - 1, day);
+  })(...(editingEntry.date ? editingEntry.date.split("-") : [null]));
+
+  return (
+    <div className={`EntryForm${isOpen ? " open" : ""}`}>
+      <input
+        type="date"
+        name="date"
+        value={dateFmt(date)}
+        onChange={handleChange}
+      />
+      <div>{editingEntry.amount < 0 ? "←" : "→"}</div>
+      <input
+        name="amount"
+        value={editingEntry.amount || ""}
+        onChange={handleChange}
+      />
+      <div>
+        <input
+          name="account"
+          list="accounts"
+          value={editingEntry.account || ""}
+          onChange={handleChange}
+        />
+        <datalist id="accounts">
+          {accounts.map((account) => (
+            <option key={account} value={account} />
+          ))}
+        </datalist>
+        <a href="#" onClick={handleCancel}>
+          cancel
+        </a>
+        <button onClick={onSave}>Save</button>
+      </div>
+    </div>
+  );
+};
+const V3React = () => {
+  const [selectedAccount, selectAccount] = React.useState();
+  const [selectedEntity, setSelectedEntity] = React.useState();
+  const [entriesOffset, setEntriesOffset] = React.useState(0);
+  const handleScroll = React.useCallback((event) => {
+    const offset = Math.max(0, Math.floor((event.target.scrollTop + 8) / 36));
+    setEntriesOffset(offset);
+  }, []);
+  const [accountBalances, setAccountBalances] = React.useState();
+  const [bankEntries, setBankEntries] = React.useState();
+  const [bankEntryOffset, setBankEntryOffset] = React.useState(0);
+  const entriesBottomRef = React.useRef();
+
+  React.useEffect(
+    function () {
+      if (!entriesBottomRef.current) return;
+      const observer = new IntersectionObserver(function (entries) {
+        if (entries[0].intersectionRatio <= 0) return;
+
+        setBankEntryOffset((offset) => offset + bankEntries.length);
+      });
+      observer.observe(entriesBottomRef.current);
+      return () => observer.disconnect();
+    },
+    [bankEntries]
+  );
+  React.useEffect(
+    function () {
+      fetch("/graphql", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `{
+        accounts { name balanceCents }
+        ${
+          /*projectedEntries {
           id
           description
           amountCents
           rrule
-          account { id }
+          account { id, name }
+        }*/ ""
         }
-      }` })
-    })
-    .then(r => r.json())
-    .then(j => { console.log('json', window.json = j); return j; })
-    .then(({ data: { projectedEntries, accounts } }) => {
-      this.setState({ projectedEntries, accounts });
-      this.generateForecastedEntries();
-    })
-    .catch(console.error);
-  }
-
-  handleProjectedEntry(id, projectedEntry) {
-    this.setState(({ projectedEntries }) => {
-      const index = projectedEntries.findIndex(pe => pe.id === id);
-      console.log('handleProjectedEntry', id, projectedEntry, index);
-
-      if (index === -1) return { projectedEntries: projectedEntries.concat(projectedEntry) };
-      return { projectedEntries: [
-        ...projectedEntries.slice(0, index),
-        ...( projectedEntry ? [projectedEntry] : [] ),
-        ...projectedEntries.slice(index + 1),
-      ] }
-    }, () => {
-      console.log('projectedEntries', window.projectedEntries = this.state.projectedEntries);
-      this.generateForecastedEntries();
-    });
-  }
-
-  render() {
-    const { accounts, projectedEntries, forecastedEntries } = this.state;
-
-    if (!forecastedEntries) return <div>Loading ...</div>;
-    console.log('forcastedEntries', window.forecastedEntries = forecastedEntries);
-
-    let sum = accounts.reduce((a, { balanceCents }) => a + balanceCents, 0);
-
-    return <React.Fragment>
-      <datalist id="frequency">
-        { [
-          'Every year',
-          'Every month'
-        ].map(option => <option key={option} value={option} />) }
-      </datalist>
-      <datalist id="accounts">
-        { accounts.map(({ name }) => <option key={name} value={name} />) }
-      </datalist>
-      <table className="forecast">
-        <thead>
-          <tr>
-            <th>date</th>
-            <th>description</th>
-            <th>frequency</th>
-            <th>account</th>
-            <th>amount</th>
-            <th>balance</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{ (new Date).toLocaleDateString() }</td>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td>{ formatCurrency(sum) }</td>
-          </tr>
-          <ProjectedEntryForm onChange={this.handleProjectedEntry} />
-          { forecastedEntries.map(({ projectedEntryId, date, first }) => {
-              const { id, description, amountCents, rrule, account: { id: accountId } } = projectedEntries.find(({ id }) => id === projectedEntryId);
-              const account = accounts.find(({ id }) => id === accountId);
-              sum -= amountCents;
-
-              if (first) return <ProjectedEntryForm key={date ? `${id} ${date.toJSON()}` : id}
-                onChange={this.handleProjectedEntry}
-                {...{ id, date, description, rrule, account, amountCents, sum }}
-              />;
-
-              return <tr key={`${id}-${date}`}>
-                <td>{ date.toLocaleDateString() }</td>
-                <td>{ description }</td>
-                <td>{ rruleToText(rrule).replace(/^[a-z]/, s => s.toUpperCase()) }</td>
-                <td>{ account.name }</td>
-                <td>{ formatCurrency(amountCents) }</td>
-                <td>{ formatCurrency(sum) }</td>
-              </tr>;
-            })
-          }
-        </tbody>
-      </table>
-    </React.Fragment>;
-  }
-}
-
-class ProjectedEntryForm extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.formRef = React.createRef();
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onDelete = this.onDelete.bind(this);
-  }
-
-  onSubmit() {
-    const { id, onChange } = this.props;
-    const formElements = [...this.formRef.current.querySelectorAll('input[name], select[name]')];
-    const props = formElements.reduce((acc,input) => ({
-      ...acc,
-      [input.name]: input.value
-    }), {});
-    const rule = new RRule({ dtstart: new Date(props.date), freq: props.frequency, until: null });
-    delete props.date;
-    delete props.frequency;
-    fetch('/graphql', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ query: `
-        mutation CreateProjectedEntry {
-          addProjectedEntryMutation(input:{ 
-            account:"${props.account}",
-            description:"${props.description}",
-            amountCents:${props.amount.replace(/(^\$|,)/, '')*100},
-            rrule:"${rule.toString()}"
+        bankEntries(first: 50, after: ${bankEntryOffset}${
+            selectedAccount ? `, account: "${selectedAccount}"` : ""
           }) {
-            projectedEntry {
-              id
-              description
-              amountCents
-              rrule
-              account { id }
-            }
-          }
+          accountEntries {
+            ${/*id, account { id, name }, amountCents*/ ""}
+            id, account { name }, amountCents
+          },
+          amountCents,
+          date,
+          id
         }
-      ` })
-    })
-    .then(r => r.json())
-    .then(j => { console.log('json', window.json = j); return j; })
-    .then(({ data: { addProjectedEntryMutation: { projectedEntry } } }) => {
-      this.props.onChange(projectedEntry.id, projectedEntry);
-      if (!id) formElements.forEach(el => el.value = el.defaultValue);
-    })
-    .catch(console.error);
-  }
-
-  onDelete() {
-    fetch('/graphql', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ query: `
-        mutation DeleteProjectedEntry {
-          deleteProjectedEntryMutation(input:{
-            id:${this.props.id}
-          }) {
-            projectedEntry { id }
+      }`,
+        }),
+      })
+        .then((r) => r.json())
+        .then(
+          ({
+            data: { projectedEntries, accounts, bankEntries: newBankEntries },
+          }) => {
+            pipe(
+              accounts.map(({ name, balanceCents }) => [name, balanceCents]),
+              Object.fromEntries,
+              setAccountBalances
+            );
+            setBankEntries((bankEntries) =>
+              (bankEntries || []).concat(newBankEntries)
+            );
           }
-        }
-      ` })
-    })
-    .then(r => r.json())
-    .then(j => { console.log('json', window.json = j); return j; })
-    .then(({ data: { deleteProjectedEntryMutation: { projectedEntry: { id } } } }) => {
-      this.props.onChange(id, null);
+        );
+    },
+    [selectedAccount, bankEntryOffset]
+  );
+  const filteredEntries = React.useMemo(
+    () =>
+      bankEntries &&
+      bankEntries.filter(
+        ({ accountEntries }) =>
+          !selectedAccount ||
+          accountEntries.some(
+            ({ account: { name } }) => name === selectedAccount
+          )
+      ),
+    [bankEntries, selectedAccount]
+  );
+  const accounts = React.useMemo(() => {
+    if (!bankEntries) return;
+    const accounts = {};
+    bankEntries.slice().forEach(({ accountEntries }) => {
+      accountEntries.forEach(({ account: { name } }) => {
+        accounts[name] = 0;
+      });
     });
-  }
+    Object.assign(accounts, accountBalances);
+    filteredEntries.slice(0, entriesOffset).forEach(({ accountEntries }) => {
+      accountEntries.forEach(({ account: { name }, amountCents }) => {
+        accounts[name] -= amountCents;
+      });
+    });
+    return Object.entries(accounts);
+  }, [entriesOffset, filteredEntries, accountBalances]);
+  const previousEntry = filteredEntries && filteredEntries[entriesOffset];
+  const handleAccountClick = React.useCallback(
+    (name) => {
+      selectAccount(name === selectedAccount ? null : name);
+      setBankEntries();
+    },
+    [selectedAccount]
+  );
 
-  render() {
-    const { id, date, description, rrule, account, amountCents, sum } = this.props;
-    const { freq } = RRule.fromString(rrule || '').options;
+  if (!bankEntries) return "Loading";
 
-    return <tr ref={this.formRef}>
-      <td><input type="date" name="date"                       defaultValue={date ? date.toJSON().slice(0, 10) : ''}  /></td>
-      <td><input             name="description"                defaultValue={description}                             /></td>
-      <td>
-        <select name="frequency" defaultValue={freq}>
-          {RRule.FREQUENCIES.map((frequency, index) => <option key={index} value={index}>{frequency}</option>)}
-        </select>
-      </td>
-      <td><input             name="account"   list="accounts"  defaultValue={account ? account.name : ''}             /></td>
-      <td><input             name="amount"                     defaultValue={formatCurrency(amountCents || '')}       /></td>
-      <td>{ formatCurrency(sum || '')                                                                                  }</td>
-      <td>
-        <button onClick={this.onSubmit}>{ id ? 'update' : 'create'  }</button>
-        { id ? <button onClick={this.onDelete}>delete</button> : null }
-      </td>
-    </tr>;
-  }
-}
+  return (
+    <React.Fragment>
+      <div className="accounts">
+        {accounts
+          .filter(
+            ([account]) => !selectedAccount || account === selectedAccount
+          )
+          .map(([account, balance]) => (
+            <Account
+              key={account}
+              highlighted={
+                previousEntry &&
+                previousEntry.accountEntries.some(
+                  ({ account: { name } }) => name === account
+                )
+              }
+              selected={account === selectedAccount}
+              account={account}
+              bankEntries={bankEntries}
+              balance={balance}
+              onClick={handleAccountClick}
+            />
+          ))}
+      </div>
+      <div className="entries" onScroll={handleScroll}>
+        {filteredEntries.map((entry, entryIndex) => (
+          <Entry
+            key={entry.id}
+            entry={entry}
+            previousEntry={filteredEntries[entryIndex - 1]}
+            isSelected={entry === selectedEntity}
+            onClick={setSelectedEntity}
+          />
+        ))}
+        <div className="entries-bottom" ref={entriesBottomRef} />
+      </div>
+      <EntryForm
+        isOpen={Boolean(selectedEntity)}
+        entry={selectedEntity}
+        accounts={accounts.map(([name]) => name)}
+        onSave={console.log.bind(null, "onSave")}
+        onClose={() => setSelectedEntity(null)}
+      />
+    </React.Fragment>
+  );
+};
 
-var app = document.querySelector('.app');
+const app = document.querySelector(".app");
 if (app) ReactDOM.render(<V3React />, app);

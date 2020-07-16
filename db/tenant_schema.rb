@@ -13,6 +13,7 @@
 ActiveRecord::Schema.define(version: 0) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "plpgsql"
 
   create_table "account_entries", id: :serial, force: :cascade do |t|
@@ -20,20 +21,20 @@ ActiveRecord::Schema.define(version: 0) do
     t.integer "bank_entry_id", null: false
     t.integer "amount_cents", null: false
     t.text "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "strategy_id"
   end
 
   create_table "accounts", id: :serial, force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name", limit: 255, null: false
     t.boolean "asset", default: true, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "position"
     t.datetime "deleted_at"
     t.integer "strategy_id"
-    t.string "category"
+    t.string "category", limit: 255
     t.index ["name"], name: "index_accounts_on_name", unique: true
   end
 
@@ -41,10 +42,10 @@ ActiveRecord::Schema.define(version: 0) do
     t.date "date", null: false
     t.integer "amount_cents", null: false
     t.text "notes"
-    t.string "description"
-    t.string "external_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string "description", limit: 255
+    t.string "external_id", limit: 255
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["external_id"], name: "index_bank_entries_on_external_id", unique: true
   end
 
@@ -56,13 +57,13 @@ ActiveRecord::Schema.define(version: 0) do
 
   create_table "projected_entries", id: :serial, force: :cascade do |t|
     t.integer "account_id", null: false
-    t.string "description"
+    t.string "description", limit: 255
     t.integer "amount_cents", null: false
-    t.string "rrule", null: false
+    t.string "rrule", limit: 255, null: false
   end
 
   create_table "strategies", id: :serial, force: :cascade do |t|
-    t.string "strategy_type", default: "fixed", null: false
+    t.string "strategy_type", limit: 255, default: "fixed", null: false
     t.decimal "variable", precision: 9, scale: 2
     t.text "notes"
   end

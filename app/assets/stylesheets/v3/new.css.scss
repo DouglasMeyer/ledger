@@ -1,42 +1,136 @@
-html {
+:root {
+  --account-width: 12rem;
+  --separator-top: 35vh;
+  --entry-form-width: 25rem;
+}
+body {
   font-family: sans-serif;
 }
 
-// .NewApp {
-//   > .accounts {
-//     display: inline-block;
-//     width: calc(1 * (12em + 2ex));
+.accounts {
+  position: fixed;
+  background-color: #333;
+  color: #ccc;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--account-width);
+  z-index: 1;
+}
+.accounts::before,
+.accounts::after {
+  content: "";
+  position: fixed;
+  left: var(--account-width);
+  z-index: -1;
+  pointer-events: none;
+}
+.accounts::before {
+  border-bottom: 2px dashed #333;
+  top: calc(var(--separator-top) - 1.1em - 1px);
+  right: 0;
+}
+.accounts::after {
+  top: calc(var(--separator-top) - 1.1em);
+  width: 2rem;
+  height: 2rem;
+  background-color: #333;
+  transform: translate(calc(-50% - 1px), -50%) rotate(45deg);
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+.Account {
+  background-color: #333;
+  padding: 5px 10px;
+  will-change: transform, clip-path;
+}
+.Account:not(.selected) {
+  overflow-y: hidden;
+  height: 0.9em;
+}
+.Account a {
+  color: currentColor;
+}
+.Account.highlighted {
+  background-color: #444;
+}
 
-//     > .account {
-//       display: inline-block;
-//       margin: 3px 1ex;
-//       width: 12em;
-//       border-bottom: 1px dashed #CCC;
+.entries {
+  padding-left: calc(var(--account-width) + 2rem);
+  padding-top: var(--separator-top);
+  scroll-padding-top: calc(var(--separator-top) - 0.5em);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: auto auto auto 1fr;
+  grid-auto-rows: 16px;
+  gap: 20px;
+  // grid-auto-rows: 18px;
+  // gap: 10px 20px;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  overflow-anchor: none;
+}
+.entries-bottom {
+  content: "";
+  grid-column: 1 / span 4;
+  height: calc(100vh - var(--separator-top));
+  // height: 1000vh;
+}
+.entries > * {
+  cursor: pointer;
+}
+.entries > *:nth-child(4n + 1) {
+  position: relative;
+  scroll-snap-align: start;
+  text-align: right;
+}
+.entries > *:nth-child(4n + 3) {
+  text-align: right;
+}
+.entries > *:nth-child(4n + 4) {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
 
-//       > span {
-//         float: right;
-//       }
-//     }
-//   }
-// }
-.forecast {
-  border-spacing: 10px 2px;
+.entries input {
+  font-size: inherit;
+  height: 100%;
+}
+.entries > input:nth-child(4n + 3) {
+  width: 5em;
+}
 
-  tr {
-    th, td {
-      &:nth-child(1), // date
-      &:nth-child(5), // amount
-      &:nth-child(6), // balance
-      {
-        text-align: right;
-      }
-    }
+.entries > .selected {
+  outline: 1px dashed blue;
+}
+
+@keyframes slide-left {
+  from {
+    transform: translateX(100%);
   }
-
-  input, select {
-    box-sizing: border-box;
-    width: 100%;
-    text-align: inherit;
-    font: inherit;
+  to {
+    transform: translateX(0%);
   }
+}
+
+.EntryForm {
+  position: fixed;
+  background-color: #333;
+  color: #ccc;
+  box-sizing: border-box;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--entry-form-width);
+  z-index: 1;
+  transform: translateX(100%);
+  transition: transform 0.3s;
+}
+.EntryForm.open {
+  transform: translateX(0%);
 }

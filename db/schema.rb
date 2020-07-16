@@ -13,10 +13,11 @@
 ActiveRecord::Schema.define(version: 2016_05_03_133854) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "plpgsql"
 
   create_table "sessions", id: :serial, force: :cascade do |t|
-    t.string "session_id", null: false
+    t.string "session_id", limit: 255, null: false
     t.text "data"
     t.datetime "created_at"
     t.datetime "updated_at"

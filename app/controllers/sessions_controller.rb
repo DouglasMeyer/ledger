@@ -32,4 +32,10 @@ class SessionsController < ApplicationController
     session[:auth_user] = nil
     redirect_to root_path
   end
+
+  def failure
+    render html: <<-END.html_safe
+      <pre style="white-space: pre-line;">#{request.env}</pre>
+    END
+  end
 end
