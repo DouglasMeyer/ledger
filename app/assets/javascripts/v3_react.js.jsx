@@ -34,5 +34,7 @@ var API = (function(){
   };
 })();
 
-var app = document.querySelector('.admin');
-if (app) ReactDOM.render(<AdminApp />, app);
+document.addEventListener("DOMContentLoaded", function () {
+  var app = document.querySelector(".admin");
+  if (app) ReactDOM.render(<AdminApp />, app);
+});
