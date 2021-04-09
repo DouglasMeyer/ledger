@@ -19,3 +19,4 @@
 /db/*.sqldump
 /.powenv
 .DS_Store
+/*.dump*

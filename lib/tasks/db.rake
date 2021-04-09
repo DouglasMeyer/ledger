@@ -36,6 +36,8 @@ namespace :db do
   task condense: :environment do
     require 'csv'
 
+    ActiveRecord::SessionStore::Session.where('updated_at < ?', 5.days.ago).delete_all
+
     ledger = ENV['LEDGER']
     raise "LEDGER must be one of: #{TenantLedger.all.inspect}" unless TenantLedger.all.include? ledger
     ActiveRecord::Base.connection.schema_search_path = "#{ledger},public"
