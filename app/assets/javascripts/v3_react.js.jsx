@@ -7,34 +7,38 @@
 //= require ./v3/react/admin
 //= require ./v3/react/new
 
-var API = (function(){
+var API = (function () {
   var requests = [];
   var resolves = {};
   var requestTimeout;
 
-  function doAPI(){
-    jQuery.post({ url: '/api', context: resolves }, JSON.stringify(requests))
-      .then(function(data){
-        data.responses.forEach(function(response){
-          this[response.reference]({ response: response, records: data.records });
+  function doAPI() {
+    jQuery
+      .post({ url: "/api", context: resolves }, JSON.stringify(requests))
+      .then(function (data) {
+        data.responses.forEach(function (response) {
+          this[response.reference]({
+            response: response,
+            records: data.records,
+          });
         }, this);
       });
     requests = [];
     resolves = {};
   }
 
-  return function API(request){
+  return function API(request) {
     request.reference = request.reference || Math.random().toString();
     requests.push(request);
     if (requestTimeout) clearTimeout(requestTimeout);
     requestTimeout = setTimeout(doAPI, 100);
-    return new Promise(function(resolve){
+    return new Promise(function (resolve) {
       resolves[request.reference] = resolve;
     });
   };
 })();
 
 document.addEventListener("DOMContentLoaded", function () {
-  var app = document.querySelector(".admin");
-  if (app) ReactDOM.render(<AdminApp />, app);
+  var adminEl = document.querySelector(".admin");
+  if (adminEl) ReactDOM.render(<AdminApp />, adminEl);
 });

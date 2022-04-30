@@ -14,4 +14,6 @@ class Types::AccountType < Types::BaseObject
   # field :asset, Boolean, null: false
   field :balanceCents, Int, null: false
   # field :avatar, Types::PhotoType, null: true
+
+  field :strategy, Types::StrategyType, null: true
 end

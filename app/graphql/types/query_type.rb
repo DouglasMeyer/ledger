@@ -18,9 +18,10 @@ module Types
       argument :after, Integer, required: false
       argument :account, String, required: false
       # argument :relevant, GraphQL::Types::Boolean, required: false
+      argument :needsDistribution, GraphQL::Types::Boolean, required: false
     end
-    def bank_entries(first: 30, after: 0, account: nil)
-      scope = BankEntry.all.offset(after).limit(first) # .with_balance
+    def bank_entries(first: 30, after: 0, account: nil, needs_distribution: false)
+      scope = (needs_distribution ? BankEntry.needs_distribution : BankEntry.all).offset(after).limit(first) # .with_balance
       if account
         scope = scope.joins(:accounts).where(accounts: { name: account })
       end
@@ -31,6 +32,12 @@ module Types
     end
     def projected_entries
       ProjectedEntry.all
+    end
+
+    field :strategies, [StrategyType], null: false do
+    end
+    def strategies
+      Strategy.all
     end
 
   end

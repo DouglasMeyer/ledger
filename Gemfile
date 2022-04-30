@@ -35,6 +35,8 @@ group :development do
   gem 'httparty', require: false
   gem 'net-netrc', require: false
   gem 'rubocop', require: false
+
+  gem 'graphiql-rails'
 end
 
 group :test do
@@ -43,5 +45,3 @@ group :test do
   gem 'json_spec'
   gem 'machinist'
 end
-
-gem 'graphiql-rails', group: :development

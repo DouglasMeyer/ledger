@@ -3,14 +3,21 @@
 
 // Constants
 $textColor: #444;
-$bodyBackground: #F3F3F3;
+$bodyBackground: #f3f3f3;
 
 // Reset
 * {
   box-sizing: border-box;
 }
-html, body { height: 100%; width: 100%; }
-html { overflow-x: auto; overflow-y: scroll; }
+html,
+body {
+  height: 100%;
+  width: 100%;
+}
+html {
+  overflow-x: auto;
+  overflow-y: scroll;
+}
 body {
   position: relative;
   font-size: medium;
@@ -18,7 +25,11 @@ body {
   color: $textColor;
   background-color: $bodyBackground;
 }
-h1, h2, h3 { color: #222; }
+h1,
+h2,
+h3 {
+  color: #222;
+}
 h4 {
   font-size: 0.8rem;
   margin-top: 1.5rem;
@@ -27,97 +38,122 @@ h4 {
   text-transform: uppercase;
   color: #888;
 }
-input, select, textarea, button, .button, [class^="button--"] {
+input,
+select,
+textarea,
+button,
+.button,
+[class^="button--"] {
   display: inline-block;
   color: inherit;
   text-align: inherit;
   background-color: rgba(255, 255, 255, 0.5);
   border: none;
-  box-shadow: 0 0 2px #ccc inset,
-              0 1px 1px #ccc inset;
+  box-shadow: 0 0 2px #ccc inset, 0 1px 1px #ccc inset;
   border-radius: 4px;
   &:not([type="button"]):not(button):not(.button):focus {
     outline: none;
-    box-shadow: 0 0 2px #ccc inset,
-                0 1px 1px #ccc inset,
-                0 0 1px blue;
+    box-shadow: 0 0 2px #ccc inset, 0 1px 1px #ccc inset, 0 0 1px blue;
   }
   &[disabled] {
     background-color: transparent;
-    box-shadow: 0 0 2px #ddd inset,
-                0 1px 1px #ddd inset;
+    box-shadow: 0 0 2px #ddd inset, 0 1px 1px #ddd inset;
     color: lighten($textColor, 25%);
   }
 }
-input[type="file"] { border-bottom-width: 0; }
-button, .button, [class^="button--"] {
+input[type="file"] {
+  border-bottom-width: 0;
+}
+button,
+.button,
+[class^="button--"] {
   margin-left: 0.3em;
   margin-right: 0.3em;
   cursor: pointer;
   text-decoration: none;
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     outline: none;
     text-shadow: 0 1px 2px #aaa;
   }
   &:active {
-    box-shadow: 0 0 6px #aaa inset,
-                0 1px 4px #aaa inset;
+    box-shadow: 0 0 6px #aaa inset, 0 1px 4px #aaa inset;
   }
 
   &.button--primary {
     color: #00a;
-    box-shadow: 0 0 4px #ccf inset,
-                0 1px 2px #ccf inset;
+    box-shadow: 0 0 4px #ccf inset, 0 1px 2px #ccf inset;
 
     &:focus,
     &:hover {
       text-shadow: 0 1px 2px #aaf;
     }
     &:active {
-      box-shadow: 0 0 6px #aaf inset,
-                  0 1px 4px #aaf inset;
+      box-shadow: 0 0 6px #aaf inset, 0 1px 4px #aaf inset;
     }
   }
 
   &.button--remove {
-    color: #A00;
-    &:hover, &:focus {
+    color: #a00;
+    &:hover,
+    &:focus {
       text-shadow: 0 1px 2px #faa;
     }
     &:active {
-      box-shadow: 0 0 6px #faa inset,
-                  0 1px 4px #faa inset;
+      box-shadow: 0 0 6px #faa inset, 0 1px 4px #faa inset;
     }
   }
 }
 input.ng-invalid {
-  color: #A00; //FIXME: same as button--remove
+  color: #a00; //FIXME: same as button--remove
 }
-ul { margin: 0; padding: 0; }
+ul {
+  margin: 0;
+  padding: 0;
+}
 em {
   font-style: normal;
   color: black;
   text-shadow: 0 1px 5px rgba(100, 100, 100, 0.3);
 }
-pre { margin: 0; }
+pre {
+  margin: 0;
+}
 
 // Elements
-.is-clickable { cursor: pointer; }
-.is-ghost { opacity: 0.3; }
-.is-focused { box-shadow: 0 0 1px 1px #aaf inset; }
-[draggable] { cursor: move; }
+.is-clickable {
+  cursor: pointer;
+}
+.is-ghost {
+  opacity: 0.3;
+}
+.is-focused {
+  box-shadow: 0 0 1px 1px #aaf inset;
+}
+[draggable] {
+  cursor: move;
+}
 .m-line {
   border-bottom: 1px dotted #ddd;
 }
 
-.l-margin-v1 { margin-top: 1em; margin-bottom: 1em; }
-.l-margin-l-24 { margin-left: -24em; }
-.l-margin-t2_5 { margin-top: 2.5em; }
+.l-margin-v1 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.l-margin-l-24 {
+  margin-left: -24em;
+}
+.l-margin-t2_5 {
+  margin-top: 2.5em;
+}
 .l-width-full {
-  margin-left: 8em; margin-right: 8em;
+  margin-left: 8em;
+  margin-right: 8em;
 
   @media (max-width: 40em) {
-    margin-left: 0.5em; margin-right: 0.5em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
   }
 }
 [ng-view] {
@@ -137,23 +173,53 @@ pre { margin: 0; }
 }
 
 // Layout
-[l-flex] { display: flex; }
-[l-flex~="wrap"] { flex-wrap: wrap; }
-[l-flex~="center"] { justify-content: center; }
-[l-flex~="between"] { justify-content: space-between; }
-@for $i from 1 through 20 {
-  [l-flex-grow="#{$i}"] { flex-grow: #{$i}; }
-
-  [l-margin~="h#{$i}"] { margin-right: #{$i}rem; margin-left: #{$i}rem; }
-  [l-margin~="r#{$i}"] { margin-right: #{$i}rem; }
-  [l-margin~="l#{$i}"] { margin-left: #{$i}rem; }
-  [l-margin~="v#{$i}"] { margin-top: #{$i}rem; margin-bottom: #{$i}rem; }
-  [l-margin~="t#{$i}"] { margin-top: #{$i}rem; }
-  [l-margin~="b#{$i}"] { margin-bottom: #{$i}rem; }
-  [l-width="#{$i}"] { width: #{$i}rem; }
+[l-flex] {
+  display: flex;
 }
-[t-align="center"] { text-align: center; }
-[t-align="right"] { text-align: right; }
+[l-flex~="wrap"] {
+  flex-wrap: wrap;
+}
+[l-flex~="center"] {
+  justify-content: center;
+}
+[l-flex~="between"] {
+  justify-content: space-between;
+}
+@for $i from 1 through 20 {
+  [l-flex-grow="#{$i}"] {
+    flex-grow: #{$i};
+  }
+
+  [l-margin~="h#{$i}"] {
+    margin-right: #{$i}rem;
+    margin-left: #{$i}rem;
+  }
+  [l-margin~="r#{$i}"] {
+    margin-right: #{$i}rem;
+  }
+  [l-margin~="l#{$i}"] {
+    margin-left: #{$i}rem;
+  }
+  [l-margin~="v#{$i}"] {
+    margin-top: #{$i}rem;
+    margin-bottom: #{$i}rem;
+  }
+  [l-margin~="t#{$i}"] {
+    margin-top: #{$i}rem;
+  }
+  [l-margin~="b#{$i}"] {
+    margin-bottom: #{$i}rem;
+  }
+  [l-width="#{$i}"] {
+    width: #{$i}rem;
+  }
+}
+[t-align="center"] {
+  text-align: center;
+}
+[t-align="right"] {
+  text-align: right;
+}
 [l-fixed="bottom"] {
   position: fixed;
   bottom: 0;
@@ -163,34 +229,58 @@ pre { margin: 0; }
   background-color: $bodyBackground;
 }
 
-.l-text-c { text-align: center; }
-.l-text-r { text-align: right; }
-.l-float-r { float: right; }
-.l-float-l { float: left; }
-.l-clear { clear: both; }
+.l-text-c {
+  text-align: center;
+}
+.l-text-r {
+  text-align: right;
+}
+.l-float-r {
+  float: right;
+}
+.l-float-l {
+  float: left;
+}
+.l-clear {
+  clear: both;
+}
 .l-text-overflow {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.balance, .m-balance {
-  &.is-negative { color: red; }
+.balance,
+.m-balance {
+  &.is-negative {
+    color: red;
+  }
 }
 
 .currency {
   text-align: right;
-  &.negative { color: red; }
+  &.negative {
+    color: red;
+  }
 }
 .accounts-table {
-  .accounts-table__assets, .accounts-table__liabilities {
+  .accounts-table__assets,
+  .accounts-table__liabilities {
     float: left;
     width: 50%;
-    @media (max-width: 35em) { width: 100%; }
+    @media (max-width: 35em) {
+      width: 100%;
+    }
 
-    h2 { text-align: center; }
-    ul { list-style-type: none; }
-    li { border-bottom: 1px dotted #DDD; }
+    h2 {
+      text-align: center;
+    }
+    ul {
+      list-style-type: none;
+    }
+    li {
+      border-bottom: 1px dotted #ddd;
+    }
     h3 {
       margin-bottom: 0;
       font-size: 80%;
@@ -199,8 +289,12 @@ pre { margin: 0; }
       color: #888;
     }
   }
-  .assets-list { padding-right: 2em; }
-  .liabilities-list { padding-left: 2em; }
+  .assets-list {
+    padding-right: 2em;
+  }
+  .liabilities-list {
+    padding-left: 2em;
+  }
 }
 
 .dropdown {
@@ -213,7 +307,8 @@ pre { margin: 0; }
   z-index: 1000;
 
   $arrow_size: 0.5rem;
-  &:before, &:after {
+  &:before,
+  &:after {
     position: absolute;
     display: inline-block;
     content: "";
@@ -221,7 +316,7 @@ pre { margin: 0; }
     pointer-events: none;
   }
   &:before {
-    top: unquote("calc(-2 * "+$arrow_size+" - 1px)");
+    top: unquote("calc(-2 * " + $arrow_size + " - 1px)");
     left: $arrow_size;
     border-bottom-color: #888;
   }
@@ -232,24 +327,36 @@ pre { margin: 0; }
   }
 
   &.dropdown--right-arrow {
-    &:before, &:after {
+    &:before,
+    &:after {
       left: auto;
       right: 0.5rem;
     }
   }
 
-  * &.dropdown--focus-parent { display: none; }
-  *:focus &.dropdown--focus-parent { display: initial; }
+  * &.dropdown--focus-parent {
+    display: none;
+  }
+  *:focus &.dropdown--focus-parent {
+    display: initial;
+  }
 }
 
 @mixin bank_entry {
   position: relative;
   min-height: 1.2em;
 
-  .date, .description, .distribute, .amount, .account {
-    position: absolute; top: 0.1em;
+  .date,
+  .description,
+  .distribute,
+  .amount,
+  .account {
+    position: absolute;
+    top: 0.1em;
   }
-  .date { width: 8em; }
+  .date {
+    width: 8em;
+  }
   .description {
     left: 9em;
     right: 20em;
@@ -257,8 +364,14 @@ pre { margin: 0; }
     white-space: pre;
     text-overflow: ellipsis;
   }
-  .account { width: 10em; right: 0; }
-  .amount { width: 8em; right: 11em; }
+  .account {
+    width: 10em;
+    right: 0;
+  }
+  .amount {
+    width: 8em;
+    right: 11em;
+  }
 }
 
 // This is more of a min-width
@@ -266,35 +379,59 @@ $bank-entry-width: 45em;
 .bank-entries {
   margin: 1em 8em;
   @media (max-width: $bank-entry-width
-                  + 16em // margins
-                  ) { margin: 1em; }
+    + 16em) {
+    margin: 1em;
+  }
   list-style-type: none;
 
-  form .actions > * { margin-right: 1em; }
-  form .actions { display: none; }
-  form.changed .actions { display: initial; }
-  form.changed .distribute { display: none; }
-  .focus { background-color: #F0F0F0; }
+  form .actions > * {
+    margin-right: 1em;
+  }
+  form .actions {
+    display: none;
+  }
+  form.changed .actions {
+    display: initial;
+  }
+  form.changed .distribute {
+    display: none;
+  }
+  .focus {
+    background-color: #f0f0f0;
+  }
 
   li {
     @include bank_entry;
 
     @media (max-width: $bank-entry-width) {
       padding-top: 1.2em;
-      .description { right: 0; }
+      .description {
+        right: 0;
+      }
       margin-top: 1.2em;
       padding-bottom: 1.2em;
     }
 
-    border-bottom: 1px dashed #DDD;
-    &:last-child { border-bottom: none; }
+    border-bottom: 1px dashed #ddd;
+    &:last-child {
+      border-bottom: none;
+    }
 
-    .date, .description, .distribute, .amount, .account {
-      input, select { width: 100%; }
+    .date,
+    .description,
+    .distribute,
+    .amount,
+    .account {
+      input,
+      select {
+        width: 100%;
+      }
     }
     .distribute {
       right: 20em;
-      @media (max-width: $bank-entry-width) { right: 0; }
+      @media (max-width: $bank-entry-width) {
+        right: 0;
+      }
     }
     .account-entry {
       position: relative;
@@ -303,21 +440,27 @@ $bank-entry-width: 45em;
   }
 }
 
-form .actions { clear: both; }
+form .actions {
+  clear: both;
+}
 
 // Layout
-body { padding-top: 2.2rem; }
+body {
+  padding-top: 2.2rem;
+}
 .navigation {
   $navigation_pages: 4;
   $base_width: 1em + // left-padding
-              10em * $navigation_pages + // .navigation__page's
-              20em; // .bank_import and .page-actions
+    10em * $navigation_pages + // .navigation__page's
+    20em; // .bank_import and .page-actions
 
   font-size: 1.1rem;
   height: 2em;
   line-height: 2em;
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   @include linear-gradient(tint(black, 25%), tint(black, 5%));
 
@@ -325,15 +468,17 @@ body { padding-top: 2.2rem; }
     padding-top: 2em;
   }
 
-  &, a {
-    color: #CCC;
+  &,
+  a {
+    color: #ccc;
   }
   .navigation__toggle {
     display: none;
 
     @media (max-width: $base_width) {
       position: absolute;
-      top: 0; left: 0;
+      top: 0;
+      left: 0;
       display: inline-block;
       width: 2em;
       height: 2em;
@@ -374,7 +519,9 @@ body { padding-top: 2.2rem; }
       background: black;
       overflow: auto;
 
-      &.is-open { display: block; }
+      &.is-open {
+        display: block;
+      }
     }
   }
   .navigation__status {
@@ -382,7 +529,9 @@ body { padding-top: 2.2rem; }
 
     @media (max-width: $base_width) {
       position: absolute;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 100;
     }
   }
@@ -391,7 +540,8 @@ body { padding-top: 2.2rem; }
 
     @media (max-width: $base_width) {
       position: absolute;
-      top: 0; right: 0;
+      top: 0;
+      right: 0;
       z-index: 101;
     }
   }
@@ -417,7 +567,7 @@ body { padding-top: 2.2rem; }
     line-height: 1;
     font-size: 75%;
     font-weight: bold;
-    background: #C00;
+    background: #c00;
     color: white;
     border-radius: 1.3ex;
     padding: 3px;
@@ -434,10 +584,14 @@ body { padding-top: 2.2rem; }
       margin-right: 0;
       padding: 0 1rem;
 
-      small { display: none; }
+      small {
+        display: none;
+      }
     }
 
-    input { width: 100%; }
+    input {
+      width: 100%;
+    }
   }
   .bank_import__details {
     text-align: left;
@@ -458,16 +612,21 @@ body { padding-top: 2.2rem; }
     @media (max-width: $base_width) {
       font-size: 1rem;
 
-      form { display: none; }
+      form {
+        display: none;
+      }
     }
   }
   .bank_import:focus .bank_import__details,
-  .bank_import__details:hover { display: initial; }
+  .bank_import__details:hover {
+    display: initial;
+  }
 
   .page-actions__calculator > .dropdown {
     transform: translateX(calc(2em - 100%));
 
-    &:before, &:after {
+    &:before,
+    &:after {
       left: auto;
       right: 0.5rem;
     }
@@ -477,7 +636,7 @@ body { padding-top: 2.2rem; }
   }
   .page-actions__calculator pre {
     height: 2rem;
-    box-shadow: inset 0 1px 3px #BBB;
+    box-shadow: inset 0 1px 3px #bbb;
   }
 }
 
