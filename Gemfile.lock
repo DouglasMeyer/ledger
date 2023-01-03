@@ -109,7 +109,8 @@ GEM
       temple (>= 0.8.0)
       tilt
     hashie (4.1.0)
-    httparty (0.16.2)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     i18n (1.0.1)
       concurrent-ruby (~> 1.0)
