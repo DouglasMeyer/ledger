@@ -1,5 +1,8 @@
 %h2.account
   = @account.name
+  &nbsp;
+  %small
+    = link_to 'csv', v3_account_path(format: :csv)
   = currency @account.balance, 'balance', 'span'
 
 %ul.bank-entries

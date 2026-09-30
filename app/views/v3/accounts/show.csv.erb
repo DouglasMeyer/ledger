@@ -1,0 +1,4 @@
+date,amount,out of
+<%- @account.account_entries.reverse.each do |account_entry| -%>
+<%= account_entry.bank_entry.date -%>,<%= account_entry.amount_cents / 100.0 -%>,<%= account_entry.bank_entry.amount_cents / 100.0 %>
+<%- end -%>
