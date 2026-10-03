@@ -22,7 +22,7 @@ class Account < ApplicationRecord
   def average_spent(average_over = 1)
     dates = bank_entries.order(:date).pluck(:date)
     return nil unless dates.any?
-    months = (dates.first.months - dates.last.months)
+    months = (months(dates.first) - months(dates.last))
     return nil if months.zero?
     spent = entries
             .joins(:bank_entry)
@@ -33,8 +33,7 @@ class Account < ApplicationRecord
   end
 
   def as_json(options)
-    (options[:methods] ||= []).push(:balance_cents, :class_name)
-    super(options)
+    super(**options, methods: [*(options[:methods] || []), :balance_cents, :class_name ])
   end
 
   def class_name
@@ -45,5 +44,9 @@ class Account < ApplicationRecord
 
   def zero_balance_when_deleting
     errors.add(:balance_cents, :not_zero) unless balance_cents.zero? || deleted_at.blank?
+  end
+
+  def months(date)
+    date.year * 12 + date.month + date.day.to_f / Time.days_in_month(date.month)
   end
 end

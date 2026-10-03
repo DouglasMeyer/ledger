@@ -23,8 +23,7 @@ class Strategy < ApplicationRecord
   end
 
   def as_json(options = {})
-    (options[:methods] ||= []).push(:class_name)
-    super(options)
+    super(**options, methods: [*(options[:methods] || []), :class_name ])
   end
 
   def class_name

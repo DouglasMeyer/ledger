@@ -62,8 +62,7 @@ class BankEntry < ApplicationRecord
   end
 
   def as_json(options = {})
-    (options[:methods] ||= []).push(:account_entries, :class_name)
-    super(options)
+    super(**options, methods: [*(options[:methods] || []), :account_entries, :class_name ])
   end
 
   def class_name

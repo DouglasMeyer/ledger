@@ -11,6 +11,22 @@
 # end
 
 # These inflection rules are supported but not enabled by default:
-# ActiveSupport::Inflector.inflections(:en) do |inflect|
-#   inflect.acronym 'RESTful'
-# end
+ActiveSupport::Inflector.inflections(:en) do |inflect|
+  # inflect.acronym 'RESTful'
+  inflect.acronym 'API'
+
+end
+
+Rails.autoloaders.each do |autoloader|
+  autoloader.inflector.inflect("api" => "API")
+
+  autoloader.inflector.inflect(
+    "account_v1" => "Account_v1",
+    "bank_entry_v1" => "BankEntry_v1",
+    "ledger_summary_v1" => "LedgerSummary_v1",
+    "ledger_v1" => "Ledger_v1",
+    "projected_entry_v1" => "ProjectedEntry_v1",
+    "user_v1" => "User_v1"
+  )
+end
+

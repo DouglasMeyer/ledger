@@ -1,9 +1,9 @@
-//= require angular/angular
-//= require angular-animate/angular-animate
-//= require angular-route/angular-route
-//= require angular-rails-templates
-//= require rrule/lib/rrule
-//= require_tree ./templates
+#= require angular/angular
+#= require angular-animate/angular-animate
+#= require angular-route/angular-route
+#= require angular-rails-templates
+#= require rrule/lib/rrule
+#= require_tree ./templates
 
 angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
 

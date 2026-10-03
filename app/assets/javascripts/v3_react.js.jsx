@@ -1,11 +1,11 @@
 /* globals React ReactDOM jQuery confirm */
 /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^(App|Users|Ledgers)$" }] */
-//= require jquery
-//= require serviceworker-companion
-//= require_self
-//= require rrule/lib/rrule
-//= require ./v3/react/admin
-//= require ./v3/react/new
+#= require jquery
+#= require serviceworker-companion
+#= require_self
+#= require rrule/lib/rrule
+#= require ./v3/react/admin
+#= require ./v3/react/new
 
 var API = (function () {
   var requests = [];

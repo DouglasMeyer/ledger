@@ -462,7 +462,7 @@ body {
   left: 0;
   right: 0;
   z-index: 100;
-  @include linear-gradient(tint(black, 25%), tint(black, 5%));
+  background-image: linear-gradient(tint(black, 25%), tint(black, 5%));
 
   @media (max-width: $base_width) {
     padding-top: 2em;

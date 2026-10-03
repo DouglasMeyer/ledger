@@ -3,7 +3,7 @@ module API
   InvalidQuery = Class.new(StandardError)
 end
 
-class ApiController < ApplicationController
+class APIController < ApplicationController
   def bulk
     api_response = API::Response.new
 

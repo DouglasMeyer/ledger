@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.6.10'
+ruby '3.3.12'
 
-gem 'rails', '5.2.0'
+gem 'rails'
 
 gem 'active_model_serializers'
 gem 'activerecord-session_store'
@@ -13,7 +13,7 @@ gem 'haml'
 gem 'graphql'
 gem 'ngannotate-rails'
 gem 'omniauth-google-oauth2'
-gem 'party_foul'
+gem 'puma'
 gem 'pg'
 gem 'sass-rails'
 gem 'serviceworker-rails'

@@ -24,7 +24,7 @@ module ParseStatement
     statement_attr :name,   'NAME'
     statement_attr :memo,   'MEMO'
     statement_attr(:date,   'DTPOSTED'){ |string| DateTime.parse(string) }
-    statement_attr(:amount, 'TRNAMT'){ |string| BigDecimal.new(string) }
+    statement_attr(:amount, 'TRNAMT'){ |string| BigDecimal(string) }
 
     def initialize(raw)
       @raw = raw

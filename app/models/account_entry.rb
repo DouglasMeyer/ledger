@@ -43,8 +43,7 @@ class AccountEntry < ApplicationRecord
   dollarify :amount_cents
 
   def as_json(options = {})
-    (options[:methods] ||= []).push(:account_name, :class_name)
-    super(options)
+    super(**options, methods: [*(options[:methods] || []), :account_name, :class_name ])
   end
 
   def class_name
