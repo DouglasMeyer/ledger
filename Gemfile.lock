@@ -87,13 +87,18 @@ GEM
       securerandom (>= 0.3)
       tzinfo (~> 2.0, >= 2.0.5)
       uri (>= 0.13.1)
-    addressable (2.3.8)
+    addressable (2.9.0)
+      public_suffix (>= 2.0.2, < 8.0)
     angular-rails-templates (1.4.0)
       railties (>= 5.0, < 8.2)
       sprockets (>= 3.0, < 5)
       sprockets-rails
       tilt
+    anonymous_loader (0.1.3)
+      version_gem (~> 1.1, >= 1.1.14)
     ast (2.4.3)
+    auth-sanitizer (0.2.3)
+      version_gem (~> 1.1, >= 1.1.14)
     autoprefixer-rails (10.4.21.0)
       execjs (~> 2)
     babel-source (5.8.35)
@@ -108,13 +113,15 @@ GEM
     builder (3.3.0)
     byebug (13.0.0)
       reline (>= 0.6.0)
-    capybara (2.18.0)
+    capybara (3.40.0)
       addressable
+      matrix
       mini_mime (>= 0.1.3)
-      nokogiri (>= 1.3.3)
-      rack (>= 1.0.0)
-      rack-test (>= 0.5.4)
-      xpath (>= 2.0, < 4.0)
+      nokogiri (~> 1.11)
+      rack (>= 1.6.0)
+      rack-test (>= 0.6.3)
+      regexp_parser (>= 1.5, < 3.0)
+      xpath (~> 3.2)
     case_transform (0.2)
       activesupport
     cgi (0.5.2)
@@ -141,8 +148,20 @@ GEM
     drb (2.2.3)
     erb (6.0.7)
     erubi (1.13.1)
+    ethon (0.18.0)
+      ffi (>= 1.15.0)
+      logger
     execjs (2.10.2)
       json (>= 2)
+    faraday (2.14.4)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-net_http (3.4.4)
+      net-http (~> 0.5)
+    faraday-typhoeus (1.1.0)
+      faraday (~> 2.0)
+      typhoeus (~> 1.4)
     ffi (1.17.4)
     fiber-storage (1.0.1)
     globalid (1.4.0)
@@ -158,6 +177,8 @@ GEM
       temple (>= 0.8.2)
       thor
       tilt
+    hashie (5.1.0)
+      logger
     httparty (0.24.3)
       csv
       mini_mime (>= 1.0.0)
@@ -174,11 +195,13 @@ GEM
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
-    json (3.0.2)
+    json (2.21.2)
     json_spec (1.1.5)
       multi_json (~> 1.0)
       rspec (>= 2.0, < 4.0)
     jsonapi-renderer (0.2.2)
+    jwt (3.3.0)
+      base64
     language_server-protocol (3.17.0.6)
     lint_roller (1.1.0)
     logger (1.7.0)
@@ -193,6 +216,7 @@ GEM
       net-pop
       net-smtp
     marcel (1.2.1)
+    matrix (0.4.3)
     method_source (1.1.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
@@ -203,6 +227,8 @@ GEM
     multi_xml (0.9.1)
       bigdecimal (>= 3.1, < 5)
     mutex_m (0.3.0)
+    net-http (0.9.1)
+      uri (>= 0.11.1)
     net-imap (0.6.7)
       date
       net-protocol
@@ -221,6 +247,33 @@ GEM
     nokogiri (1.19.4)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
+    oauth2 (2.0.25)
+      anonymous_loader (~> 0.1, >= 0.1.3)
+      auth-sanitizer (~> 0.2, >= 0.2.3)
+      faraday (>= 0.17.3, < 4.0)
+      jwt (>= 1.0, < 4.0)
+      logger (~> 1.2)
+      multi_xml (~> 0.5)
+      rack (>= 1.2, < 4)
+      snaky_hash (~> 2.0, >= 2.0.7)
+      version_gem (~> 1.1, >= 1.1.14)
+    ollama-ai (1.3.0)
+      faraday (~> 2.10)
+      faraday-typhoeus (~> 1.1)
+      typhoeus (~> 1.4, >= 1.4.1)
+    omniauth (2.1.4)
+      hashie (>= 3.4.6)
+      logger
+      rack (>= 2.2.3)
+      rack-protection
+    omniauth-google-oauth2 (1.2.3)
+      jwt (>= 2.9.2, < 4)
+      oauth2 (~> 2.0)
+      omniauth (~> 2.0)
+      omniauth-oauth2 (~> 1.8)
+    omniauth-oauth2 (1.9.0)
+      oauth2 (>= 2.0.2, < 3)
+      omniauth (~> 2.0)
     ostruct (0.6.3)
     parallel (2.3.0)
     parser (3.3.12.0)
@@ -238,10 +291,15 @@ GEM
     pry-byebug (3.12.0)
       byebug (~> 13.0)
       pry (>= 0.13, < 0.17)
+    public_suffix (7.0.5)
     puma (8.0.2)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.7)
+    rack-protection (4.2.1)
+      base64 (>= 0.1.0)
+      logger (>= 1.6.0)
+      rack (>= 3.0.0, < 4)
     rack-session (2.1.2)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -356,9 +414,16 @@ GEM
       ostruct
       rack (>= 2.1)
       railties (>= 7.0)
-    site_prism (2.9)
-      addressable (>= 2.3.3, < 3.0)
-      capybara (>= 2.1, < 3.0)
+    site_prism (6.0.1)
+      addressable (~> 2.8, >= 2.8.4)
+      base64 (~> 0.3.0)
+      capybara (~> 3.37)
+      logger (~> 1.7)
+      site_prism-all_there (> 3, < 5)
+    site_prism-all_there (3.0.10)
+    snaky_hash (2.0.7)
+      hashie (>= 0.1.0, < 6)
+      version_gem (~> 1.1, >= 1.1.14)
     sprockets (4.4.1)
       concurrent-ruby (~> 1.1)
       logger
@@ -376,6 +441,8 @@ GEM
     tilt (2.9.0)
     timeout (0.6.1)
     tsort (0.2.0)
+    typhoeus (1.6.0)
+      ethon (>= 0.18.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     uglifier (4.2.1)
@@ -385,6 +452,7 @@ GEM
     unicode-emoji (4.3.0)
     uri (1.1.1)
     useragent (0.16.11)
+    version_gem (1.1.15)
     websocket-driver (0.8.2)
       base64
       websocket-extensions (>= 0.1.0)
@@ -413,6 +481,8 @@ DEPENDENCIES
   machinist
   net-netrc
   ngannotate-rails
+  ollama-ai (~> 1.3.0)
+  omniauth-google-oauth2
   pg
   pry
   pry-byebug

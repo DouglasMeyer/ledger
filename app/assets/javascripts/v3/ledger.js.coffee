@@ -65,11 +65,21 @@ angular.module('ledger', ['ng', 'ngRoute', 'ngAnimate', 'templates'])
       promises.push(refresh('Account'))
       promises.push(refresh('BankEntry'))
       promises.push(refresh('ProjectedEntry'))
-      promises.push(Model.BankEntry.read(needsDistribution: true).then (entries)->
+      needsDistributionP = Model.BankEntry.read(needsDistribution: true)
+      needsDistributionP.then (entries)->
         oldLength = entriesNeedingDistribution.length
         args = [0,oldLength].concat(entries)
         entriesNeedingDistribution.splice.apply(entriesNeedingDistribution, args)
-      )
+      promises.push(needsDistributionP)
+      Model.accountEntryAutocomplete = needsDistributionP.then (entries) ->
+        ids = for entry in entries
+          entry.id
+        if ids.length
+          fetch('/api', { method: 'POST', body: JSON.stringify([
+            { resource: 'BankEntryAutocomplete_v1', action: 'read', ids: ids }
+          ])}).then((r) => r.json()).then((data) =>
+            data.responses[0].result
+          )
       promises.push(Model.LedgerSummary.read().then (summary)->
         angular.copy summary, ledgerSummary
       )

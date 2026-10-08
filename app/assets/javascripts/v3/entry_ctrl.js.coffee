@@ -9,7 +9,8 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse, entries
   amountRemainingCentsExpression = 'editingEntry.amountCents - (editingEntry.accountEntries | map:"amountCents" | sum)'
 
   autoOpen = ->
-    $scope.open() if $scope.isEditable() && (!$scope.entry.id || $parse(amountRemainingCentsExpression)($scope))
+    if $scope.isEditable() && (!$scope.entry.id || $parse(amountRemainingCentsExpression)($scope))
+      $scope.open()
 
   reset = ->
     $scope.isOpen = false
@@ -37,6 +38,18 @@ angular.module("ledger").controller 'EntryCtrl', ($scope, Model, $parse, entries
           $scope.editingEntry.accountEntries.push( newAE )
         else if lastAE = $scope.editingEntry.accountEntries[$scope.editingEntry.accountEntries.length-1]
           lastAE.amountCents += amountRemainingCents
+    Model.accountEntryAutocomplete.then (autocompletes) ->
+      accountEntries = autocompletes[$scope.entry.id]
+      if accountEntries
+        $scope.editingEntry = Object.assign({}, $scope.editingEntry, {
+          accountEntries: accountEntries.map((accountName, index) =>
+            entry = $scope.editingEntry.accountEntries[index]
+            if entry.accountName?.length
+              entry
+            else
+              Object.assign({}, entry, { accountName })
+          )
+        })
 
   $scope.close = (e)->
     e.stopPropagation()

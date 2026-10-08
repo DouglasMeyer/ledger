@@ -26,7 +26,8 @@ Rails.autoloaders.each do |autoloader|
     "ledger_summary_v1" => "LedgerSummary_v1",
     "ledger_v1" => "Ledger_v1",
     "projected_entry_v1" => "ProjectedEntry_v1",
-    "user_v1" => "User_v1"
+    "user_v1" => "User_v1",
+    "bank_entry_autocomplete_v1" => "BankEntryAutocomplete_v1",
   )
 end
 
