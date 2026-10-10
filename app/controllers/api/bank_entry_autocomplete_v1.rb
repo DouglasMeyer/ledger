@@ -4,6 +4,11 @@ module API
     extend Service
 
     def self.read(command)
+      address = ENV['OLLAMA_ADDRESS']
+      model = ENV['OLLAMA_MODEL']
+
+      return { result: {} } if address.blank? || model.blank?
+
       require 'ollama-ai'
       bank_entries = BankEntry.where(id: command['ids'])
       recent_bank_entries = BankEntry.includes(:accounts).limit(50).
@@ -30,19 +35,20 @@ module API
         }
       PROMPT
 
-      json_result = Rails.cache.fetch(prompt, expires_in: 7.days) do
-        client = Ollama.new(
-        )
+      # A job or a request may cause multiple triggers. For our use-case, we only want 1 call at a time
+      json_result = BankEntry.with_advisory_lock("autocomplete") do
+        Rails.cache.fetch(prompt, expires_in: 7.days) do
+          client = Ollama.new(credentials: { address: })
 
+          result = client.generate({
+            model:,
+            prompt:,
+            stream: false,
+            format: 'json'
+          })
 
-        result = client.generate({
-          model:,
-          prompt:,
-          stream: false,
-          format: 'json'
-        })
-
-        JSON.parse(result.first['response'])
+          JSON.parse(result.first['response'])
+        end
       end
 
       { result: json_result }

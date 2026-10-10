@@ -13,6 +13,8 @@ services:
       DB_USER: postgres
       DB_PASSWORD: password
       RAILS_ENV: development
+      OLLAMA_ADDRESS: http://192.168.1.50:11434
+      OLLAMA_MODEL: hf.co/unsloth/Phi-4-mini-instruct-GGUF:Q4_K_M
     env_file: .env
     networks:
       - default

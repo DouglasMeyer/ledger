@@ -21,7 +21,9 @@ gem 'uglifier'
 
 gem 'jquery-rails'
 gem 'react-rails'
+
 gem 'ollama-ai', '~> 1.3.0'
+gem 'with_advisory_lock'
 
 group :development, :test do
   #gem 'capybara-webkit'
