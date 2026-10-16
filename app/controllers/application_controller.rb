@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   private
 
   def authenticate
-    return if session[:auth_user]
+    return if session[:auth_user] || ENV['LOCAL_LEDGER']
 
     if request.xhr?
       render status: :unauthorized, json: { error: :unauthorized }
@@ -15,7 +15,11 @@ class ApplicationController < ActionController::Base
   end
 
   def scope_tenant(&block)
-    ledger = session[:auth_user][:ledger] if session[:auth_user]
+    if session[:auth_user]
+      ledger = session[:auth_user][:ledger]
+    elsif ENV['LOCAL_LEDGER']
+      ledger = ENV['LOCAL_LEDGER']
+    end
 
     if ledger
       logger.info "TenantLedger.scope #{ledger}"

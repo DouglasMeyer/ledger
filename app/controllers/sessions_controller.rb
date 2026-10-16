@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
 
   def new
     strategy = request.env['omniauth.strategy']
-    @url = strategy.callback_url
+    @url = strategy.try :callback_url
     @ledgers = TenantLedger.all
   end
 
